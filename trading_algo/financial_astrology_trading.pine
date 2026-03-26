@@ -919,11 +919,9 @@ bool finalShort = filtShort and sRR >= i_minRR
 
 bgcolor(i_showSolar and sBull ? color.new(color.green, 90) : i_showSolar and sBear ? color.new(color.red, 90) : na, title = "Solar Trend Background")
 
-bgcolor(i_showMutable and isMutableMoon ? color.new(color.purple, 88) : na,
-        title = "Mutable Moon Period")
+bgcolor(i_showMutable and isMutableMoon ? color.new(color.purple, 88) : na, title = "Mutable Moon Period")
 
-bgcolor(i_showSolar   and inSolarWin    ? color.new(color.yellow, 94) : na,
-        title = "Solar Time Window")
+bgcolor(i_showSolar and inSolarWin ? color.new(color.yellow, 94) : na, title = "Solar Time Window")
 
 plotshape(i_showPiv and hasPH,
           title = "Confirmed Pivot High", style = shape.triangledown,
