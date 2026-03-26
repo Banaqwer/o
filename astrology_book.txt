@@ -1,0 +1,2183 @@
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 1 
+
+The lessons in "Secrets of Financial Astrology" will provide you with the tools to 
+make your own trading decisions in the stock and futures markets. Financial 
+astrology is really all about cycles, and I'll be introducing you to some astrologically 
+based cycles that I've found particularly effective. The first of these is one that I 
+frequently refer to in my nightly columns (the lunation cycle). However, before we 
+get started, there are a few astrological definitions that you'll need to learn. I don't 
+intend to complicate matters with a lot of technical jargon, but a basic 
+understanding of the astrological language will make it easier for you to grasp 
+the ideas that will be presented in this course.  
+
+The signs of the zodiac are divided into four groups called triplicities. They 
+represent the four elements of fire, earth, air and water. The fire signs are composed 
+of Aries, Leo and Sagittarius. The earth signs are composed of Taurus, Virgo and 
+Capricorn. The air signs are composed of Gemini, Libra and Aquarius, and the 
+water signs are composed of Cancer, Scorpio and Pisces.  
+
+ The zodiacal signs are also divided into three groups called quadratures. They 
+represent the three qualities of cardinal, fixed and mutable. The cardinal signs are 
+composed of Aries, Cancer, Libra and Capricorn. The fixed signs are composed of 
+Taurus, Leo, Scorpio and Aquarius, and the mutable signs are composed of Gemini, 
+Virgo, Sagittarius and Pisces.  
+
+It's a good idea to look for correlations in the elements and qualities. For example, 
+the last new moon cycle occurred on November 25th in the sign of Sagittarius. 
+Sagittarius is a mutable fire sign. That gives us the clue to look for trend changes in 
+stocks when the Moon is transiting through either fire or mutable signs. The Moon 
+passed through Pisces (a mutable sign) on December 4th, and this correlated with a 
+3-day low (both closing and intraday) in the price of Cisco Systems. A 3-day low 
+means that the price of the stock is lower than it was during the prior three trading 
+days. It's important to remember that cycle work always demands clarification. A 
+cycle should never be looked at as a magic bullet, where price trends reverse as if on 
+cue. A cycle always needs confirmation. We'll delve deeply into the mysteries of the 
+lunation cycle in next Wednesday's lesson... and also learn how to differentiate 
+between true trend reversals and false signals, through the use of confirmations. 
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 2 
+
+You can, with just a little bit of confirmation, accurately forecast a stock's price 
+direction during a specific time frame. The real secret to this trading technique lies 
+in properly interpreting the astrological language. I indicated the importance of the 
+'elements' (fire, earth, air and water) and 'qualities' (cardinal, fixed and mutable) in 
+our first lesson. We'll learn how to apply those 'qualities' to the lunar cycle in the 
+next two lessons.  
+
+Each sign is divided into three parts, which represents a total of 30 degrees for each 
+sign of the zodiac. The 'decanate' is 10 degrees of a sign. Each 'decanate' is then 
+divided into four parts called 'duads', of 2 1/2 degrees each. Think of the 
+astrological sign as the projector and the decanate as the receiver. The 'duad' shows 
+the daily experiences that help in the development of the sign. I said in the first 
+lesson that I would try to stay away from too much technical jargon, but have 
+patience with this one. It's a real jewel of a trading strategy, and is well worth the 
+effort to learn it.  
+
+Let's take a look at the 4-phase lunar cycle, and see how we can apply this 
+information to our stock trading. The Moon formed a conjunction aspect (0 degrees) 
+with the Sun on 8/29/00, at 6 degrees and 22 minutes Virgo. The 'duad' for both the 
+Sun and the Moon is therefore in the sign of Scorpio*. You'll remember from our 
+first lesson that Scorpio has a ‘fixed' quality. Now here's a secret. No matter what 
+phase of the lunar cycle you're in, the ‘duad' of the Moon will always have the same 
+quality as the 'duad' of the Sun. For example, the Moon formed a square aspect (90 
+degrees) with the Sun on 9/05/00. On that date the Sun was at 13 degrees and 24 
+minutes Virgo, and the Moon was at 13 degrees and 24 minutes Sagittarius. The 
+'duad' for the Sun was in the sign of Aquarius, and the 'duad' for the Moon was in 
+the sign of Taurus. Note that both Aquarius and Taurus have 'fixed' qualities!  
+
+The 4-phase lunar cycle consists of the New Moon (0 degrees), the 1st Quarter Moon 
+(90 degrees), the Full Moon (180 degrees) and the Last Quarter Moon (90 degrees). 
+Whenever the 'duads' of the Sun and Moon remain in the same 'quality' for at least 
+three consecutive phases, be sure to make a note of it. The 'duads' for the Sun and 
+Moon were in a 'fixed' mode for the New Moon on 8/29, the First Quarter Moon on 
+9/05, the Full Moon on 9/13 and the Last Quarter Moon on 9/20. Now take a look at 
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+the daily price chart for the NASDAQ 100 cash Index (NDX). You can see how 
+prices moved down during this period, from the 3951.39 close on 8/29 to the 3583.16 
+close on 9/26 (the last day of the 9/20 Last Quarter Moon). In the next lesson, I'll 
+show you how you can use this information for forecasting future stock prices.  
+
+*A quick reference table to determine Duads  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 3 
+
+The astrological sign is the projector, and the duad shows the daily experiences that 
+aid in the development of that projection. Therefore, the element (fire, earth, air 
+and water) and quality (cardinal, fixed and mutable) of the duad will more 
+accurately reveal actual events. In our last lesson, I focused on the 4-phase lunar 
+cycle. Whenever the duads of the Sun and Moon remain in the same quality 
+(cardinal, fixed or mutable) for at least three consecutive phases, it indicates a bias 
+towards a specific behavioral pattern. For example, the duads of the Sun and Moon 
+were in fixed modes for the New Moon of 8/29, the 1st Quarter Moon of 9/05, the 
+Full Moon of 9/13 and the Last Quarter Moon of 9/20. During that period, the 
+NASDAQ 100 cash index (or NDX) moved lower, from the 3951.39 close on 8/29 to 
+the 3583.16 close on 9/26 (the last day of the 9/20 Last Quarter Moon phase). The 
+price action of the NDX showed that the fixed mode brought out a negative response 
+from the trading public.  
+
+The duads of the Sun and Moon shifted to the mutable mode, from the 9/27 New 
+Moon phase to the 10/13 Full Moon phase. The quality then switched back to the 
+fixed mode for the 10/20 Last Quarter Moon phase. Bring up a daily price chart for 
+the cash NASDAQ 100 index (or NDX), and let's see how we can take advantage of 
+the lunar cycle's move back into the fixed mode. Since the prior 'fixed' period 
+reflected a down market environment, we'd expect a similar negative response from 
+the trading public during this 'fixed' period!  
+
+The duads of the Sun and Moon only stayed in that fixed mode for the Last Quarter 
+Moon phase of 10/20, which meant your window of opportunity lasted just one 
+week, from 10/20 through 10/26 (the last day of that phase). Now look at the daily 
+price chart for the NDX, and note that prices on 10/20 (the first day of the Last 
+Quarter phase) were in the process of forming a 3-day high. Remember that the 
+NDX went lower during the previous 'fixed' phase, so we'd be looking for a good 
+shorting opportunity in this 'fixed' phase. If prices are at a 3-day high, you only 
+need a break of the last two days' lows for confirmation of a short. The NDX broke 
+under the prior two days' lows on 10/24, at 3378.33. The NDX closed on 10/26 (the 
+last day of the phase) at 3168.49. This equates to a 12.4% (on margin) return in just 
+three trading days.  
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+I'll briefly run through one more example of this phenomenon. The duads of the 
+Sun and Moon were in the 'mutable' mode for the 9/27 New Moon, the 10/05 1st 
+Quarter Moon, and the 10/13 Full Moon (three consecutive phases). The NDX went 
+lower during this period, from the 3572.21 close on 9/27 to the 3401.65 close on 10/19 
+(the last day of the 10/13 Full Moon phase). That was a signal for us to look for 
+another shorting opportunity when the duads of the lunar cycle move back into the 
+'mutable' mode. In fact, the lunar cycle went back into the mutable mode during the 
+10/27 New Moon phase, & stayed there until 11/24 (the last day of the 11/18 Last 
+Quarter Moon phase). Now pay attention to this part! The NDX was not making a 
+3-day high on 10/27, the first day of the mutable mode, so you have to wait until it 
+does. You only want to take your shorting opportunities from a 3-day high in prices. 
+The NDX topped out on 11/06, at 3369.47. Note that the 2-day break of the lows 
+occurred on 11/07, at 3275.06. The NDX proceeded to fall, closing at 2829.49 on 
+11/24 (the last day of the mutable period). This equates to a 27.2% return (on 
+margin) for 13 trading days.  
+
+There won't be a lesson next Wednesday, during Christmas week. The fourth lesson 
+will resume on January 3rd of 2001. At that time, I'll show you how to use the 
+astrological aspects to determine areas of price support and resistance. We'll also 
+explore an arcane method for determining price objectives (or targets).  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 4 
+
+The waxing phase of the cycle (from 0 to 180 degrees) shows the birth and growth of 
+a new idea. That process culminates at 180 degrees, when the new idea (started at 0 
+degrees) becomes a physical reality. For the next two lessons, I'll examine the use of 
+aspects in determining true support and resistance levels for stocks, but first we 
+need to do a little review on the 3-bar reversal technique.  
+
+The 3-bar reversal is not a trading strategy. It's simply a tool for examining the 
+cyclical characteristics of a stock or futures contract. Take a look at the daily price 
+chart for the NASDAQ 100 Index tracking stock (or QQQ). Note the low (of 60 1/2) 
+it made on 11/30/00. The low price of that day was lower than the prior 3 days' lows. 
+Therefore, you can say that it formed a 3-bar low on 11/30. That was immediately 
+followed by a 3-bar upside reversal. This simply means that prices subsequently 
+showed enough strength to break above the prior 3-days' highs. The actual 3-bar 
+upside reversal occurred on 12/05, when QQQ went above 66 3/4. I'll now list the 3-
+bar highs and lows in the QQQ for the past few months: 
+
+3-bar high of 87 3/4 on 10/20/00. 
+3-bar low of 73 5/8 on 10/26. 
+3-bar high of 84 1/8 on 11/06. 
+3-bar low of 68 1/4 on 11/13. 
+3-bar high of 78 1/16 on 11/15. 
+3-bar low of 66 1/2 on 11/22. 
+3-bar high of 72 15/16 on 11/27. 
+3-bar low of 60 1/2 on 11/30. 
+3-bar high of 74 3/4 on 12/11. 
+3-bar low of 54 1/4 on 12/21. 
+
+Once you've established these cyclical highs and lows in a stock, you can start the 
+analysis. The first step is to compute the numerical difference between the high and 
+low of each cycle. For example, the QQQ went down a total of 14.12 points from the 
+high on 10/20 to the subsequent low on 10/26. It then went up a total of 10.50 points 
+from the low on 10/26 to the subsequent high on 11/06. Now here's where it gets 
+interesting: the QQQ went down 15.88 points from the high on 11/06 to its 
+subsequent low on 11/13. Prices not only took out the prior low (of 73 5/8), but the 
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+momentum also increased (by going down more than it had on the previous 
+downswing). This is a technical sign of weakness in the stock, and indicates that you 
+should start looking for shorting opportunities in the vicinity of the next 3-bar high. 
+Here's where aspects assume their rightful place in the art of financial astrology. 
+I’ ll continue with this study in next Wednesday's lesson. 
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 5 
+
+The zodiacal circle is divided into twelve equal parts; each part contains 30 degrees 
+of space, making a total of 360 degrees in the circle. The first aspect can be found by 
+dividing 30 by the 360-degree circle. The result of that division is .08. I'll give you a 
+list now of the 11 aspects I use, along with their decimal equivalents:  
+
+                            Aspect #1 30/360=.08 
+                            Aspect #2 60/360=.17 
+                            Aspect #3 90/360=.25 
+                            Aspect #4 120/360=.33 
+                            Aspect #5 150/360=.42 
+                            Aspect #6 180/360=.50 
+                            Aspect #7 210/360=.58 
+                            Aspect #8 240/360=.67 
+                            Aspect #9 270/360=.75 
+                            Aspect #10 300/360=.83 
+                            Aspect #11 330/360=.92 
+
+The aspects from #1 to #5 show the waxing phase of the cycle, while the aspects from 
+#7 to #11 represent the waning phase of the cycle. The waxing phase of the cycle 
+(aspects 1 to 5) shows the birth and growth of a new idea. That process culminates 
+at 180 degrees (or aspect #6), when the new idea (started at 0 degrees) becomes a 
+physical reality. Therefore, the 180-degree point takes on a great deal of significance 
+in financial astrology. Aspects # 5, 6 & 7 will thus be the focus of this study. First 
+
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+let's review the last paragraph of the prior lesson, "Once you've established these 
+cyclical highs and lows in a stock (through the 3-bar reversal technique), you can 
+start the analysis. The first step is to compute the numerical difference between the 
+high and low of each cycle. For example, the QQQ went down a total of 14.12 points 
+from the high on 10/20 to the subsequent low on 10/26. It then went up a total of 
+10.50 points from the low on 10/26 to the subsequent high on 11/06. Now here's 
+where it gets interesting: the QQQ went down 15.88 points from the high on 11/06 
+to its subsequent low on 11/13. Prices not only took out the prior low (of 73 5/8), but 
+the momentum also increased (by going down more than it had on the previous 
+downswing). 
+This is a technical sign of weakness in the stock, and you should start looking for 
+shorting opportunities in the vicinity of the next 3-bar high. Here's where aspects 
+assume their rightful place in the art of financial astrology."  
+
+The QQQ went down a total of 15.88 points from its high on 11/06 to the low on 
+11/13. As previously stated, the stock was giving signs of technical weakness. It had 
+not only taken out its prior 3-bar low of 73 5/8, but the momentum was increasing 
+on the downside (by going down more than it had on its previous downswing). As 
+the stock moves into new 3-bar highs, you can assess the strength of the retracement 
+by checking its aspect flow. 15.88 multiplied by .50= 7.94. Add that number to the 
+11/13 low of 68 1/4, and the resulting number is 76 3/16. If you look at the daily 
+price chart of the Qs, you can see that on 11/15 prices broke into new 3-bar highs, 
+and went above 76 3/16. That indicates that the stock has completed its growth and 
+development phase. Remember that .50 (or 180 degrees) is the culmination point of 
+the new idea (or trend) that started at 0 degrees (or the conjunction). As I said 
+earlier, aspects # 5, 6 and 7 will be the focus of this study. The QQQ successfully 
+moved through aspect # 6 by trading higher than 76 3/16. 15.88 multiplied by .58 
+(which is aspect # 7) results in 9.21. Adding that number to the 11/13 low of 68 1/4 
+gives you 77.46 (or 77 1/2 if it's rounded up to the nearest sixteenth). Note that the 
+high on 11/15 is 78 1/16, which is higher than aspect # 7's 77 1/2. Does this indicate 
+forthcoming strength in the stock? I've found that unless prices can graduate to the 
+next aspect level (or aspect # 8), you should really look at it as a sign of weakness! 
+15.88 multiplied by .67 (which is aspect # 8)= 10.64. If you add 10.64 to the 11/13 low 
+of 68 1/4, the resulting number is 78.89 (or 78 15/16 if it's rounded up to the nearest 
+sixteenth). As you can see, the QQQ high of 78 1/16 on 11/15 did not reach this price 
+level. Unless prices can get up to 78 15/16 (aspect # 8), the stock is vulnerable to a 
+correction.  
+
+You don't need to wait for a 3-bar downside reversal if the retracement only gets as 
+high as aspect # 7. Instead, short the stock on a 2-bar downside reversal. That 
+means you could have shorted the QQQ on 11/17, at 72 13/16. I'll continue with this 
+analysis in my next lesson. I'll also show you a very impressive track record for the 8 
+HOLDRS over the last three months. There will be no lesson next week due to travel 
+plans.  
+
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 6 
+
+The 3-bar reversal technique (see Lesson 4) defines the cyclical highs and lows of a 
+stock or futures contract. The aspect flow (see Lesson 5) allows you to assess the true 
+strength of any retracement (or new trend). The bottom line is that prices need to 
+retrace 67% (aspect # 8) or more of the prior move, or you should view the new 
+retracement) as suspect. Try to think of it more in terms of the lunar cycle. The 
+waxing phase of a cycle (from 0 to 180 degrees) shows the birth and growth of a new 
+idea (or trend). This process culminates at 180 degrees (or 50%), when the new 
+trend begins to assume its own identity. However, a trend doesn't reach full 
+maturity until it hits the 8th aspect (or 67%). Therefore, any new trend (or 
+retracement) that falls short of the 8th aspect should be looked upon as a good 
+trading opportunity. I discussed this theory thoroughly in the last two paragraphs of 
+Lesson 5, using the QQQ as an example. You don't need to wait for a 3-bar reversal 
+if the retracement only gets as high as aspect # 7 (or 58%). You can instead take the 
+trade based on a simple 2-bar reversal. For example, the QQQ went down a total of 
+15.88 points from its high on 11/06/00 to the subsequent low on 11/13. The upward 
+retracement (or new trend) was only able to get as high as the 7th aspect (or 58%). 
+That means you could have shorted the QQQ on 11/17, at 72 13/16 (a 2-bar 
+reversal). Use a tick above the high of the cycle (or 78 1/8) as your stop. That's a risk 
+of 5 5/16 points. Tack that number on the your sell point of 72 13/16, and your price 
+target becomes 67 1/2. Exit either when that target is hit, or on any 2-bar reversal. 
+That's all there is to it. I've compiled a complete 3-month track record for the QQQ, 
+as well as the 8 HOLDRS I follow on a daily basis. 
+Here are the results of that study:  
+
+QQQ: 
+Short 72 13/16 on 11/17. Exit on 11/22, for a profit of 14.6% (utilizing 50% margin). 
+Short 68 1/8 on 11/28. Exit on 11/29, for a profit of 14.4%. 
+Short 58 7/8 on 12/29. Exit on 1/02, for a profit of 11.4%. 
+IIH:  
+Short 35 7/8 on 1/16. Exit on 1/17, for a profit of 14.6%. 
+Short 22 1/8 on 12/29. Exit on 1/02, for a profit of 24.8%. 
+Long 23 1/2 on 1/24. Exit on 1/24, for a profit of 14.8%. 
+BBH:  
+Short 160 7/8 on 11/29. Exit on 12/05, for a loss of 7.2%. 
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+Short 146 9/16 on 1/17. Exit on 1/22, for a loss of 4.6%. 
+Long 149 1/2 on 1/22. Exit on 1/24, for a profit of 10.6%. 
+BHH:  
+Short 23.00 on 11/28. Exit on 11/30, for a profit of 34.8%. 
+Short 17 1/8 on 1/02. Exit on 1/02, for a profit of 31.4%. 
+BDH:  
+Short 58 9/16 on 11/16. Exit on 11/17, for a profit of 11.8%. 
+Short 53 9/16 on 11/28. Exit on 11/29, for a profit of 14.2%. 
+Short 45 1/8 on 1/02. Exit on 1/02, for a profit of 15.0%. 
+IAH:  
+Short 73 7/16 on 11/28. Exit on 11/29, for a profit of 13.2% 
+Short 57 3/16 on 12/29. Exit on 1/02, for a profit of 14.8%. 
+HHH:  
+Long 73 3/16 on 11/01. Exit on 11/06, for a profit of 6.8%. 
+Long 79 7/8 on 11/08. Exit on 11/08, for a loss of 11.8%. 
+Short 53 5/16 on 12/14. Exit on 12/18, for a profit of 18.8%. 
+Short 40 1/8 on 12/27. Exit on 1/02, for a profit of 24.6%. 
+SWH:  
+Short 79 1/16 on 12/13. Exit on 12/13, for a profit of 13.2%. 
+Short 63 9/16 on 12/29. Exit on 1/02, for a profit of 19.4%. 
+
+That's a total of 22 trades during the past 3-months. There were 19 winners and 
+only 3 losers (86% winners)! The average losing trade was 7.9%, while the average 
+winning trade was more than double that, at 17.0%!! I call this indicator "The 8th 
+Way". We'll start tracking it on the site next week. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 7 
+
+I use the '3-day Solar Time Window' to help in identifying important short-term 
+highs and lows in stocks. In financial astrology, the Sun represents events over 
+which we have conscious control. The outer planets (Uranus, Neptune and Pluto) 
+are invisible to the naked eye; thus representing events over which we have no 
+control. The relationship between these two forces is signified by their angular 
+separation (also known as aspects). I've found that significant short-term trend 
+reversals tend to occur when these two forces are in relationship. If you refer back 
+to Lesson # 5 of this course, you'll see a list of the original 11 aspects I use. However, 
+the 3-day solar time window adds an additional 5 aspects.  
+
+If you divide the 360-degree circle by 8, the resulting number is 45. Thus, the 8-
+phase cycle in financial astrology is as follows:  
+
+                            45 degrees is called the waxing semisquare. 
+                             90 degrees is called the waxing square. 
+                            135 degrees is called the waxing sesquiquadrate. 
+                            180 degrees is called the opposition. 
+                            225 degrees is called the waning sesquiquadrate. 
+                            270 degrees is called the waning square. 
+                            315 degrees is called the waning semisquare. 
+                            0 degrees is called the conjunction. 
+
+ Now add the following 5 aspects to that original list of 11: 45 degrees (waxing 
+semisquare), 135 degrees (waxing sesquiquadrate), 225 degrees (waning 
+sesquiquadrate), 315 degrees (waning semisquare) and the conjunction (or 0 degree 
+aspect). That gives you a total of 16 aspects that you need to utilize when calculating 
+the 3-day solar time window. The 2nd day of the time window is always the day of 
+aspect exactitude. The 1st day is the day before the aspect becomes exact, and the 
+3rd day is the day after the aspect became exact. Only market days are used. I'll 
+show you a list now of the 3-day solar time windows for the last couple of months:  
+
+                            11/02, 11/03, 11/06. 
+                            11/08, 11/09, 11/10. 
+                            11/24, 11/27, 11/28. 
+
+                                                                
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                            12/01, 12/04, 12/05. 
+                            12/08, 12/11, 12/12. 
+                            12/22, 12/26, 12/27. 
+                            1/03, 1/04, 1/05. 
+                            1/08, 1/09, 1/10. 
+                            1/18, 1/19, 1/22. 
+                            1/25, 1/26, 1/29. 
+                            2/02, 2/05, 2/06. 
+
+Now take a look at the daily price chart of the NASDAQ 100 Index tracking stock 
+(or QQQ). Note that the QQQ made a 3-bar intraday high of 84.12 on 11/06, which 
+was during the 11/02-06 solar time window. The next day (11/07) prices dropped 
+under the prior 3 days' lows (81.25). That's called a 3-bar downside reversal, and it 
+confirmed the 11/06 high of 84.12 as an important short-term resistance level. I'll 
+continue with this study in my next lesson. I realize that this lesson has been very 
+technical in nature, but I urge you to stick with it. I often refer to the 3-day solar 
+time windows in my nightly commentaries, and I do this for good reason. These 
+windows provide valuable insight for identifying true trend reversals. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 8 
+
+The 3-day Solar Time Window is an important indicator for identifying true short-
+term trend reversals. What exactly makes one price high (or low) more significant 
+than another? This is the theme we'll be exploring for the next two lessons.  
+
+The 3-bar reversal technique is an excellent tool for identifying the cyclical 
+characteristics of a stock or futures contract. I explained this at length in Lesson 4 of 
+this series. A confirmed high (or low) can only occur when there has been a 
+legitimate reversal off a 3-bar high or low. For example, take a look at the daily 
+price chart of the NASDAQ 100 Index tracking stock (or QQQ). Note that the stock 
+made a 3-bar intraday high of 84.12 on 11/06/00. The next day (11/07) saw prices 
+drop below the prior three days' lows (or 81.25). That's called a 3-bar downside 
+reversal, and it 'confirmed' the 11/06 high of 84.12 as an important short-term 
+resistance level.  
+
+That 11/06 high of 84.12 occurred during a 3-day Solar Time Window (11/02, 11/03 
+& 11/06). If you refer back to the last lesson, I listed the dates for the most recent 
+windows. Whenever a 'confirmed' 3-bar high or low occurs during the Solar Time 
+Window, you need to give that point added weight! A subsequent break above that 
+84.12 high would indicate a bullish trend reversal. Also, since 11/06 was a 
+'confirmed' high, you must now look backward for the prior 'confirmed' 3-bar low. 
+That occurred on 10/26, at 73.62. If prices subsequently break below 73.62, it would 
+be a bearish trend confirmation.  
+
+If you only use the Solar Time Window highs and lows for your trend analysis, 
+you'll get a much clearer picture of the true short-term trend of a stock. Let's 
+continue with our example of the QQQ. It broke below 73.62 on 11/09, and thus 
+gave a bearish trend confirmation. Note that the 'confirmed' 3-bar low of 11/13, and 
+the 'confirmed' 3-bar high of 11/15 did not relate to a Solar Time Window date. 
+Therefore, they are not given any importance. In fact, it really isn't until 11/27 that 
+there is a time window match to a 'confirmed' 3-bar high.  
+
+The 11/27 high of 72.93 occurred during a Solar Time Window, which meant that a 
+subsequent break above that high would constitute a bullish trend reversal. A break 
+below the 11/22 low of 66.50 (the prior 'confirmed' 3-bar low) would constitute 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+another bearish trend confirmation. Note that on 12/08 the QQQ reversed its short-
+term trend to bullish by moving above 72.93. However, 12/08-12 was also a Solar 
+Time Window period. In the next lesson, I'll show you how to handle this situation. 
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 9 
+
+In financial astrology the Sun symbolizes the known, whereas the outer planets 
+(Uranus, Neptune and Pluto) suggest that which is unknown. The relationship 
+between these forces is signified by their angular separation (also known as aspects). 
+Whenever the known (Sun) and the unknown (outer planets) come together in 
+relationship (angular aspect to each other), there is a possibility of change in the air. 
+I refer to these periods as "Solar Time Windows". Since these windows reflect a 
+potential for enhanced consciousness (the merging of conscious and unconscious 
+behavior), any changes in that behavior (or trend) should be viewed as significant.  
+
+I showed you how to apply the 3-bar reversal technique to these time windows in the 
+last lesson. I used the NASDAQ 100 Index tracking stock (or QQQ) as my example 
+for this exercise. It has been an exceptionally difficult stock to trade during the past 
+three months, giving numerous false signals (on both sides). However, it 
+encompasses all of the possibilities for this trading strategy, so it's a good teaching 
+device. Here's the track record for the past three months:  
+
+                            11/09 Short QQQ 73.61 +.67 
+                            12/08 Buy QQQ 72.94 -2.02 
+                            12/13 Exit QQQ 70.92  
+                            12/14 Short QQQ 66.49 +4.27 
+                            1/03 Exit QQQ 62.22 
+                            1/03 Buy QQQ 62.47 +1.77 
+                            2/01 Exit QQQ 64.24 
+                            2/02 Short QQQ 62.99 +4.38 
+                            2/13 Exit QQQ 58.61 
+                            2/13 Short QQQ 56.24 open 
+
+ 
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+That's a profit of 9.07 points on the closed positions (four winners and one loser), 
+which represents a 24.6% return on investment during the past three months (using 
+the standard margin). Since you already know how to track the straight buy and sell 
+signals (see last llesson), it's time now to learn the subtleties of this system.  
+
+We left off the last lesson with a buy signal on 12/08, at 72.94. However, the 12/08-12 
+period was also a "Solar Time Window". Whenever an intraday 3-bar high (or low) 
+occurs during a window, you need to pay attention. The QQQ formed an intraday 3-
+bar high of 74.75 on 12/11. If it could now take out the low price of the prior two 
+days (not three, but two), you should exit the position. Note that the QQQ did take 
+out the low price of the prior two days on 12/13, when it moved below 70.93. It's 
+important to remember that this is not a sell signal, simply an exit from the existing 
+long. Use a tick above the candle body high of those two days as your buy stop. Take 
+a look at the daily price chart for the QQQ. You can clearly see the 74.75 3-bar 
+intraday high that was made on 12/11, as well as the 2-bar reversal (at 70.92) off 
+that time window high. The candle body is simply the opening and closing prices. 
+The highest open or close value during those two days (12/11 & 12/12) was 74.31 (on 
+12/11). Therefore, you'd place your buy stop at 74.32.  
+
+As it turned out, prices never did get back up to 74.32. Instead, the QQQ went 
+down, and moved below the 11/22 low of 66.50. This triggered the next sell signal on 
+12/14 (at 66.49). That's all there is to it! I use this method to determine the short-
+term price trend (or behavior) of a particular stock. For example, the QQQ went 
+into a bearish short-term mode when it broke below 63.00 on 2/02. Once you've 
+determined the short-term trend of a stock, you can use intraday chart analysis to 
+pinpoint low risk buy (or sell) signals. We'll explore that area in the next lesson.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                          
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 10 
+
+The 3-day Solar Time Window defines the time frames that have real significance. 
+About half of the trading days fit into these time periods, so it's not a particularly 
+rare occurrence. However, it's important to remember that you should only pay 
+attention to the extreme intraday 3-bar highs and lows that occur within these 
+windows. For example, the NDX 100 tracking stock (or QQQ) made a 3-bar 
+intraday high of 60.49 on 2/15. But 2/15 was not a Solar Time Window date; 
+therefore, a break of that high (after the requisite 3-bar downside reversal) would 
+'not' constitute a real buy signal (merely an exit from an existing short position). 
+However, take note of the QQQ's 3-bar intraday low of 63.00 on 1/26. 1/26 was a 3-
+day Solar Time Window date; therefore, a break of that low (after the requisite 
+3-bar upside reversal) would indicate a true short position. I've spoken at length 
+about this time window (Lessons 7, 8 & 9), because I use it to determine the 
+probable near-term price direction of a stock or futures contract. I'll amplify on this 
+theme now by showing you how to use intraday price analysis to pinpoint low-risk 
+buy (or sell) signals.  
+
+The QQQ went into a sell mode when it went below its 1/26 time window low of 
+63.00 (on 2/02). Note how it made the requisite 3-bar upside reversal first, topping 
+out at 68.00 on 1/31. At the present time (2/21), you would exit that short position if 
+prices should move above 60.49 (the 3-bar high of 2/15). Do not think of the 3-day 
+Solar Time Window as a trading system in itself; rather, it will provide you with a 
+good indication of the probable price direction over the near-term. Since the QQQ 
+went into a sell bias as of 2/02, you should use the subsequent intraday price action 
+to establish a low-risk short in the stock. I'll provide you with some basic theories 
+for intraday price analysis in this lesson. Then, In Lesson 11, I'll introduce you to 
+the "Lunar Trend Confirmation" model, a powerful intraday combination with the 
+3-day Solar Time Window.  
+
+After QQQ went into a sell mode on 2/02, you should start monitoring the 60-minute 
+price chart. Using the 3-bar reversal technique (as defined in Lesson 4), look for a 
+buy signal. 
+Bring up a 60-minute price chart of the Qs now, and start monitoring it from 2/02. 
+You cansee that the first 3-bar intraday low (60.12) occurred on 2/05, at 1:30 pm. 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The subsequent 3-bar upside reversal took prices to a high of 63.12 on 2/06, at 11:30 
+am. The QQQ then proceeded to move below that 2/05 low, and the selling pressure 
+continued...no buy signal forthcoming.  
+
+Now switch over to a 30-minute price chart of the Qs, and start monitoring it from 
+that 2/02 sell date. Note how it made a 3-bar intraday high of 61.90, at 10:30 am on 
+2/05. After the requisite 3-bar downside reversal took prices to a new low of 60.12, 
+at 1:30 pm that same day, the QQQ then proceeded to move above that 61.90 high. 
+That occurred on the opening bar of the following day (2/06), and it constituted an 
+intraday buy signal for the Qs. That is exactly what you want to see! As soon as the 
+buy signal was activated, you should have put in an order to short the QQQ when it 
+moved below the 60.12 low, using the 61.90 high as the resistance (or stop) level for 
+the trade. By utilizing intraday price analysis, you can see how you've lowered your 
+risk on the trade. Take a close look at the 30-minute price chart of the QQQ for that 
+time period, so that you'll understand the rationale behind the short. Remember to 
+always take your cue from the 3-day Solar Time Window. Since it went into a sell 
+mode on 2/02, you would only be looking for sell signals with your intraday price 
+analysis.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                          
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 11 
+
+The "Solar Trend Indicator" is updated nightly on the e-mail version of the site. It's 
+based on the 3-day Solar Time Window, and gives a good indication of a stock's 
+probable near-term price direction. For example, the S&P 500 tracking stock (or 
+SPY) went into a sell mode back on 2/09, at 132.11. That's not a signal to short the 
+SPY, but it does indicate that you should be working the market from the short side 
+only. The "Lunar Trend Confirmation" model uses intraday price analysis in order 
+to locate good low-risk trading opportunities. It always trades in the same direction 
+as the "Solar Trend Indicator".  
+
+The "Solar Trend Indicator" tracks the aspect flow between the transiting Sun and 
+the transiting outer planets. This gives rise to a 3-day time period that signifies 
+important turning points in a stock. The "Lunar Trend Confirmation" model 
+tracks the aspect flow between the transiting Moon and the transiting outer planets. 
+This leads to important intraday turning points. I'll analyze the last couple of week's 
+price action in the SPY now to illustrate the effects of the "Lunar Trend 
+Confirmation" model.  
+
+The transiting Moon formed a conjunction aspect (0 degrees) with transiting Pluto 
+on February 16th, at 10:14 a.m. I use a two-hour orb of influence for all intraday 
+lunar aspects. That's because the Moon moves by approximately one degree every 
+two hours. That means the important time frame for 2/16 was from the opening (at 
+9:30 a.m.) to 12:14 p.m. During that period the SPY formed a 3-bar low of 130.50 at 
+the 9:30 (15-minute) bar, and a 3-bar high of 131.29 at the 10:15 (15-minute) bar.  
+
+Since the "Solar Trend Indicator" was in a sell mode at that time, you would only 
+be interested in shorting the SPY. If the SPY moves below 130.50 anytime after 
+12:14 p.m. on 2/16, you should establish a short position, and place a protective buy 
+stop at a tick above the 131.29 high. The SPY did go below 130.50 at the 1:15 (15-
+minute) bar, so you were short from 130.49.  
+
+The next time the transiting Moon formed an aspect with an outer planet during 
+market hours was on February 21st. The transiting Moon formed a sextile aspect 
+(60 degrees) with transiting Pluto at 11:37 a.m. That means the important time 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+frame for 2/21 was from 9:37 a.m. to 1:37 p.m. Note that the SPY formed a 3-bar 
+low of 127.31 at the 11:15 (15-minute) price bar, and a 3-bar high of 128.84 at the 
+12:15 (15-minute) bar. That means you could now lower the protective buy stop on 
+your short position to a tick above 128.84. The SPY moved below the 127.31 low at 
+the 2:00 p.m. (15-minute) price bar, and the selling pressure continued in the stock.  
+
+Let's pause for a moment and review some of the rules for this trade. The first thing 
+is to determine the important time frame for the day. If the transiting Moon is 
+aspecting a transiting outer planet during market hours, note the time when that 
+aspect is exact. Then add and subtract two hours from that time. For example, the 
+Moon's sextile with Pluto on 2/21 occurred at 11:37 a.m. That made the important 
+time frame for that day from 9:37 a.m. to 1:37 p.m. Once you've established the 
+day's important time frame, you can only establish a position in the stock after that 
+time frame. That means you could only have taken a trade in the SPY after 1:37 
+p.m. on 2/21. The "Lunar Trend Confirmation" model is a powerful ally with the 
+"Solar Trend Indicator", and gives excellent low-risk trades. I'll continue with this 
+study in my next lesson. 
+
+ 
+ 
+                                                          
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 12 
+
+The "Solar Trend Indicator" gives a good indication of a stock's probable near-
+term price direction. For example, the SPY (S&P 500 tracking stock) went into a sell 
+mode with this indicator back on 2/09, at 132.11. Although this was not a signal to 
+short the stock, it did indicate that you should only work it from the short side. The 
+"Lunar Trend Confirmation" model is a perfect partner for the "Solar Trend 
+Indicator". It uses intraday price and time window analysis, in order to locate good 
+low-risk trading opportunities. It's important to remember that the "Lunar Trend 
+Confirmation" model always trades in the same direction as the "Solar Trend 
+Indicator".  
+
+I started tracking the 'Lunar Trend Confirmation" model (from February 16th) in 
+my last lesson. A sell signal was issued on 2/16 with this model, at 130.49, using a 
+protective buy stop at 131.30. Note how little risk was involved in the trade (about 
+6/10ths of 1%). That's the real value of the lunar model.  
+
+The next time the transiting Moon formed an aspect with a transiting outer planet 
+(Uranus, Neptune & Pluto) during market hours was on 2/21. As noted in the prior 
+lesson, this allowed you to lower the protective buy stop on the short to 128.85. That 
+effectively guaranteed you a profit on the trade, while keeping you in for the 
+potentially big down move. 
+
+The next time the transiting Moon formed an aspect with a transiting outer planet 
+during market hours was on 2/26. The Moon trined Pluto at 10:44 a.m. EST. That 
+set the important time frame for the day between the open (at 9:30) until 12:44 p.m. 
+A 3-bar 'confirmed' high of 125.87 was established at the 9:30 (15-minute) price bar, 
+and this was followed by a 'confirmed' 3-bar low of 124.50 at the 10:45 (15-minute)          
+bar. Remember that you can only act on these points after the day's important time 
+frame has passed. The SPY proceeded to move above 125.87 at the 1:15 (15-minute) 
+price bar on the same day. That was your signal to exit the short that had been 
+initially established at 130.49 on 2/16. This gave you a profit of 4.61 points for the 
+trade. Not bad considering your risk was only .81 points. The real key to successful 
+trading is in keeping your risk low, while allowing the potential for large rewards. 
+Remember that you would not go long on that move above 125.87, because the 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+"Lunar Trend Confirmation" model only takes trades in the same direction as the 
+"Solar Trend Indicator".  
+
+In the next lesson, I'll show you how to use our intraday time windows. These are 
+published daily on the e-mail version of the site. 
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 13 
+
+The intraday lunar and location time windows are published daily on the 'Astrikos 
+Data Sheet'. They work especially well when used in conjunction with a longer-term 
+trading strategy, like the 'Solar Trend Indicator'. I'm going to focus on the location 
+time windows in this lesson, and I'll use Cisco Systems (CSCO) as my example 
+stock.  
+
+Cisco Systems (CSCO) is a part of the Internet Architecture HOLDRS (Amex:IAH). 
+This group went into a sell mode (on the 'Solar Trend Indicator') on 2/02, when it 
+went below 65.18. That was an indication that you should only work Cisco from the 
+short side. Now let's take a look at the 15-minute bar chart for CSCO... 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+I've marked all of the 3-bar highs and lows over the past week that coincided with a 
+location time window. Remember that if the 15-minute bar chart is at 9:30, that 
+means the range of prices is between 9:30 and 9:44. The 9:45 (15-minute) bar is the 
+9:45 to 9:59 price range. For example, there was an intraday location time window 
+on 3/07, at 9:33 a.m. Note that Cisco was making a 3-bar high (closing or intraday) 
+at that 9:30 bar. Of course, you won't have confirmation of that high until there is 
+an actual 3-bar downside reversal.  
+
+Look at the areas of the chart where I've put either an up or a down arrow. Those 
+are the legitimate 3-bar highs and lows over the past week in the Cisco 15-minute 
+bar chart. Cisco has been in a sell mode since 2/02, so we're only interested in 
+shorting opportunities. Wherever you see a down arrow indicates a legitimate 3-bar 
+high. If you're looking for an opportunity to short this market, always look to the 
+prior 3-bar low! I've put a star in those areas of the chart. Here's why it's so 
+important to use intraday chart analysis. You can greatly lower your risk factor. As 
+I said earlier, there was a 3-bar high at the 9:30 (15-minute) bar on 3/07. After this 
+high was confirmed, you could look back for the prior 3-bar low. That occurred on 
+3/06, at the 3:45 (15-minute) bar, at 23 15/16. Remember I've put a star by that 
+point on the Cisco chart. That means you could place an order to short Cisco at a 
+tick below 23 15/16. Your resistance level, of course, will be the 3-bar high of 24 
+15/16. 
+
+ 
+ 
+ 
+If you look at the Cisco chart I've marked, you'll see that you can steadily lower 
+your stop point when utilizing this technique. Let's say you shorted Cisco at 23 7/8 
+(a tick below 23 15/16). Your initial stop would have been placed at a tick above 24 
+15/16. Now look at the next down arrow (and prior star). Every time the starred 
+area is taken out, you can lower your stop to the down arrow (or latest 3-bar high). 
+The only exception to this rule occurs if a marked 3-bar high (or down arrow) is 
+taken out to the upside. You can clearly see on the Cisco chart that you would have 
+remained short until 3/12, when the 3-bar high of 19 7/16 was broken. Therefore, 
+you would have exited the position at 19 1/2 (a tick above the 19 7/16 3-bar high). 
+That gave you a profit on the trade of 36% (on margin).  
+
+This is an important component of my trading strategy, and there are some 
+additional considerations. I'll continue with this study in my next lesson. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 14 
+
+The 'location' time windows are published daily on the 'Astrikos Data Sheet'. In last 
+week's lesson, I illustrated an effective method of implementing these windows for 
+your short-term stock trading. Using Cisco Systems (CSCO) as the example, you 
+saw how you could have shorted the stock on 3/07, at 23 7/8, placing a protective 
+buy stop at 25.00. This short stayed in effect until the opening (15-minute) bar on 
+3/13, when you would have covered the position at 19 1/2. That gave you a profit on 
+the trade of 36.7% (utilizing the standard 50% stock margin). Today, we'll continue 
+with the Cisco analysis.  
+
+Cisco Systems is a component of the Internet Architecture HOLDRS (Amex:IAH). 
+This sector went into a sell mode (on the Solar Trend Indicator, also found on the 
+Data Sheet) on 2/02, which indicates that you should only work Cisco from the short 
+side. After marking all of the 'confirmed' 3-bar highs on the 15-minute price chart 
+that coincide with a location time window, you're ready to begin trading.  
+
+The next 'confirmed' 3-bar high in Cisco came on 03/15, at 21 3/16. The closing 3-
+bar high occurred in the 12:15 (15-minute) chart, and this coincided with the 12:23 
+location time window. The prior low of 20 5/8 was made at the 11:15 bar. Cisco 
+moved below 20 5/8 at 2:45 that same day. Therefore, you would have been short 
+Cisco at 20 9/16, with the protective buy stop placed just above the 21 3/16 high.  
+
+The next 'confirmed' 3-bar high in Cisco came at 3:45 that same day, at 20 13/16. 
+This high coincided with the 3:51 location time window. At this point, you could 
+lower the protective buy stop on the trade to 20 7/8 (a tick above the 20 13/16 high). 
+That price was subsequently hit on 3/19, at the 3:45 (15-minute) bar. That gave us a 
+loss of 5/16 (or 3.0%) for the trade.  
+
+The next 'confirmed' 3-bar high in Cisco came on 3/20, at 21 7/8. The closing 3-bar 
+high occurred at the 12:00 (15-minute) bar, and this coincided with the 12:03 
+location time window. The prior low could be found at the 11:00 (15-minute) bar, at 
+21 5/16. Cisco moved below that point at 2:00 that same day. Therefore, you would 
+have shorted Cisco again, at 21 1/4 (a tick below the 21 5/16 low), placing the 
+protective buy stop at 21 15/16 (a tick above the 21 7/8 high).  
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The next 'confirmed' 3-bar high in Cisco came on 3/21, at 19 13/16. The closing 3-
+bar high occurred at the 10:30 (15-minute) bar, and this coincided with the 10:32 
+location time window. That high was subsequently taken out at the 2:30 (15-minute) 
+bar that same day. This gave us a profit of 13% for the trade.  
+
+*Remember the definition of a 'confirmed' 3-bar high. That means that a 3-bar high                     
+was made (either closing or intraday), immediately followed by a 3-bar downside 
+reversal.  
+
+If you had utilized this trading strategy in Cisco Systems for the past two weeks, you 
+would have had 3 completed trades. There were two winners, one for 36.7% and the 
+other for 13%. There was also one loser of 3%. I've included a 15-minute chart of 
+Cisco, and marked the 'confirmed' 3-bar highs with a down arrow. I've also placed 
+a star at the prior 3-bar lows...  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 15 
+
+The signs of the zodiac are divided into four groups called triplicities. They 
+represent the four elements of fire, earth, air and water. The fire signs are composed 
+of Aries, Leo and Sagittarius. The earth signs are composed of Taurus, Virgo and 
+Capricorn. The air signs are composed of Gemini, Libra and Aquarius, and the 
+water signs are composed of Cancer, Scorpio and Pisces. Signs of the same element 
+are separated by an angle of 120 degrees. This is commonly known as the trine 
+aspect, and it is thought to exert a positive influence. For example, Aries and Leo 
+are both fire signs, and they are 120 degrees apart in the natural zodiac. It's a good 
+idea to look for correlations in the elements. Keeping this in mind, I've devised an 
+interesting scan, in order to take advantage of the elemental correlation. I call this 
+strategy, the "Elemental Connection".  
+
+I use the bullish (or bearish) engulfing candlestick pattern as the trigger for this 
+study. The bearish engulfing pattern occurs in an uptrend. The key characteristic of 
+this pattern is that a long body completely engulfs the previous session's smaller 
+body. Take a look at the BEA Systems (BEAS) price chart on 3/15 of this year. 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Note that the stock made a 3-bar intraday high (meaning that it traded higher than 
+the prior three sessions) on 3/15, as it opened above the prior day's body. (The body 
+defines the open and close of a trading session. A 'white' body appears when the 
+stock closes higher than the open. A 'dark' body occurs when the stock closes lower 
+than the open). Since BEAS made a 3-bar intraday high on 3/15,it indicated that the 
+stock was in a short-term uptrend. And remember that a bearish engulfing 
+candlestick pattern can only occur during an uptrend.  
+
+BEAS opened at 33 3/4 on 3/14 (the prior day), and it closed at 35 5/16. BEAS 
+opened at 37 1/8 on 3/15, which was higher than the prior day's 'body'. As soon as 
+the stock went below 33 3/4 on 3/15, it qualified as a valid bearish engulfing 
+candlestick pattern.  
+
+Now let's examine how the elements work in this study. The transiting Moon was 
+passing through the sign of Sagittarius (a fire sign) on 3/15, the day of the bearish 
+engulfing candlestick pattern in BEA Systems. Refer now to the time period of the 
+prior fire sign (Leo), and you'll see that the Moon was passing through Leo on 3/06 
+& 3/07. However, BEA Systems didn't make a 3-bar high during that time frame. 
+Therefore, the bearish engulfing candlestick pattern of 3/15 is not deemed 
+significant. Since signs of the same element tend to work well together, I'm looking 
+
+ 
+ 
+ 
+ 
+ 
+ 
+for an elemental correlation that supports that viewpoint. If the 3/06 & 3/07 (Leo) 
+period had related to a 3-bar high in BEAS, then the bearish engulfing pattern of 
+3/15 would have taken on a much greater significance. That's because both time 
+frames would have related to highs, and since the 3/15 high was lower in value than 
+the 3/06-07 high, the bearish engulfing pattern would have provided the 
+necessary trigger for the (short) trade.  
+
+Aries is the fire sign that follows Sagittarius in the natural zodiac. The Moon 
+transited through the sign of Aries on 3/26. Take a look at the BEAS price chart 
+now, and you'll see that the stock made a 3-bar intraday high on 3/26, as it opened 
+above the prior day's body. Note also how this high was lower in value than the 3/15 
+(Sagittarius) high. The 3/23 (prior day) open for BEA Systems was 35 1/2, and it 
+closed that day at 34 7/16. BEAS opened at 36 on 3/26, and when it subsequently 
+dropped below 34 7/16 that same day, it qualified as a valid bearish engulfing 
+candlestick pattern! You could have shorted BEA Systems at 34 3/8 (a tick below the 
+prior day's body), and placed a protective buy stop at 36 1/16 (a tick above the 
+signal day's opening value). Note how this trade met all of the requirements 
+of the 'elemental connection'. I'll get into price objectives for this trade, as well as 
+introducing you to the 'qualities connection' in my next lesson.  
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 16 
+
+BEA Systems (BEAS) gave an "elemental connection" sell signal on March 26th of 
+this year, at 34 3/8. The prior lesson (#15) gave you the basic rules for this trading 
+strategy. However, I'd like to make a correction from that lesson. I wrote in Lesson 
+15, "You could have shorted BEA Systems at 34 3/8 (a tick below the prior day's 
+body), and placed the protective buy stop at 36 1/16 (a tick above the signal day's 
+opening value)." Actually, the protective buy stop should have been placed at 36 
+5/16 (a tick above the signal day's high price). Therefore, the risk on the position 
+was 1 & 15/16 (or 5.6%).Once you've defined your risk on the trade, you can 
+establish the price objective.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+Take a look at the daily price chart for BEA Systems, and you'll notice that the 
+intraday high on March 26th was 36 1/4. Use the difference between that number 
+(plus one tick) and the entry price (34 3/8), in order to determine the price objective 
+for the trade. The difference between those two numbers is 1 15/16 (36.3125-
+34.375=1.9375). Now double that number (1.9375 * 2 = 3.875), and subtract the 
+result from the entry price (34.375-3.875=30.50). That gave you a price objective of 
+30 1/2 for the BEAS short. You can see that the risk-to-reward ratio on the trade 
+was exactly 2 to 1. This trade will always have a 2 to 1 risk-to-reward ratio. 
+Incidentally, BEAS met that price objective two days later, on March 28th.  
+
+Every astrological sign is composed of both an element and a quality. So far, we've 
+been focusing on the "elemental connections" in a stock, but now I want to 
+introduce you to the "quality connection". I'll use the NDX 100 tracking stock (or 
+QQQ) as my example stock for this exercise. The QQQ made a 3-bar high of 69.12 
+on January 24th of this year. The subsequent 3-bar downside reversal took prices 
+down to 63.00, before the Qs rallied to make another 3-bar high on 1/31, at 68.00. 
+The transiting Moon was passing through the sign of Aquarius on January 24th. 
+Aquarius is in the air element, and it has a fixed quality. The qualities are broken 
+down into 3 groupings: 1) cardinal signs (Aries, Cancer, Libra & Capricorn), 2) 
+fixed signs (Taurus, Leo, Scorpio and Aquarius), and 3) mutable signs (Gemini, 
+Virgo, Sagittarius and Pisces).  
+
+Since the QQQ made a confirmed 3-bar high during the lunar transit of a fixed sign 
+(Aquarius), you should check the Qs prices when the Moon next transits through a 
+fixed sign. The Moon was passing through Taurus (which is the next fixed sign after 
+Aquarius) on 1/31. Note that the QQQ made another 3-bar high on that date, which 
+was lower in value than the 1/24 high. The Qs also formed a bearish engulfing 
+candlestick pattern on that same day! The intraday high on 1/31 was 68.00, and the 
+bearish engulfing candlestick pattern was confirmed when prices slipped down to 
+66.79. That meant the risk on the trade was 1.22 points (or 1.8%). Take the 
+difference between those two numbers (68.01-66.79=1.22), and double the resulting 
+number (1.22 * 2 = 2.44). Now subtract that number (2.44) from the entry price of 
+66.79 (66.79-2.44=64.35). That gave you a price objective of 64.35 for the QQQ 
+short. The Qs met that price objective on the same day (1/31). The "quality 
+connection" trade follows the exact same procedure as the “lemental connection" 
+trade. The only difference is in the highlighted dates.  
+
+The 'elemental and quality connection" trades are a particularly attractive trading 
+strategy, since the risk-to-reward ratio is fixed at 2 to 1. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 17 
+
+The Fibonacci series is formed by starting with 0+1, and then adding the latest two 
+numbers to get the next one: 0+1=1, 1+1=2, 1=2=3, 2+3=5, 3+5=8, 5+8=13, 8+13=21, 
+etc. If you take the ratio of two successive numbers in Fibonacci's series 
+(1,1,2,3,5,8,13,21...), and then divide each by the number before it, you'll find the 
+following series of numbers: 1/1=1, 2/1=2, 3/2=1.5, 5/3=1.666, 8/5=1.6, 13/8=1.625, 
+21/13=1.615, 34/21=1.619, 55/34=1.618. The ratio settles down to a particular value, 
+which is called the 'Golden Ratio' or the 'Golden Number'. It has a value of 1.618.  
+
+The 'Golden Ratio' can be effectively used to highlight significant turning points in a 
+stock. I'll use the Internet HOLDRS (or Amex:HHH) as my example for this 
+exercise. Bring up a daily price chart of HHH, and make a note of all the 
+'confirmed' 3-bar highs and lows for this year. Remember that a 'confirmed' 3-bar 
+high or low is always followed immediately by a 3-bar reversal. For your 
+convenience, I've marked all of those points in the accompanying chart. 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+The next step is to count the number of bars between the two extreme points. For 
+example, HHH had an intraday 'confirmed' 3-bar low of 35.00 on 1/03 of this year. 
+Note how that low was immediately followed by a 3-bar upside reversal. It doesn't 
+make a 'confirmed' 3-bar high until January 24th. Once that 3-bar high has been 
+'confirmed', you should count the number of price bars between the two extreme 
+points (which is 14). If you multiply 14 by the 'Golden Number' (or 1.618), the 
+resulting number is 22.65. Refer to the right hand side of the chart, and you'll see 
+the math has been done on the numbers 2 through 14.  
+
+The midpoint of the number 14 is 7. If the number of bars between the two extreme 
+points is an odd number, always round it up to the next even number. For example, 
+if the two extremes were separated by 13 price bars, you would round it up to 14, in 
+order to determine the midpoint date. Now take a look at the HHH price chart, and 
+find the midpoint between the 3-bar low on 1/03 and the 3-bar high on 1/24. The 
+answer is 1/12. Once you have this midpoint date, you can project possible future 
+turning points.  
+
+You project future turning points by counting the number of price bars between 
+two extreme points, and then multiplying that number by the 'Golden Number'. 
+We've already determined that the two extremes (1/03 and 1/24) were separated by 
+14 price bars, which led to 22.65 (14 multiplied by 1.618=22.65). Starting at the 
+midpoint date (1/12), count 22 to 23 bars into the future. That takes you to 2/14 (the 
+22nd bar from 1/12) and 2/15 (the 23rd bar from 1/12).  
+
+ 
+ 
+ 
+ 
+ 
+Look at the actual prices for HHH, and you'll see that the stock was still in a 
+downtrend on 2/14. That means that the last 'confirmed' point related to a 3-bar 
+high (on 1/24). In order for a stock (that is in a downtrend) to switch into a short-
+term uptrend, it must first make a 3-bar upside reversal. I'll continue with this 
+study in my next lesson. 
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 18 
+
+The "Golden Ratio" highlights significant turning points in a stock. In the last 
+lesson, I showed you how to project those points, using the Internet HOLDRS 
+(Amex:HHH) as my example for the exercise. By the end of that lesson, we had 
+projected two dates (2/14/01 and 2/15/01) as possible turning points. Indeed, 2/15 did 
+relate to a 'confirmed' 3-bar high for the stock, but that still wasn't enough to 
+classify it as a "Golden Ratio" turning point. That's because you always need at 
+least two projections to converge on a specific date. 
+Today, I'll illustrate this concept.  
+
+I've posted a daily price chart of Diamond Offshore Drilling (DO), and marked the 
+key points on the chart. There was a high of 45.65 on 3/09, and a low of 40.30 on 
+3/16. That's a difference of 5 trading days, with the midpoint of the downmove 
+falling on 3/13. If you don't recall the basics for this strategy, please refer to the 
+prior lesson. From that midpoint you should project ahead 8 to 9 trading days 
+(5*1.618=8.09). That will take you to the dates of 3/23 and 3/26. 
+
+ 
+ 
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The 40.30 low on 3/16 was confirmed on 3/20, when DO made a 3-bar upside 
+reversal, which took prices to an intraday high of 41.98. In turn, that high was 
+confirmed on 3/22, when Diamond Offshore made a 3-bar downside reversal, which 
+sent prices down to a low of 39.70. This choppy period continued as DO confirmed 
+that 39.70 low by making a 3-bar upside reversal, which saw prices hitting a high of 
+42.18 on 3/26. Look for stocks to chop around like this when it's time for a major 
+move.  
+
+There was a difference of 2 trading days between the low of 3/16 (40.30) and the 
+high of 3/20 (41.98), with the midpoint of that upmove falling on 3/19. From that 
+midpoint you should project ahead 3 to 4 trading days (2*1.618=3.24). That will 
+take you to the dates of 3/22 and 3/23.  
+
+There was a difference of 2 trading days between the high of 3/20 (41.98) and the 
+low of 3/22 (39.70), with the midpoint of that downmove falling on 3/21. From that 
+midpoint you should project ahead 3 to 4 trading days (2*1.618=3.24). That will 
+take you to the dates of 3/26 and 3/27.  
+
+If you review these projected points, you'll see that two dates had more than one 
+projection: 3/23 and 3/26. As you can see, 3/23 did not relate to a 'confirmed' 3-bar 
+high or low, but 3/26 did correspond to a 'confirmed' 3-bar high! Therefore, 3/26 
+can be classified as a true "Golden Ratio" turning point. You should short this stock 
+on the first 3-bar downside reversal (which was at 40.09).  
+
+ 
+ 
+ 
+ 
+ 
+ 
+When your work reveals a "Golden Ratio" turning point, you can then establish a 
+price objective for the move. Note that the initial price move saw prices coming off a 
+high of 45.65 on 3/09, and moving to a low of 40.30 on 3/16. Those two price levels 
+are the key to establishing the price target for the move. During the choppy period 
+that followed that initial downmove, prices never closed lower than 40.30 or higher 
+than 45.65. The difference in value between the 3/09 high of 45.65 and the 3/16 low 
+of 40.30 is 5.35 points. 
+
+Since the double projection date of 3/26 corresponded to a 3-bar high, you would 
+simply subtract 5.35 points from the high of that date. The high on 3/26 was 42.18, 
+so the price objective for the subsequent downmove was 36.83 (42.18-5.35=36.83). 
+Take a look at the daily price chart for Diamond Offshore now. Prices went down to 
+a low of 36.60 (on 4/03), before moving up again. That gave you a profit of more 
+than 16% (based on the standard stock margin)in just 4 trading days.  
+
+Cyclical (or astrological) analysis is always trying to find the true turning points. In 
+my next lesson, I'll introduce you to the concept of Lunar Birthdays. 
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 19 
+
+The Chinese Lunar New Year is the longest chronological record in history, dating 
+back to 2600 BC, when the Emperor Huang Ti introduced the first cycle of the 
+zodiac. Like the western calendar, the Chinese lunar calendar is an annual cycle, 
+with the start of the lunar year being based on the cycles of the moon. This is why 
+the beginning of the lunar year can occur anywhere between late January and the 
+middle of February. All of us have a lunar birthday as well as a solar one. For 
+example, if you were born on April 25th of this year, your lunar birthday would 
+actually be on April 3rd. I've found an interesting tendency of turning points can 
+show up in stocks when comparing these solar & lunar days.  
+
+Take a look at the daily price chart of Microsoft (MSFT) below. The most recent 
+'confirmed' 3-bar low in that stock occurred on April 4th of this year. That date 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+corresponded to March 11th in the Chinese lunar calendar. March 11th occurred on 
+a weekend, but note that Microsoft formed a 'confirmed' 3-bar low (both closing 
+and intraday) on the following Monday, March 12th. 
+
+Working backwards, you can see that Microsoft made a 'confirmed' 3-bar high on 
+March 27th. Remember that a 'confirmed' 3-bar high is simply a 3-bar high 
+immediately followed by a 3-bar downside reversal. March 27th (the solar date) 
+corresponded to March 3rd in the Chinese lunar calendar. March 3rd fell on a 
+weekend, but you can see that Microsoft formed a ''confirmed' 3-bar closing low on 
+the prior Friday (March 2nd). When comparing the solar and lunar dates, it doesn't 
+really matter whether the stock is making a high or low on those dates. We're 
+looking for turning points, and those turning points are best expressed as 3-bar 
+(upside or downside) reversals.  
+
+Once again working backwards, you can see that Microsoft made a 'confirmed' 3-
+bar low on March 21st of this year. That date corresponded to February 27th in the 
+Chinese lunar calendar. Note that Microsoft made a 'confirmed' 3-bar intraday high 
+on February 27th.  
+
+This turning point correlation between solar and lunar dates can be a great timing 
+tool for the short-term trader. For your convenience, I'll show you 3-months (the 
+last two, as well as the next month) of this data. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                             Solar Date:    Lunar Date: 
+
+                                 2/25                2/03 
+                                 2/26                2/04 
+                                 2/27                2/05 
+                                 2/28                2/06 
+                                 3/01                2/07 
+                                 3/02                2/08 
+                                 3/03                2/09 
+                                 3/04                2/10 
+                                 3/05                2/11 
+                                 3/06                2/12 
+                                 3/07                2/13 
+                                 3/08                2/14 
+                                 3/09                2/15 
+                                 3/10                2/16 
+                                 3/11                2/17 
+                                 3/12                2/18 
+                                 3/13                2/19 
+                                 3/14                2/20 
+                                 3/15                2/21 
+                                 3/16                2/22 
+                                 3/17                2/23 
+                                 3/18                2/24 
+                                 3/19                2/25 
+                                 3/20                2/26 
+                                 3/21                2/27 
+                                 3/22                2/28 
+                                 3/23                2/29      Note that the lunar calendar always  
+                                 3/24                2/30           has 29 or 30 days in a month 
+                                 3/25                3/01          
+                                 3/26                3/02 
+                                 3/27                3/03 
+                                 3/28                3/04 
+                                 3/29                3/05 
+                                 3/30                3/06 
+                                 3/31                3/07 
+                                 4/01                3/08 
+                                 4/02                3/09 
+                                 4/03                3/10 
+                                 4/04                3/11 
+                                 4/05                3/12 
+                                 4/06                3/13 
+                                 4/07                3/14 
+                                 4/08                3/15 
+                                 4/09                3/16 
+
+ 
+                                 4/10                3/17 
+                                 4/11                3/18 
+                                 4/12                3/19 
+                                 4/13                3/20 
+                                 4/14                3/21 
+                                 4/15                3/22 
+                                 4/16                3/23 
+                                 4/17                3/24 
+                                 4/18                3/25 
+                                 4/19                3/26 
+                                 4/20                3/27 
+                                 4/21                3/28 
+                                 4/22                3/29 
+                                 4/23                4/01 
+                                 4/24                4/02 
+                                 4/25                4/03 
+                                 4/26                4/04 
+                                 4/27                4/05 
+                                 4/28                4/06 
+                                 4/29                4/07 
+                                 4/30                4/08 
+                                 5/01                4/09 
+                                 5/02                4/10 
+                                 5/03                4/11 
+                                 5/04                4/12 
+                                 5/05                4/13 
+                                 5/06                4/14 
+                                 5/07                4/15 
+                                 5/08                4/16 
+                                 5/09                4/17 
+                                 5/10                4/18 
+                                 5/11                4/19 
+                                 5/12                4/20 
+                                 5/13                4/21 
+                                 5/14                4/22 
+                                 5/15                4/23 
+                                 5/16                4/24 
+                                 5/17                4/25 
+                                 5/18                4/26 
+                                 5/19                4/27 
+                                 5/20                4/28 
+                                 5/21                4/29 
+                                 5/22                4/30 
+
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 20 
+
+Neptune is the outermost of the four gas giants: Jupiter, Saturn, Uranus and 
+Neptune. It (more than any other planet) tends to exert a long-term influence on 
+stock prices, especially when it corresponds to turning points. I use the transiting 
+Sun's aspects to transiting Neptune as a means of tracking Neptune's influence on 
+stock prices.  
+
+The aspects I utilize for this analysis are based on the 30-degree division of the 360-
+degree circle. For your convenience, I'll list the dates for these Sun-Neptune aspects 
+over the past several months:  
+
+                     07/27/00 Sun opposition (180 degrees) Neptune 
+                     08/27/00 Sun quincunx (210 degrees) Neptune 
+                     09/26/00 Sun trine (240 degrees) Neptune 
+                     10/26/00 Sun square (270 degrees) Neptune 
+                     11/26/00 Sun sextile (300 degrees) Neptune 
+                     12/26/00 Sun semi-sextile (330 degrees) Neptune 
+                     01/26/01 Sun conjunct (0 degrees) Neptune 
+                     02/25/01 Sun semi-sextile (30 degrees) Neptune 
+                     03/28/01 Sun sextile (60 degrees) Neptune 
+                     04/28/01 Sun square (90 degrees) Neptune 
+                     05/29/01 Sun trine (120 degrees) Neptune 
+
+Intel (INTC) is the most heavily-weighted stock in the Semiconductor HOLDRS 
+(Amex:SMH). For this trade to be triggered, INTC and SMH must both make 
+'confirmed' 3-bar highs or lows within just one trading day of a Sun-Neptune 
+aspect. A 3-bar high or low is only 'confirmed' if it is immediately followed by a 3-
+bar reversal. For example, both Intel and the Semiconductor HOLDRS formed 3-
+bar highs during the 8/27/00 Sun-Neptune aspect. They proceeded to 'confirm' those 
+highs by following through with 3-bar downside reversals. That reversal point 
+would also act as the sell signal for Intel. The 3-bar reversal point for Intel was 
+72.75, but prices gapped lower on 9/05/00, and opened at 71.06. Therefore, you 
+would have been short Intel at 71.06 (on 9/05), placing the protective buy stop just 
+above the high of that cycle (or 75.82). That's a risk of 4.76 points (75.82-
+71.06=4.76).  
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+If this trade is triggered, it tends to exert a long-term influence on the value of the 
+stock. Since the risk on the 9/05 short position was 4.76 points, you could triple that 
+number to establish the long-term price objective on the trade. That made the 
+downside objective 56.78 (4.76*3=14.28; 71.06-14.28=56.78). Intel hit that objective 
+on 9/15/00, for a 20% profit on the investment.  
+
+Intel and the Semiconductor HOLDRS both made 3-bar lows within just one 
+trading day of the 10/26/00 Sun-Neptune aspect. They proceeded to 'confirm' those 
+lows by following through with 3-bar upside reversals. That reversal point would 
+also act as the buy signal for Intel. The 3-bar reversal point for Intel was 45.01, but 
+prices gapped higher on 10/27/00, and opened at 45.87. Therefore, you would have 
+been long Intel at 45.87, placing the protective sell stop just below the low of the 
+cycle (or 41.11). That's a risk of 4.76 points (45.87-41.11=4.76). The upside price 
+objective on the trade was 60.15 (4.76*3=14.28; 45.87+14.28=60.15). However, you 
+would have been stopped out on 11/09/00, for a loss of 10% on the investment.  
+
+Intel and the Semiconductor HOLDRS both made 3-bar highs within just one 
+trading day of the 11/26/00 Sun-Neptune aspect. They proceeded to 'confirm' those 
+highs by following through with 3-bar downside reversals. The reversal point for 
+Intel was 41.99, which occurred on 11/29/00. Therefore, you would have been short 
+Intel at 41.99, placing the protective buy stop at 46.76 (just above the high of that 
+cycle). That's a risk of 4.77 points (46.76-41.99=4.77). The downside price objective 
+for the trade was 27.68 (4.77*3=14.31; 41.99-14.31=27.68). Intel hit that objective on 
+3/01/01, for a profit of 34% on the investment!  
+
+Of course you'd have to exercise a sound money management strategy for this trade, 
+but the risk-to-reward ratio of 3 to 1 makes this a particularly attractive long-term 
+investment vehicle.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 21 
+
+Qualities show the way a sign's energy flows. In other words, they describe how the 
+sign will act. The cardinal signs (Aries, Cancer, Libra & Capricorn) correspond to 
+action in the here and now. The fixed signs (Taurus, Leo, Scorpio and Aquarius) are 
+determined to carry out what the cardinal signs start, and are very future 
+oriented. The mutable signs (Gemini, Virgo, Sagittarius and Pisces) are mental in 
+nature, and signify change (or transformation).  
+
+The Moon passes through the entire zodiac each month, giving you the opportunity 
+to observe how a stock responds to each of the three qualities. Since the mutable 
+signs are mental, they not only symbolize change, but are causal in nature as well. 
+It's the thoughts and ideas of the mutable signs that cause the cardinal signs to act. 
+Therefore, it's a good idea to monitor any changes that do take place (in a stock) 
+when the Moon transits through a mutable sign. For your convenience, here's a list 
+of the lunar transits through mutable signs (during market hours) for this year: 
+
+                     1/12/01 Moon in Virgo 
+                     1/19/01 Moon in Sagittarius 
+                     1/26/01 Moon in Pisces 
+                     2/02/01 Moon in Gemini 
+                     2/09/01 Moon in Virgo 
+                     2/15-16 Moon in Sagittarius 
+                     2/23/01 Moon in Pisces 
+                     3/02/01 Moon in Gemini 
+                     3/08-09 Moon in Virgo 
+                     3/14-16 Moon in Sagittarius 
+                     3/22-23 Moon in Pisces 
+                     3/29-30 Moon in Gemini 
+                     4/04-06 Moon in Virgo 
+                     4/11-12 Moon in Sagittarius 
+                     4/18-20 Moon in Pisces 
+                     4/25-27 Moon in Gemini 
+                     5/02-03 Moon in Virgo 
+                     5/08-10 Moon in Sagittarius 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+I've marked the daily price chart (with an up or down arrow) of the Philadelphia 
+Bank Index with the dates that corresponded to actual trend changes. The definition 
+of a trend change is simply that a stock makes a 3-bar high or low (closing or 
+intraday) during the mutable period, and that it's immediately followed by a 3-bar 
+reversal of trend. For example, BKX made an intraday low of 894.75 on 1/19, when 
+the Moon was transiting through the sign of Sagittarius (see list above). This was 
+immediately followed by a 3-bar upside reversal. If you've marked a low in the 
+mutable cycle (such as the one on 1/19), the buy point is determined by the prior 3-
+bar high. I've marked the accompanying BKX chart with + signs to indicate the 
+prior 3-bar highs and lows. Remember to always look back from the arrow dates to 
+find the corresponding 3-bar highs and lows (+ signs). The prior 3-bar high for the 
+1/19 BKX low occurred on 1/11, at 938.65. However, a break above that price is not 
+your buy point! The actual buy signal for the mutable strategy is always determined 
+through candlestick analysis.  
+
+ The thick part of the candlestick line is called the body. It represents the range 
+between the day's opening and closing prices. When the body is black or filled in, it 
+means the close of the session was lower than the open. If the body is white or 
+empty, it means the close was higher than the open. The thin lines above and below 
+the body are called shadows. These shadows represent the day's price extremes. 
+Look at the BKX chart, and you can see that the actual intraday low (894.75) on 
+1/19 is represented by the thin line below the body. But we're only interested in the 
+highs and lows of the body for this particular trading method. I'll complete this 
+study on the 'mutable factor' in the next lesson. 
+
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 22 
+
+I marked the daily price chart of the Philadelphia Bank Index (BKX) with the dates 
+that corresponded to actual trend changes in the previous lesson. The definition of a 
+trend change is simply that the BKX make a 3-bar high or low (closing or intraday) 
+during the mutable period, and that it's immediately followed by a 3-bar reversal of 
+trend. Those trend change dates were marked by up or down arrows (see previous 
+lesson for chart). Remember to always look back in time from those dates to find the 
+prior 3-bar highs or lows. I marked those dates with + signs. For example, the prior 
+3-bar high for the 1/19/01 BKX low occurred on 1/11, at 938.65. 
+However, a break of that high is not your buy point! The actual buy (or sell) signals 
+for the 'mutable factor' is always determined through candlestick analysis.  
+
+The thick part of the candlestick line is called the body. It represents the range 
+between the day's opening and closing prices. We're only interested in the highs and 
+lows of the body for this particular trading strategy. Let's get back to that 1/19 low 
+in the BKX. The prior confirmed 3-bar high occurred on 1/11, at 938.65 (intraday). 
+However, the body high on that date was only 931.67 (the closing price). Therefore, 
+you could place a buy stop order at a tick above that price for your buy signal. That 
+means you'd be buying the BKX at 931.68. Now check the body low that was made 
+at the cycle low. That was 902.75 (the close) on 1/19. Therefore, you could place the 
+protective sell stop at a tick below that point (or 902.74).  
+
+Here's how to determine the price objective for the trade. Take the point difference 
+between the entry price and the protective stop price, and add the resulting number 
+to the entry price. The entry price was 931.68, and the stop price was 902.74, which 
+is a difference of 28.94 points (931.68 - 902.74 = 28.94). Now add 28.94 to the entry 
+price of 931.68, and you have the price target for the trade (931.68 + 28.94 = 960.62). 
+Note that BKX hit the entry price of 931.68 on 1/24, and achieved the price target of 
+960.62 on 1/29 (3 trading days later). That brings up the last rule for this system: if 
+the price target is not hit within 5 trading days, simply close out the trade. Utilizing 
+the standard 50% stock margin, this 3-day trade would have yielded a profit of 
+6.20%.  
+
+Now that you understand the mechanics of the system, I'll simply list the subsequent 
+trades. There was a short trade triggered on 3/12/01, at 873.59, with the protective 
+
+                                                                     
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+buy stop placed at 910.42. That yielded a profit of 8.40% for the 2-day trade. The 
+next trade was a buy on 4/11 at 859.89, with the protective sell stop placed at 
+808.25. The price target was not hit during the 5-trading day deadline, so you would 
+have exited at the close on the 5th trading day (or 4/19). This 5-day trade yielded a 
+profit of 8.40%. The last trade was a buy on 4/30, at 896.32, with the protective sell 
+stop placed at 869.29. The price target was not hit during the 5-trading day 
+deadline, so you would have exited at the close on the 5th trading day (or 5/07). This 
+5-day trade resulted in a minor loss of 9/10ths of 1.0%.  
+
+I've illustrated various trading cycles over these past 22 lessons. In subsequent 
+lessons, I'll show you how to combine these cycles to create even better trading 
+strategies.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 23 
+
+I talked about the mutable factor in the last two lessons. The mutable signs (Gemini, 
+Virgo, Sagittarius and Pisces) cause the cardinal signs (Cancer, Libra, Capricorn 
+and Aries) to act, and the fixed signs (Leo, Scorpio, Aquarius and Taurus) have the 
+determination to follow through on the actions of the cardinal signs. Trend changes 
+(in stocks) that occur during the lunar transits of the mutable signs should always 
+be given greater emphasis. This is due to the causal nature of the mutable signs. 
+Short-term trading defines a trend change as a 3-bar high (or low) in prices, 
+immediately followed by a 3-bar reversal. However, it's not always necessary to wait 
+for that 3-bar reversal. Through the use of candlestick analysis, you can enter the 
+trade before the actual reversal takes place. We'll explore this theme today, using 
+the NDX 100 tracking stock (QQQ) as the trading example.  
+
+The thick part of the candlestick line is called the body. It represents the range 
+between the day's opening and closing prices. When the body is black or filled in, it 
+means that the close of the session was lower than the open. If the body is white or 
+empty, it means that the close was higher than the open. The thin lines above and 
+below the body are called shadows. These shadows represent the day's price 
+extremes. The engulfing pattern consists of two bodies of opposite color. The second 
+day's body completely engulfs the prior day's body. The shadows are not considered 
+in this pattern. 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+If you look at the accompanying price chart, you'll see that I marked the QQQ 3-bar high of 
+March 15th. The Moon was passing (during actual trading hours in New York) through the sign 
+of Sagittarius (a mutable sign) from March 14th to March 16th. The QQQ made an intraday 3-
+bar high of 45.31on 3/15, and then formed a bearish engulfing candlestick pattern. The prior day 
+(3/14) had an opening price of 42.70 and a closing price of 43.75, forming a white body. As soon as 
+prices dropped a tick under 42.70 on 3/15, the bearish engulfing pattern was in effect, and you 
+should have been short the stock. The protective buy stop could be placed at a tick above the 
+intraday high of 45.31, giving you a risk factor of 2.63 points for the trade (45.32-42.69=2.63).  
+
+Take profits on half of the position at 40.06 (42.69-2.63=40.06). That objective was reached on 
+March 21st. Then double the risk factor (or 2.63 points), in order to determine the price target for 
+the remaining half of the trade. That equates to 37.43 (2.63*2=5.26; 42.69-5.26=37.43). That price 
+objective was hit on April 2nd.  
+
+I won't bother to detail the next two examples on the QQQ chart. However, I will give you the 
+numbers so that you can check your own calculations. 1) There was a buy on 4/25 at 45.11, with 
+the protective sell stop placed at 43.09. You would have taken 1/2 profits at 47.13 on 4/30, and the 
+remaining half would have been covered at 49.15 on 5/02. 2) There was a buy on 5/16 at 45.31 
+(note the skipped day, in order to trade the two bodies of opposite color), with the protective sell 
+stop placed at 44.09. You could have taken 1/2 profit on 5/16 at 46.53, and the remaining half 
+would have been covered on 5/17, at 47.75.  
+
+ 
+ 
+ 
+ 
+ 
+ 
+There will be no lesson next Wednesday (5/30) due to travel plans. The lessons will resume on the 
+following Wednesday, June 6th, when we'll explore the 4-phase lunar cycle in depth.  
+
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 24 
+
+The Sun and Moon always travel counterclockwise around the chart circle through 
+the signs of the zodiac. The Moon travels faster than the Sun, so in about 28 days it 
+will go from New Moon (conjunct the Sun) all the way around the chart and return 
+again to the Sun. It can never be more than 180 degrees from the Sun. It reaches 
+this point exactly half-way around the chart, and this is called the Full Moon. When 
+it is going through the first half of the cycle toward the Full Moon, it is called 
+waxing. When it is going from Full Moon back toward the Sun, it is called waning. 
+During the entire cycle from conjunction to conjunction, the Moon goes through 4 
+major phases with the Sun: New (0 degrees), First Quarter (90 degrees), Full (180 
+degrees) and Last Quarter (270 degrees). For the next couple of lessons, we’ll be 
+conducting a detailed analysis of this 4-phase lunar cycle, and its influence on stock 
+prices.  
+
+Think of the astrological sign as the projector and the decanate as the receiver. Each 
+sign is divided into three equal parts of 10 degrees each (called decanates). The 
+duad, the 2 ½ degree divisions of the decanate, shows the daily experiences that will 
+help in the development of the sign’s projection. Therefore, we can conclude that 
+the duads of the 4-phase lunar cycle are a highly significant aspect of this cycle. 
+Let’s take a look now at the 4-phase lunar cycle, in conjunction with the price 
+activity of two of the major averages (SPY and QQQ).  
+
+The Moon formed a conjunction aspect (0 degrees) with the Sun on January 24th of 
+this year. The Sun and Moon were at 4 degrees, 36 minutes and 51 seconds of 
+Aquarius at the time of this conjunction, which corresponded to a duad in the sign 
+of Pisces. Two conclusions can be drawn from this information: 1) January 
+24th (the actual date of the phase) is a potential turn date and 2) the date (or dates) 
+when the transiting Moon is in Pisces (the sign of the duad) is a potential turn date. 
+Now take a look at the daily price chart for the NDX 100 tracking stock (QQQ). 
+Prices made an intraday 3-bar high of 69.125 on 1/24, the date of the conjunction. 
+
+ 
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+I would accept either a 3-bar intraday high or a 3-bar closing high as valid (the 
+same is true for the lows). The Qs then proceeded to ‘confirm’ that high by making 
+an immediate 3-bar downside reversal. Once a high (or low) is ‘confirmed’, it 
+becomes a major short-term resistance (or support) level. Let’s go over this one 
+more time, just to be sure you understand the rules. The QQQ made a major short-
+term high on 1/24. That’s because 1/24 was the actual date of the phase (New Moon), 
+and prices ‘confirmed’ that high by making an immediate 3-bar downside reversal. 
+Once a phase or duad date is ‘confirmed’ as a major short-term high, it’s an open 
+invitation to go long the stock if that point should be subsequently broken!  
+Don’t forget the duad point. The Moon transited through the sign of Pisces (the 
+duad of the 1/24 New Moon) on 1/26. Only use those lunar transits that occur during 
+actual market hours (9:30 am to 4:15 pm; New York time). You can see that the 
+QQQ made an intraday 3-bar low of 63.00 on 1/26 (the day of the duad), and that 
+this low was ‘confirmed’ by an immediate 3-bar upside reversal. Now you have two 
+key points: 1) a major short-term high of 69.125 and 2) a major short-term low of 
+63.00. The Qs will be a buy above 69.125 and a short under 63.00. I urge you to go 
+over this lesson before the next one begins. The and the results are very good. I’ll 
+continue with this study next week. 
+
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 25 
+
+There are two potential turn dates associated with the 4-phase lunar cycle: 1) the 
+actual day on which the phase becomes exact, and 2) the date (or dates) when the 
+transiting Moon is in the signs of the duads. The New Moon has only one duad, as 
+the Sun and Moon are conjunct (0 degrees). However, the other three phases 
+each contain two duads (one for the Sun and one for the Moon). For example, 
+February 1st of this year was the date of the 1st Quarter phase. The Sun was 
+positioned at 12 degrees and 46 minutes of Aquarius at the time the phase became 
+exact, and the Moon was at 12 degrees and 46 minutes of Taurus. Therefore, the 
+duad of the Sun was in the sign of Cancer, and the duad of the Moon was located in 
+Libra. I’ve included a table below, which shows how to convert any sign placement 
+to its proper duad... 
+
+ 
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+If you refer back to the last lesson, you’ll see that the New Moon of 1/24/01 
+correlated to a 3-bar high of 69.13 in the price of the NDX 100 tracking stock 
+(QQQ). The day of the duad for that New Moon was 1/26, and that related to a 3-
+bar low of 63.00 for the Qs. Remember that a 3-bar high or low is only confirmed if 
+immediately followed by a 3-bar price reversal. However, once confirmed it 
+becomes a major short-term resistance or support level. Note that on February 2nd 
+the QQQ went under that 63.00 duad low. That was a powerful short-term sell 
+signal.  In fact, the Qs remained in a sell mode until April 18th, when you would have 
+reversed and gone long at 43.84. That equates to a profit of 60.8%, based on using 
+the standard 50% margin. Here’s what’s even more impressive than that 
+performance; literally all of the important turning points were correlated to a lunar 
+phase or duad date. That means that you were consistently lowering the resistance 
+level (or buy point) for the stock. Take a look at the daily price chart of the QQQ, 
+and I’ll list the correlated dates since the beginning of this year: 
+
+                          1/24 High at 69.13 
+                          1/26 Low at 63.00  
+                          2/14 Low at 54.13 (prices broke under 63.00 on 2/01, giving a sell). 
+                          2/15 High at 60.49 (lower the buy point to 60.50) 
+                          3/02 Low at 45.65 
+                          3/06 High at 50.66 (lower the buy point to 50.67) 
+                          3/12 Low at 41.80 
+                          3/15 High at 45.32 (lower the buy point to 45.33) 
+                          3/22 Low at 39.49 
+                          3/23 High at 43.83 (lower the buy point to 43.84) 
+                          4/04 Low at 33.60 
+
+  4/17 Low at 39.90 (the next day prices went above the 3/23 High of                                
+43.83  issuing a buy signal). 
+
+                          4/25 Low at 43.10 (raise the sell point to 43.09) 
+                          5/02 High at 49.40 
+                          5/16 Low at 44.06 (raise the sell point to 44.05) 
+                          5/22 High at 51.95 
+                          5/30 Low at 44.08 (there's a possible duad low of 44.23 on 6/12, 
+                          but it hasn't been confirmed yet). 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+                                                      
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson  26 
+
+Intermarket analysis is the comparison of the price action of one market to another. 
+The most widely endorsed use of intermarket analysis hails from the Dow Theory, 
+whereby the movement of the Dow Jones Industrial Average is compared with the 
+Dow Jones Transportation Average. The theory holds that if both averages are 
+trending higher, the investor should conclude that the underlying fundamentals 
+driving the stock market are sound, and that the trend of the market is up. When 
+one of the averages begin to diverge; for example, one average trends to higher 
+highs, while the other average fails to make a higher high, a warning is signaled. 
+The key point is that intermarket analysis can aid the investor in determining the 
+trend of the market, as well as alert the investor to a potential trend reversal.  
+The 3-bar reversal technique is an important tool I use for examining the short-term 
+cyclical characteristics of a stock or futures contract. A confirmed 3-bar high or low 
+defines the highs (or lows), but it is vital to remember that a confirmed high (or low) 
+in a stock can only occur when there has been an immediate 3-bar price reversal 
+off that 3-bar high (or low). For example, the S&P 500 tracking stock (SPY) made a 
+3-bar high of 129.23 on June 5th of this year. This means that on June 5th, the SPY 
+made a higher intraday high than it had on the previous three trading days. That 
+high of 129.23 was confirmed as a major high when it was followed by an 
+immediate 3-bar price reversal. The actual day of the price reversal was June 8th. 
+On that day the SPY went lower intraday than it had in the previous three trading 
+sessions.  You’ll find a chart of the S&P 500 tracking stock (SPY) and the NDX 100 
+tracking stock (QQQ) posted below. Note that I’ve marked all of the confirmed 3-
+bar highs and lows for both stocks. When conducting an intermarket analysis 
+between two stocks, it’s important that they perform in relatively the same manner. 
+A quick look at the accompanying daily price chart shows that the SPY and QQQ 
+are good candidates for intermarket divergence analysis... 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+The QQQ made a confirmed 3-bar high of 69.13 on 1/24 of this year, which was 
+followed by a confirmed  3-bar low of 63.00 on 1/26. This, in turn, led to another 
+confirmed 3-bar high of 67.99 on 1/31. While the QQQ was busy forming these 
+highs and low during this period, the SPY only made one confirmed 3-bar high 
+of 138.70 on 1/31. Does this mean we should just go on, and not pay attention to this 
+time frame? The answer to that question is no! In intermarket divergence analysis, 
+if one of the stocks makes a confirmed 3-bar high or low, you need to carefully 
+check the other stock's price performance during that same period. The SPY made 
+a 3-bar high of 137.31 on 1/24, which was the same day QQQ hit a 3-bar high of 
+69.13. The SPY followed this with a low of 134.43 on 1/26, which was the same day 
+the QQQ made its 3-bar low of 63.00. The SPY was only able to achieve a 2-bar 
+downside price reversal, so you can see that the 1/24 high of 137.31 and the 1/26 
+low of 134.43 are not marked on the accompanying chart. I'll show you how to deal 
+with this type of situation, as well as completing the divergence analysis between 
+these two stocks, in the next lesson. 
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+SECRETS OF FINANCIAL ASTROLOGY 
+By  Kenneth Min 
+
+Lesson 27 
+
+It’s very important to compare the right stocks (or futures contracts) when scanning 
+for divergences. The S&P 500 tracking stock (SPY) and the NDX 100 tracking stock 
+(QQQ) have a long history of moving in synch with each other. Of course there are 
+periods when they diverge from that norm, but it’s precisely at those times that 
+we (the investors) have the greatest opportunities for profit. We finished off last 
+week’s lesson by examining the 1/24 to 1/31 time frame between the SPY and QQQ. 
+The QQQ made a confirmed 3-bar high of 69.13 on 1/24, a confirmed 3-bar low of 
+63.00 on 1/26 and a 3-bar high of 67.99 on 1/31 (see last week’s chart). During that 
+same period the SPY only managed to form a 3-bar high on 1/31. However, you 
+shouldn’t necessarily disregard this time frame, because the SPY did make a 2-bar 
+reversal on 1/26! When two stocks historically move in synch, I will accept a 2-bar 
+reversal from one of them during periods of congestion. A 2-bar reversal simply 
+means that the stock went lower than the prior 2-days’ lows. The SPY and QQQ 
+both made 3-bar highs on 1/24. Note that the SPY’s subsequent 2-bar low of 134.43 
+occurred on the exact same day (1/26) as the QQQ’s 3-bar low of 63.00. The SPY 
+then proceeded to move above its 1/24 high, while the Qs fell short of its 1/24 high. 
+This price action was signaling the very real possibility of a negative divergence 
+between these two stocks. All that was needed to confirm that divergence was a 
+lower low for both stocks (on the same day). On 2/01 they both dropped under the 
+prior days’ (1/31) lows, and this confirmed the negative divergence. Check out the 
+daily price chart from the previous lesson, and you can see how quickly prices fell 
+for both of these stocks.  
+
+The next divergence period occurred between 3/22 and 4/04 of this year. I won’t 
+detail every high and low price for this time frame, but you can easily see how the 
+SPY’s 3-bar low on 4/04 held above its 3/22 low. Now look at the Qs 4/04 low, and 
+you can see that it’s well below the low it made on 3/22. Confirmation of this positive 
+divergence came on 4/05, as they both proceeded to take out their prior days’ highs. 
+Once again, as you can see from last week’s accompanying price chart, the 2-bar 
+reversal played an important role during this congestion period. The SPY made a 
+confirmed 3-bar low on 3/22, whereas the Qs could only manage a 2-bar reversal off 
+those lows. From the high it made on 3/23, the QQQ went straight down to its 
+subsequent low on 4/04. The SPY did make another 3-bar low and high between 
+3/29 and 4/02, but this wasn’t corroborated by the QQQ (no 2-bar reversal); so it 
+
+                                                                 
+ 
+ 
+ 
+ 
+ 
+ 
+should have been disregarded in your analysis.  Cyclical (or astrological) analysis 
+should always be considered in divergence analysis. It will dramatically improve 
+your odds of success in working with divergences. This will be the focus of next 
+week’s lesson. 
+
+ 
+
