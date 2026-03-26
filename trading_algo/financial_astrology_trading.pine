@@ -1,0 +1,1130 @@
+// ============================================================================
+// Financial Astrology Trading System
+// Based on "Secrets of Financial Astrology" (27 Lessons) by Kenneth Min
+//
+// All 10 strategies are implemented:
+//
+//   Strategy 1  — Lunation Cycle Duad Quality        (Lessons  1– 3)
+//   Strategy 2  — The 8th Way / Aspect Flow Targets  (Lessons  4– 6)
+//   Strategy 3  — Solar Trend Indicator  [PRIMARY FILTER]  (Lessons  7– 9)
+//   Strategy 4  — Lunar Trend Confirmation  [daily-simplified] (Lessons 11–12)
+//   Strategy 5  — Elemental & Quality Connection     (Lessons 15–16)
+//   Strategy 6  — Golden Ratio Turning Points        (Lessons 17–18)
+//   Strategy 7  — Sun-Neptune Long-Term Signal       (Lesson  20)
+//   Strategy 8  — The Mutable Factor                 (Lessons 21–23)
+//   Strategy 9  — Lunar Phase Duad Turn Dates        (Lessons 24–25)
+//   Strategy 10 — Intermarket Divergence Analysis    (Lessons 26–27)
+//
+// ── Astronomical Approximations ────────────────────────────────────────────
+// PineScript has no ephemeris library.  All planetary positions are derived
+// from orbital periods anchored to a verified reference epoch (New Moon on
+// 2000-01-06 18:14 UTC).  For exact planetary longitudes, run the companion
+// Python code (uses PyEphem).  All price-action logic — N-bar pivots,
+// engulfing patterns, aspect price levels, Golden Ratio projections, and
+// intermarket divergence — is fully exact.
+// ============================================================================
+
+//@version=5
+indicator(title      = "Financial Astrology Trading System (Kenneth Min – 27 Lessons)",
+          shorttitle = "FinAstro",
+          overlay    = true,
+          max_lines_count  = 500,
+          max_labels_count = 500,
+          max_boxes_count  = 200)
+
+
+// ============================================================================
+// ■ SECTION 1 — INPUTS
+// ============================================================================
+
+var string GRP_CORE    = "◆ Core Settings"
+var string GRP_FILTER  = "◆ Signal Filters"
+var string GRP_DISPLAY = "◆ Display Options"
+
+// Symbols
+i_sym2    = input.symbol("SPY", "Symbol 2  (Intermarket Divergence)",   group = GRP_CORE)
+i_sector  = input.symbol("SMH", "Sector ETF  (Sun-Neptune Strategy)",   group = GRP_CORE)
+
+// Pivot lookback (N-bar pivot; book default = 3)
+i_pivN    = input.int(3, "N-Bar Pivot Lookback", minval = 2, maxval = 5, group = GRP_CORE)
+
+// Signal aggregation / filtering
+i_minConf   = input.int  (2,   "Min Confidence  (# strategies agreeing)",
+                           minval = 1, maxval = 10, group = GRP_FILTER)
+i_minRR     = input.float(1.5, "Min Risk : Reward Ratio",
+                           minval = 0.5, step = 0.1, group = GRP_FILTER)
+i_solarFilt = input.bool (true,
+                           "Solar Trend Filter  (long in bull / short in bear only)",
+                           group = GRP_FILTER)
+
+// Display toggles
+i_showLunar   = input.bool(true,  "Lunar Phase Labels",                group = GRP_DISPLAY)
+i_showPiv     = input.bool(true,  "Confirmed Pivot Markers",           group = GRP_DISPLAY)
+i_showSolar   = input.bool(true,  "Solar Trend Background + Levels",   group = GRP_DISPLAY)
+i_showSigs    = input.bool(true,  "Trade Signal Labels + Boxes",       group = GRP_DISPLAY)
+i_showAsp     = input.bool(true,  "Aspect Level Lines  (8th Way)",     group = GRP_DISPLAY)
+i_showGolden  = input.bool(true,  "Golden Ratio Projections",          group = GRP_DISPLAY)
+i_showMutable = input.bool(true,  "Mutable Moon Period Shading",       group = GRP_DISPLAY)
+i_showDiv     = input.bool(true,  "Intermarket Divergence Markers",    group = GRP_DISPLAY)
+i_showTable   = input.bool(true,  "Strategy Summary Table",            group = GRP_DISPLAY)
+
+
+// ============================================================================
+// ■ SECTION 2 — ASTRONOMICAL APPROXIMATIONS
+// ============================================================================
+// Reference epoch: New Moon on 2000-01-06 18:14 UTC
+//   Unix timestamp (ms) ≈ 947178840000
+//   Sun longitude at that moment ≈ 285.4° (Capricorn ~15°)
+//
+// Orbital periods used:
+//   Moon synodic   29.5306 days   (New Moon → New Moon)
+//   Moon sidereal  27.3217 days   (full zodiac revolution)
+//   Solar year    365.2425 days
+
+float MS_DAY       = 86400000.0
+float LUN_SYNODIC  = 29.5306
+float LUN_SIDEREAL = 27.3217
+float SOLAR_YEAR   = 365.2425
+
+// REF_NM_MS: Unix timestamp in milliseconds for New Moon on 2000-01-06 18:14 UTC.
+// Verification: ephem.next_new_moon(ephem.Date("2000/01/06")) → 2000/1/6 18:14:00 UTC
+// 946684800000 (2000-01-01 00:00 UTC) + 6 days + 18 h + 14 min = 947178840000 ms
+float REF_NM_MS    = 947178840000.0   // 2000-01-06 18:14 UTC (verified via PyEphem)
+float REF_SUN_LON  = 285.4            // Sun ecliptic longitude at reference epoch (Capricorn ≈15°)
+
+// ── Moon synodic phase angle  (0° = New Moon, 90° = 1st Q, 180° = Full, 270° = Last Q)
+moonPhase() =>
+    float d = (time - REF_NM_MS) / MS_DAY
+    (d / LUN_SYNODIC * 360.0) % 360.0
+
+// ── Moon approximate ecliptic longitude  (sidereal)
+moonLon() =>
+    float d = (time - REF_NM_MS) / MS_DAY
+    (REF_SUN_LON + d * (360.0 / LUN_SIDEREAL)) % 360.0
+
+// ── Sun approximate ecliptic longitude
+sunLon() =>
+    float d = (time - REF_NM_MS) / MS_DAY
+    (REF_SUN_LON + d * (360.0 / SOLAR_YEAR)) % 360.0
+
+// ── Zodiac sign index  0=Aries, 1=Taurus, … 11=Pisces
+signIdx(float lon) =>
+    int(lon % 360.0 / 30.0)
+
+// ── Element
+//   0=Fire  (Aries=0, Leo=4, Sagittarius=8)
+//   1=Earth (Taurus=1, Virgo=5, Capricorn=9)
+//   2=Air   (Gemini=2, Libra=6, Aquarius=10)
+//   3=Water (Cancer=3, Scorpio=7, Pisces=11)
+// Pattern cycles every 4 signs starting from Aries.
+elemOf(int si) =>
+    si % 4
+
+// ── Quality
+//   0=Cardinal (Aries=0, Cancer=3, Libra=6, Capricorn=9)
+//   1=Fixed    (Taurus=1, Leo=4, Scorpio=7, Aquarius=10)
+//   2=Mutable  (Gemini=2, Virgo=5, Sagittarius=8, Pisces=11)
+// Pattern cycles every 3 signs starting from Aries.
+qualOf(int si) =>
+    si % 3
+
+// ── Duad sign index  (12 duads of 2.5° each within a 30° sign)
+duadOf(float lon) =>
+    float l  = lon % 360.0
+    int   si = int(l / 30.0)
+    int   di = int((l - float(si) * 30.0) / 2.5)
+    (si + di) % 12
+
+// ── Computed values for the current bar
+float mPhase   = moonPhase()
+float mLon     = moonLon()
+float sLon     = sunLon()
+
+int   mSignIdx = signIdx(mLon)
+int   mElem    = elemOf(mSignIdx)
+int   mQual    = qualOf(mSignIdx)
+
+int   sDuadIdx = duadOf(sLon)
+int   mDuadIdx = duadOf(mLon)
+int   sDuadQ   = qualOf(sDuadIdx)
+int   mDuadQ   = qualOf(mDuadIdx)
+bool  duadQMatch = sDuadQ == mDuadQ   // Sun & Moon duads share the same quality?
+
+// ── Lunar phase detection  (±6° tolerance suits daily bars)
+float PTOL        = 6.0
+bool  isNewMoon   = mPhase <= PTOL or mPhase >= (360.0 - PTOL)
+bool  isFirstQ    = math.abs(mPhase - 90.0)  <= PTOL
+bool  isFullMoon  = math.abs(mPhase - 180.0) <= PTOL
+bool  isLastQ     = math.abs(mPhase - 270.0) <= PTOL
+bool  isPhaseDay  = isNewMoon or isFirstQ or isFullMoon or isLastQ
+
+// ── Moon in a mutable sign?  (Gemini / Virgo / Sagittarius / Pisces → quality = 2)
+bool isMutableMoon = mQual == 2
+
+// ── Approximate Solar Time Window
+// The Sun makes 16 aspects/year to outer planets → one aspect every 22.5°.
+// Flag a window when Sun's longitude is within 2.5° of any 22.5° multiple.
+float sunMod225  = sLon % 22.5
+bool  inSolarWin = sunMod225 < 2.5 or sunMod225 > 20.0
+
+// ── Approximate Sun-Neptune aspect
+// Sun completes ~12 aspects to Neptune per year (one per 30° of Sun travel).
+float sunMod30   = sLon % 30.0
+bool  sunNepAsp  = sunMod30 < 2.5 or sunMod30 > 27.5
+
+// ── Approximate Lunar Time Window  (Moon-outer-planet aspect)
+// Moon moves ≈13°/day and forms an aspect every ≈30° → window every ~2.3 days.
+float moonMod30  = mLon % 30.0
+bool  inLunarWin = moonMod30 < 4.0 or moonMod30 > 26.0
+
+
+// ============================================================================
+// ■ SECTION 3 — CORE PRICE-ACTION
+// ============================================================================
+
+// ── Confirmed N-bar pivot  (symmetric: n bars on each side)
+// pivH / pivL hold the pivot VALUE or na.  They reference bar[i_pivN] in the past.
+float pivH  = ta.pivothigh(high, i_pivN, i_pivN)
+float pivL  = ta.pivotlow (low,  i_pivN, i_pivN)
+bool  hasPH = not na(pivH)
+bool  hasPL = not na(pivL)
+
+// ── N-bar breakout  (real-time: current bar vs. prior N bars)
+bool nBarHigh = high > ta.highest(high[1], i_pivN)
+bool nBarLow  = low  < ta.lowest (low[1],  i_pivN)
+
+// ── Track the two most recent confirmed pivot highs and lows
+var float lpH    = na    // last pivot high price
+var float lpL    = na    // last pivot low  price
+var int   lpHBar = na    // bar_index at which that pivot formed
+var int   lpLBar = na
+
+var float pp2H   = na    // second-to-last pivot high  (for divergence)
+var float pp2L   = na    // second-to-last pivot low
+
+if hasPH
+    pp2H   := lpH
+    lpH    := pivH
+    lpHBar := bar_index - i_pivN
+
+if hasPL
+    pp2L   := lpL
+    lpL    := pivL
+    lpLBar := bar_index - i_pivN
+
+float swRange = (not na(lpH) and not na(lpL)) ? math.abs(lpH - lpL) : na
+
+// ── Candlestick bodies
+float bH  = math.max(open, close)        // today's body top
+float bL  = math.min(open, close)        // today's body bottom
+float pbH = math.max(open[1], close[1])  // prior day's body top
+float pbL = math.min(open[1], close[1])  // prior day's body bottom
+
+// ── Engulfing patterns  (Lessons 15 / 16 / 22 / 23)
+// Bearish: open above prior body  AND  close below prior body
+bool bearEngulf = open > pbH and close < pbL
+// Bullish: open below prior body  AND  close above prior body
+bool bullEngulf = open < pbL and close > pbH
+
+
+// ============================================================================
+// ■ SECTION 4 — STRATEGY 3: SOLAR TREND INDICATOR  (Lessons 7-9)
+//                              ← PRIMARY DIRECTION FILTER
+// ============================================================================
+// Simplified logic (daily bars, no intraday data):
+//   • Capture confirmed pivots that form on Solar Time Window days.
+//   • BULL: price closes above the most recent solar-window HIGH.
+//   • BEAR: price closes below the most recent solar-window LOW.
+// All other strategies are filtered through this trend state.
+
+var float sRes    = na          // solar resistance  (window high)
+var float sSup    = na          // solar support     (window low)
+var string sTrend = "neutral"
+
+// Record pivots that form inside a solar window
+if inSolarWin
+    if hasPH
+        sRes := pivH
+    if hasPL
+        sSup := pivL
+
+// Bootstrap: use regular pivots until the first solar window fires
+if na(sRes) and not na(lpH)
+    sRes := lpH
+if na(sSup) and not na(lpL)
+    sSup := lpL
+
+// Trend state machine
+if not na(sRes) and not na(sSup)
+    if sTrend != "bear" and low < sSup
+        sTrend := "bear"
+        sSup   := not na(lpL) ? lpL : sSup
+    else if sTrend != "bull" and high > sRes
+        sTrend := "bull"
+        sRes   := not na(lpH) ? lpH : sRes
+
+bool sBull = sTrend == "bull"
+bool sBear = sTrend == "bear"
+
+// S3 fires on the bar the trend direction changes
+bool  s3Long  = sBull and not sBull[1]
+bool  s3Short = sBear and not sBear[1]
+
+float s3Entry  = s3Long  ? sRes  : s3Short ? sSup  : na
+float s3Stop   = s3Long  ? sSup  : s3Short ? sRes  : na
+float s3Risk   = not na(s3Entry) and not na(s3Stop) ? math.abs(s3Entry - s3Stop) : na
+float s3Target = s3Long  and not na(s3Risk) ? s3Entry + 2.0 * s3Risk :
+                 s3Short and not na(s3Risk) ? s3Entry - 2.0 * s3Risk : na
+
+
+// ============================================================================
+// ■ SECTION 5 — STRATEGY 1: LUNATION CYCLE DUAD QUALITY  (Lessons 1-3)
+// ============================================================================
+// Track consecutive lunar phases where Sun-duad quality == Moon-duad quality.
+// When 3+ consecutive phases share the same quality, derive a directional bias
+// from how the market moved during the PRIOR period of the same quality.
+// Entry rule: N-bar reversal + engulfing in the direction of the bias.
+
+var int    lq_currQ  = -1       // current quality group  (-1 = none)
+var int    lq_run    = 0        // consecutive matching phases
+var float  lq_start  = na       // close price when quality period began
+var string lq_bias   = "none"   // "long" | "short" | "none"
+
+if isPhaseDay
+    if duadQMatch
+        int tQ = sDuadQ
+        if tQ == lq_currQ
+            lq_run := lq_run + 1
+        else
+            if not na(lq_start) and lq_currQ >= 0
+                lq_bias := close > lq_start ? "long" : "short"
+            lq_currQ := tQ
+            lq_run   := 1
+            lq_start := close
+    else
+        lq_run := 0
+
+bool lq_active = lq_run >= 3 and lq_bias != "none"
+
+bool  s1Long  = lq_active and lq_bias == "long"  and nBarLow  and bullEngulf
+bool  s1Short = lq_active and lq_bias == "short" and nBarHigh and bearEngulf
+
+float s1Entry  = s1Long  ? pbH + syminfo.mintick : s1Short ? pbL - syminfo.mintick : na
+float s1Stop   = s1Long  ? low  - syminfo.mintick : s1Short ? high + syminfo.mintick : na
+float s1Risk   = not na(s1Entry) and not na(s1Stop) ? math.abs(s1Entry - s1Stop) : na
+float s1Target = s1Long  and not na(s1Risk) ? s1Entry + 2.0 * s1Risk :
+                 s1Short and not na(s1Risk) ? s1Entry - 2.0 * s1Risk : na
+
+
+// ============================================================================
+// ■ SECTION 6 — STRATEGY 2: THE 8TH WAY / ASPECT FLOW  (Lessons 4-6)
+// ============================================================================
+// Aspect decimal table (price levels from prior swing range):
+//   #1–#11 correspond to 30°, 60°, 90°, 120°, 150°, 180°, 210°, 240°,
+//   270°, 300°, 330° of the circle divided by 360°.
+//
+// The 8th Way rule:
+//   Retracement reaches Aspect #7 (58.33%) but NOT #8 (66.67%)
+//   → the prior trend is still intact; enter on a 2-bar reversal.
+//   Stop = tick beyond the retracement extreme.
+//   Target = entry ± 1× risk  (1:1 R:R).
+
+// ── Named constants (Lesson 5 aspect decimals)
+float ASPECT_7_RATIO        = 210.0 / 360.0   // 0.5833 — Aspect #7 threshold
+float ASPECT_8_RATIO        = 240.0 / 360.0   // 0.6667 — Aspect #8 threshold
+float RETRACEMENT_TOLERANCE = 0.02             // ±2% entry band below Aspect #7
+
+bool  s2Short = false
+bool  s2Long  = false
+float s2Entry  = na
+float s2Stop   = na
+float s2Target = na
+
+if not na(swRange) and swRange > 0.0
+    // ── SHORT: last swing went DOWN (lpHBar < lpLBar), then retraced UP ≥ Asp7 < Asp8
+    if not na(lpHBar) and not na(lpLBar) and lpLBar > lpHBar
+        float retUp = (close - lpL) / swRange
+        if retUp >= (ASPECT_7_RATIO - RETRACEMENT_TOLERANCE) and retUp < ASPECT_8_RATIO and nBarHigh
+            s2Short  := true
+            s2Entry   := high[1]
+            s2Stop    := high + syminfo.mintick
+            float r2  = math.abs(s2Stop - s2Entry)
+            s2Target  := s2Entry - r2
+
+    // ── LONG: last swing went UP (lpLBar < lpHBar), then retraced DOWN ≥ Asp7 < Asp8
+    if not na(lpHBar) and not na(lpLBar) and lpHBar > lpLBar
+        float retDown = (lpH - close) / swRange
+        if retDown >= (ASPECT_7_RATIO - RETRACEMENT_TOLERANCE) and retDown < ASPECT_8_RATIO and nBarLow
+            s2Long   := true
+            s2Entry   := low[1]
+            s2Stop    := low - syminfo.mintick
+            float r2  = math.abs(s2Entry - s2Stop)
+            s2Target  := s2Entry + r2
+
+
+// ============================================================================
+// ■ SECTION 7 — STRATEGY 4: LUNAR TREND CONFIRMATION  (Lessons 11-12)
+//                            [DAILY-BAR SIMPLIFICATION]
+// ============================================================================
+// Full strategy requires 15-minute intraday bars with exact Moon-outer-planet
+// aspect windows.  Daily simplification:
+//   On approximate lunar-aspect days (moonMod30 near 0°), treat the day as a
+//   "lunar window."  In solar BEAR: short on close below prior day's low.
+//   In solar BULL: long on close above prior day's high.
+
+bool  s4Short = false
+bool  s4Long  = false
+float s4Entry  = na
+float s4Stop   = na
+float s4Target = na
+
+if inLunarWin
+    if sBear and close < low[1]
+        s4Short  := true
+        s4Entry   := low[1]
+        s4Stop    := high + syminfo.mintick
+        float r4  = math.abs(s4Stop - s4Entry)
+        s4Target  := s4Entry - r4
+    else if sBull and close > high[1]
+        s4Long   := true
+        s4Entry   := high[1]
+        s4Stop    := low - syminfo.mintick
+        float r4  = math.abs(s4Entry - s4Stop)
+        s4Target  := s4Entry + r4
+
+
+// ============================================================================
+// ■ SECTION 8 — STRATEGY 5: ELEMENTAL & QUALITY CONNECTION  (Lessons 15-16)
+// ============================================================================
+// Bearish / bullish engulfing at a 3-bar pivot, where the CURRENT extreme is
+// WEAKER (lower high / higher low) than the PRIOR pivot that formed when the
+// Moon occupied the SAME element or quality group.
+// Entry : tick below prior body (short) / above prior body (long).
+// Stop  : tick above signal day's high (short) / below signal day's low (long).
+// Target: 2× risk  (per Lesson 16).
+
+// Last confirmed pivot high/low, keyed by Moon element (0=Fire, 1=Earth, 2=Air, 3=Water)
+var float lhE0 = na
+var float lhE1 = na
+var float lhE2 = na
+var float lhE3 = na
+var float llE0 = na
+var float llE1 = na
+var float llE2 = na
+var float llE3 = na
+
+// Last confirmed pivot high/low, keyed by Moon quality (0=Cardinal, 1=Fixed, 2=Mutable)
+var float lhQ0 = na
+var float lhQ1 = na
+var float lhQ2 = na
+var float llQ0 = na
+var float llQ1 = na
+var float llQ2 = na
+
+// Update tracking arrays on every confirmed pivot
+if hasPH
+    if mElem == 0
+        lhE0 := pivH
+    else if mElem == 1
+        lhE1 := pivH
+    else if mElem == 2
+        lhE2 := pivH
+    else
+        lhE3 := pivH
+
+    if mQual == 0
+        lhQ0 := pivH
+    else if mQual == 1
+        lhQ1 := pivH
+    else
+        lhQ2 := pivH
+
+if hasPL
+    if mElem == 0
+        llE0 := pivL
+    else if mElem == 1
+        llE1 := pivL
+    else if mElem == 2
+        llE2 := pivL
+    else
+        llE3 := pivL
+
+    if mQual == 0
+        llQ0 := pivL
+    else if mQual == 1
+        llQ1 := pivL
+    else
+        llQ2 := pivL
+
+// Look up the prior high/low for today's Moon element / quality
+float priorHE = mElem == 0 ? lhE0 : mElem == 1 ? lhE1 : mElem == 2 ? lhE2 : lhE3
+float priorLE = mElem == 0 ? llE0 : mElem == 1 ? llE1 : mElem == 2 ? llE2 : llE3
+float priorHQ = mQual == 0 ? lhQ0 : mQual == 1 ? lhQ1 : lhQ2
+float priorLQ = mQual == 0 ? llQ0 : mQual == 1 ? llQ1 : llQ2
+
+// Elemental / Quality Connection signal conditions
+bool eShortOk = not na(priorHE) and high < priorHE   // current high < prior elem high
+bool qShortOk = not na(priorHQ) and high < priorHQ   // current high < prior qual high
+bool eLongOk  = not na(priorLE) and low  > priorLE   // current low  > prior elem low
+bool qLongOk  = not na(priorLQ) and low  > priorLQ   // current low  > prior qual low
+
+bool  s5Short = nBarHigh and bearEngulf and (eShortOk or qShortOk)
+bool  s5Long  = nBarLow  and bullEngulf and (eLongOk  or qLongOk)
+
+float s5Entry  = s5Short ? pbL - syminfo.mintick : s5Long ? pbH + syminfo.mintick : na
+float s5Stop   = s5Short ? high + syminfo.mintick : s5Long ? low  - syminfo.mintick : na
+float s5Risk   = not na(s5Entry) and not na(s5Stop) ? math.abs(s5Entry - s5Stop) : na
+float s5Target = s5Short and not na(s5Risk) ? s5Entry - 2.0 * s5Risk :
+                 s5Long  and not na(s5Risk) ? s5Entry + 2.0 * s5Risk : na
+
+
+// ============================================================================
+// ■ SECTION 9 — STRATEGY 6: GOLDEN RATIO TURNING POINTS  (Lessons 17-18)
+// ============================================================================
+// For each pair of adjacent confirmed pivots (alternate H→L or L→H):
+//   N    = bar count between them.
+//   Mid  = bar at N/2 from the earlier pivot.
+//   Proj = Mid + floor(N × 1.618) bars forward  (Golden Ratio projection).
+// A signal fires when a confirmed pivot forms within ±1 bar of a projection.
+// Entry / Stop: tick beyond the pivot extreme.
+// Target: 1× prior swing range.
+
+float PHI = 1.618033988749895   // Golden Ratio (φ = (1 + √5) / 2)
+
+// Default swing range fallback when no confirmed swing is available:
+//   2% of close for standard strategies (short-term scale)
+//   3% of close for Sun-Neptune strategy (long-term scale, Lesson 20)
+float DEFAULT_SWING_PCT     = 0.02   // 2% — used by S6 and S10
+float DEFAULT_SWING_PCT_LT  = 0.03   // 3% — long-term (S7 Sun-Neptune)
+float DIVERGENCE_STOP_BUF   = 0.02   // 2% buffer above/below close for S10 stops
+
+// Aggregator fallback percentages (applied when no strategy provides a valid level)
+float AGG_STOP_BUF_LONG     = 0.98   // 2% below close  (long stop fallback)
+float AGG_STOP_BUF_SHORT    = 1.02   // 2% above close  (short stop fallback)
+float AGG_TARGET_BUF_LONG   = 1.04   // 4% above close  (long target fallback)
+float AGG_TARGET_BUF_SHORT  = 0.96   // 4% below close  (short target fallback)
+
+var int  grProjBar = na     // bar_index of the most recent projected turn
+var bool grWasHigh = false  // did the last source leg end at a HIGH?
+
+// Recompute projection whenever a new confirmed pivot is detected
+if hasPH and not na(lpLBar)
+    int nb = (bar_index - i_pivN) - lpLBar
+    if nb >= 2
+        int midB  = lpLBar + nb / 2
+        grProjBar := midB + int(float(nb) * PHI)
+        grWasHigh := true
+
+if hasPL and not na(lpHBar)
+    int nb = (bar_index - i_pivN) - lpHBar
+    if nb >= 2
+        int midB  = lpHBar + nb / 2
+        grProjBar := midB + int(float(nb) * PHI)
+        grWasHigh := false
+
+bool nearGolden = not na(grProjBar) and math.abs(float(bar_index) - float(grProjBar)) <= 1.0
+
+bool  s6Short = false
+bool  s6Long  = false
+float s6Entry  = na
+float s6Stop   = na
+float s6Target = na
+
+if nearGolden
+    float swR6 = not na(swRange) ? swRange : close * DEFAULT_SWING_PCT
+    if hasPH
+        s6Short  := true
+        s6Entry   := high - syminfo.mintick
+        s6Stop    := high + syminfo.mintick
+        s6Target  := s6Entry - swR6
+    else if hasPL
+        s6Long   := true
+        s6Entry   := low  + syminfo.mintick
+        s6Stop    := low  - syminfo.mintick
+        s6Target  := s6Entry + swR6
+
+
+// ============================================================================
+// ■ SECTION 10 — STRATEGY 7: SUN-NEPTUNE LONG-TERM SIGNAL  (Lesson 20)
+// ============================================================================
+// When the Sun makes an aspect to Neptune (~every 30 days of Sun travel):
+//   SHORT: BOTH primary symbol AND sector ETF form confirmed 3-bar HIGHS.
+//   LONG:  BOTH primary symbol AND sector ETF form confirmed 3-bar LOWS.
+// Target = 3× risk  (long-term influence; Lesson 20 specifies 3:1 R:R).
+
+[secHigh, secLow] = request.security(i_sector, timeframe.period,
+                     [high, low],
+                     lookahead = barmerge.lookahead_off)
+
+float secPivH  = ta.pivothigh(secHigh, i_pivN, i_pivN)
+float secPivL  = ta.pivotlow (secLow,  i_pivN, i_pivN)
+bool  secHasPH = not na(secPivH)
+bool  secHasPL = not na(secPivL)
+
+bool  s7Short = false
+bool  s7Long  = false
+float s7Entry  = na
+float s7Stop   = na
+float s7Target = na
+
+if sunNepAsp
+    // Sun-Neptune is a long-term signal (Lesson 20); use a 3% default swing range
+    // (larger than the 2% default used by other strategies — reflects longer holding period)
+    float swR7 = not na(swRange) ? swRange : close * DEFAULT_SWING_PCT_LT
+    if hasPH and secHasPH
+        s7Short  := true
+        s7Entry   := high - syminfo.mintick
+        s7Stop    := high + syminfo.mintick
+        s7Target  := s7Entry - 3.0 * swR7
+    else if hasPL and secHasPL
+        s7Long   := true
+        s7Entry   := low  + syminfo.mintick
+        s7Stop    := low  - syminfo.mintick
+        s7Target  := s7Entry + 3.0 * swR7
+
+
+// ============================================================================
+// ■ SECTION 11 — STRATEGY 8: THE MUTABLE FACTOR  (Lessons 21-23)
+// ============================================================================
+// When the Moon is in a mutable sign (Gemini / Virgo / Sagittarius / Pisces):
+//   SHORT: 3-bar HIGH + bearish engulfing candlestick.
+//   LONG:  3-bar LOW  + bullish engulfing candlestick.
+//
+// Two targets (split-position exit, Lesson 22):
+//   Target 1 (half position): 1× risk.
+//   Target 2 (full close):    2× risk.
+// 5-trading-day max holding rule (Lesson 22): position closed at EOD day 5
+// if neither target is reached.  The 5-day deadline box is shown on the chart.
+
+bool  s8Short   = false
+bool  s8Long    = false
+float s8Entry   = na
+float s8Stop    = na
+float s8Target1 = na   // 1× risk  (first half exit)
+float s8Target2 = na   // 2× risk  (full exit / aggregator R:R basis)
+
+if isMutableMoon
+    if nBarHigh and bearEngulf
+        s8Short   := true
+        s8Entry    := pbL - syminfo.mintick
+        s8Stop     := high + syminfo.mintick
+        float r8   = math.abs(s8Stop - s8Entry)
+        s8Target1  := s8Entry - r8
+        s8Target2  := s8Entry - 2.0 * r8
+    else if nBarLow and bullEngulf
+        s8Long    := true
+        s8Entry    := pbH + syminfo.mintick
+        s8Stop     := low  - syminfo.mintick
+        float r8   = math.abs(s8Entry - s8Stop)
+        s8Target1  := s8Entry + r8
+        s8Target2  := s8Entry + 2.0 * r8
+
+float s8Target = s8Short ? s8Target2 : s8Long ? s8Target2 : na
+
+
+// ============================================================================
+// ■ SECTION 12 — STRATEGY 9: LUNAR PHASE DUAD TURN DATES  (Lessons 24-25)
+// ============================================================================
+// Confirmed 3-bar pivots that form ON a lunar phase day become major
+// short-term support / resistance levels.
+//   SELL: price breaks below the most recent lunar-phase pivot LOW.
+//   BUY:  price breaks above the most recent lunar-phase pivot HIGH.
+// Progressively update levels as new phase-day pivots appear.
+
+var float lp9PH   = na           // lunar-phase pivot HIGH
+var float lp9PL   = na           // lunar-phase pivot LOW
+var string lp9Tr  = "neutral"    // current trend for Strategy 9
+
+if isPhaseDay
+    if hasPH
+        lp9PH := pivH
+    if hasPL
+        lp9PL := pivL
+
+// Bootstrap from regular pivots until the first phase-day pivot fires
+if na(lp9PH) and not na(lpH)
+    lp9PH := lpH
+if na(lp9PL) and not na(lpL)
+    lp9PL := lpL
+
+bool  s9Short = false
+bool  s9Long  = false
+float s9Entry  = na
+float s9Stop   = na
+float s9Target = na
+
+if not na(lp9PH) and not na(lp9PL)
+    if lp9Tr != "bear" and low < lp9PL
+        s9Short  := true
+        lp9Tr    := "bear"
+        s9Entry   := lp9PL
+        s9Stop    := lp9PH
+        float r9  = math.abs(s9Stop - s9Entry)
+        s9Target  := s9Entry - r9
+        lp9PL     := not na(lpL) ? lpL : lp9PL   // track falling low
+    else if lp9Tr != "bull" and high > lp9PH
+        s9Long   := true
+        lp9Tr    := "bull"
+        s9Entry   := lp9PH
+        s9Stop    := lp9PL
+        float r9  = math.abs(s9Entry - s9Stop)
+        s9Target  := s9Entry + r9
+        lp9PH     := not na(lpH) ? lpH : lp9PH   // track rising high
+
+
+// ============================================================================
+// ■ SECTION 13 — STRATEGY 10: INTERMARKET DIVERGENCE  (Lessons 26-27)
+// ============================================================================
+// Compare primary symbol with Symbol 2 (e.g., QQQ vs SPY).
+//
+// Negative divergence → SHORT:
+//   Primary makes a HIGHER confirmed high; Symbol 2 makes a LOWER confirmed
+//   high (fails to confirm).  Both then simultaneously break prior-day lows.
+//
+// Positive divergence → LONG:
+//   Primary makes a LOWER confirmed low; Symbol 2 makes a HIGHER confirmed
+//   low (divergence = strength).  Both simultaneously break prior-day highs.
+
+[s2H, s2L] = request.security(i_sym2, timeframe.period,
+              [high, low],
+              lookahead = barmerge.lookahead_off)
+
+float sym2PivH = ta.pivothigh(s2H, i_pivN, i_pivN)
+float sym2PivL = ta.pivotlow (s2L, i_pivN, i_pivN)
+
+var float s2lpH  = na    // Symbol-2 last confirmed pivot high
+var float s2lpL  = na    // Symbol-2 last confirmed pivot low
+var float s2pp2H = na    // Symbol-2 second-to-last pivot high
+var float s2pp2L = na    // Symbol-2 second-to-last pivot low
+
+if not na(sym2PivH)
+    s2pp2H := s2lpH
+    s2lpH  := sym2PivH
+
+if not na(sym2PivL)
+    s2pp2L := s2lpL
+    s2lpL  := sym2PivL
+
+// Divergence detection
+bool negDiv = hasPH and not na(pp2H) and not na(s2lpH) and not na(s2pp2H) and
+              pivH > pp2H and sym2PivH < s2pp2H        // A higher, B lower
+
+bool posDiv = hasPL and not na(pp2L) and not na(s2lpL) and not na(s2pp2L) and
+              pivL < pp2L and sym2PivL > s2pp2L        // A lower, B higher
+
+// Pending divergence flags
+var bool pendNeg = false
+var bool pendPos = false
+
+if negDiv
+    pendNeg := true
+if posDiv
+    pendPos := true
+
+// Confirmation: both symbols break on the same bar
+bool confNeg = pendNeg and low < low[1]     and s2L < s2L[1]
+bool confPos = pendPos and high > high[1]   and s2H > s2H[1]
+
+if confNeg
+    pendNeg := false
+if confPos
+    pendPos := false
+
+bool  s10Short = confNeg
+bool  s10Long  = confPos
+
+float s10Entry  = s10Short ? low  : s10Long  ? high : na
+float s10Stop   = s10Short ? (not na(lpH) ? lpH + syminfo.mintick : high * (1.0 + DIVERGENCE_STOP_BUF)) :
+                  s10Long  ? (not na(lpL) ? lpL  - syminfo.mintick : low  * (1.0 - DIVERGENCE_STOP_BUF)) : na
+float s10Risk   = not na(s10Entry) and not na(s10Stop) ? math.abs(s10Entry - s10Stop) : na
+float s10Target = s10Short and not na(s10Risk) ? s10Entry - s10Risk :
+                  s10Long  and not na(s10Risk) ? s10Entry + s10Risk : na
+
+
+// ============================================================================
+// ■ SECTION 14 — SIGNAL AGGREGATION & CONFIDENCE SCORING
+// ============================================================================
+// Count how many strategies agree on LONG and SHORT independently.
+// Apply:  (1) minimum strategy count  (2) solar trend direction  (3) min R:R.
+
+int longConf  = (s1Long  ? 1 : 0) + (s2Long  ? 1 : 0) + (s3Long  ? 1 : 0) +
+                (s4Long  ? 1 : 0) + (s5Long  ? 1 : 0) + (s6Long  ? 1 : 0) +
+                (s7Long  ? 1 : 0) + (s8Long  ? 1 : 0) + (s9Long  ? 1 : 0) +
+                (s10Long ? 1 : 0)
+
+int shortConf = (s1Short  ? 1 : 0) + (s2Short  ? 1 : 0) + (s3Short  ? 1 : 0) +
+                (s4Short  ? 1 : 0) + (s5Short  ? 1 : 0) + (s6Short  ? 1 : 0) +
+                (s7Short  ? 1 : 0) + (s8Short  ? 1 : 0) + (s9Short  ? 1 : 0) +
+                (s10Short ? 1 : 0)
+
+bool rawLong  = longConf  >= i_minConf
+bool rawShort = shortConf >= i_minConf
+
+// Apply Solar Trend filter
+bool filtLong  = rawLong  and (not i_solarFilt or sBull)
+bool filtShort = rawShort and (not i_solarFilt or sBear)
+
+// ── Pick best entry / stop / target from the first agreeing strategy
+// Priority: S1 → S2 → S3 → S4 → S5 → S6 → S7 → S8 → S9 → S10
+float aggLE = filtLong  ?
+    (s1Long  ? s1Entry  : s2Long  ? s2Entry  : s3Long  ? s3Entry  :
+     s4Long  ? s4Entry  : s5Long  ? s5Entry  : s6Long  ? s6Entry  :
+     s7Long  ? s7Entry  : s8Long  ? s8Entry  : s9Long  ? s9Entry  :
+     s10Long ? s10Entry : close) : na
+
+float aggLS = filtLong  ?
+    (s1Long  ? s1Stop   : s2Long  ? s2Stop   : s3Long  ? s3Stop   :
+     s4Long  ? s4Stop   : s5Long  ? s5Stop   : s6Long  ? s6Stop   :
+     s7Long  ? s7Stop   : s8Long  ? s8Stop   : s9Long  ? s9Stop   :
+     s10Long ? s10Stop  : close * AGG_STOP_BUF_LONG) : na
+
+float aggLT = filtLong  ?
+    (s1Long  ? s1Target : s2Long  ? s2Target : s3Long  ? s3Target :
+     s4Long  ? s4Target : s5Long  ? s5Target : s6Long  ? s6Target :
+     s7Long  ? s7Target : s8Long  ? s8Target : s9Long  ? s9Target :
+     s10Long ? s10Target : close * AGG_TARGET_BUF_LONG) : na
+
+float aggSE = filtShort ?
+    (s1Short  ? s1Entry  : s2Short  ? s2Entry  : s3Short  ? s3Entry  :
+     s4Short  ? s4Entry  : s5Short  ? s5Entry  : s6Short  ? s6Entry  :
+     s7Short  ? s7Entry  : s8Short  ? s8Entry  : s9Short  ? s9Entry  :
+     s10Short ? s10Entry : close) : na
+
+float aggSS = filtShort ?
+    (s1Short  ? s1Stop   : s2Short  ? s2Stop   : s3Short  ? s3Stop   :
+     s4Short  ? s4Stop   : s5Short  ? s5Stop   : s6Short  ? s6Stop   :
+     s7Short  ? s7Stop   : s8Short  ? s8Stop   : s9Short  ? s9Stop   :
+     s10Short ? s10Stop  : close * AGG_STOP_BUF_SHORT) : na
+
+float aggST = filtShort ?
+    (s1Short  ? s1Target : s2Short  ? s2Target : s3Short  ? s3Target :
+     s4Short  ? s4Target : s5Short  ? s5Target : s6Short  ? s6Target :
+     s7Short  ? s7Target : s8Short  ? s8Target : s9Short  ? s9Target :
+     s10Short ? s10Target : close * AGG_TARGET_BUF_SHORT) : na
+
+// ── Compute aggregate Risk:Reward
+float lRisk   = not na(aggLE) and not na(aggLS) ? math.abs(aggLE - aggLS)  : na
+float lReward = not na(aggLE) and not na(aggLT) ? math.abs(aggLT - aggLE)  : na
+float lRR     = not na(lRisk) and lRisk > 0.0 and not na(lReward) ? lReward / lRisk : 0.0
+
+float sRisk   = not na(aggSE) and not na(aggSS) ? math.abs(aggSE - aggSS)  : na
+float sReward = not na(aggSE) and not na(aggST) ? math.abs(aggSE - aggST)  : na
+float sRR     = not na(sRisk) and sRisk > 0.0 and not na(sReward) ? sReward / sRisk : 0.0
+
+// ── Final filtered signals
+bool finalLong  = filtLong  and lRR >= i_minRR
+bool finalShort = filtShort and sRR >= i_minRR
+
+
+// ============================================================================
+// ■ SECTION 15 — VISUAL OUTPUT
+// ============================================================================
+
+// ── Background: Solar Trend (green=bull / red=bear) + Mutable Moon (purple)
+bgcolor(i_showSolar   and sBull         ? color.new(color.green,  90) :
+        i_showSolar   and sBear         ? color.new(color.red,    90) : na,
+        title = "Solar Trend Background")
+
+bgcolor(i_showMutable and isMutableMoon ? color.new(color.purple, 88) : na,
+        title = "Mutable Moon Period")
+
+bgcolor(i_showSolar   and inSolarWin    ? color.new(color.yellow, 94) : na,
+        title = "Solar Time Window")
+
+// ── Confirmed pivot markers
+plotshape(i_showPiv and hasPH,
+          title    = "Confirmed Pivot High",
+          style    = shape.triangledown,
+          location = location.abovebar,
+          color    = color.new(color.orange, 10),
+          size     = size.small)
+
+plotshape(i_showPiv and hasPL,
+          title    = "Confirmed Pivot Low",
+          style    = shape.triangleup,
+          location = location.belowbar,
+          color    = color.new(color.teal, 10),
+          size     = size.small)
+
+// ── Lunar Phase labels
+string lunarTxt = isNewMoon  ? "🌑 NM" :
+                  isFirstQ   ? "🌓 1Q" :
+                  isFullMoon ? "🌕 FM" :
+                  isLastQ    ? "🌗 3Q" : ""
+
+if i_showLunar and isPhaseDay
+    label.new(bar_index, high,
+              text      = lunarTxt,
+              color     = color.new(color.navy, 50),
+              textcolor = color.white,
+              style     = label.style_label_down,
+              size      = size.small,
+              yloc      = yloc.abovebar)
+
+// ── Solar Trend resistance / support lines
+var line lineRes = na
+var line lineSup = na
+
+if i_showSolar and not na(sRes)
+    if not na(lineRes)
+        line.delete(lineRes)
+    lineRes := line.new(bar_index - 30, sRes, bar_index, sRes,
+                        color = color.new(color.red, 30),
+                        style = line.style_dashed,
+                        width = 1)
+if i_showSolar and not na(sSup)
+    if not na(lineSup)
+        line.delete(lineSup)
+    lineSup := line.new(bar_index - 30, sSup, bar_index, sSup,
+                        color = color.new(color.green, 30),
+                        style = line.style_dashed,
+                        width = 1)
+
+// ── Lunar Phase Duad support / resistance lines  (Strategy 9)
+var line lp9LineH = na
+var line lp9LineL = na
+
+if i_showLunar and not na(lp9PH)
+    if not na(lp9LineH)
+        line.delete(lp9LineH)
+    lp9LineH := line.new(bar_index - 15, lp9PH, bar_index, lp9PH,
+                         color = color.new(color.blue, 40),
+                         style = line.style_dotted,
+                         width = 2)
+if i_showLunar and not na(lp9PL)
+    if not na(lp9LineL)
+        line.delete(lp9LineL)
+    lp9LineL := line.new(bar_index - 15, lp9PL, bar_index, lp9PL,
+                         color = color.new(color.blue, 40),
+                         style = line.style_dotted,
+                         width = 2)
+
+// ── Aspect price levels from last swing  (8th Way — 11 levels)
+// Drawn from the last pivot LOW upward (reference point for the swing)
+float aspBase = not na(lpL) and not na(swRange) ? lpL : na
+
+plot(i_showAsp ? aspBase + swRange * (30.0  / 360.0) : na, color = color.new(color.gray, 72), linewidth = 1, title = "Asp #1  (30°)")
+plot(i_showAsp ? aspBase + swRange * (60.0  / 360.0) : na, color = color.new(color.gray, 72), linewidth = 1, title = "Asp #2  (60°)")
+plot(i_showAsp ? aspBase + swRange * (90.0  / 360.0) : na, color = color.new(color.gray, 72), linewidth = 1, title = "Asp #3  (90°)")
+plot(i_showAsp ? aspBase + swRange * (120.0 / 360.0) : na, color = color.new(color.gray, 72), linewidth = 1, title = "Asp #4 (120°)")
+plot(i_showAsp ? aspBase + swRange * (150.0 / 360.0) : na, color = color.new(color.gray, 65), linewidth = 1, title = "Asp #5 (150°)")
+plot(i_showAsp ? aspBase + swRange * (180.0 / 360.0) : na, color = color.new(color.gray, 55), linewidth = 2, title = "Asp #6 (180° – 50%)")
+plot(i_showAsp ? aspBase + swRange * (210.0 / 360.0) : na, color = color.new(color.orange, 35), linewidth = 2, title = "Asp #7 (210° – 58%)")
+plot(i_showAsp ? aspBase + swRange * (240.0 / 360.0) : na, color = color.new(color.red, 35),    linewidth = 2, title = "Asp #8 (240° – 67%)")
+plot(i_showAsp ? aspBase + swRange * (270.0 / 360.0) : na, color = color.new(color.gray, 65), linewidth = 1, title = "Asp #9 (270°)")
+plot(i_showAsp ? aspBase + swRange * (300.0 / 360.0) : na, color = color.new(color.gray, 65), linewidth = 1, title = "Asp #10 (300°)")
+plot(i_showAsp ? aspBase + swRange * (330.0 / 360.0) : na, color = color.new(color.gray, 65), linewidth = 1, title = "Asp #11 (330°)")
+
+// ── Golden Ratio projection arrow / convergence marker
+var line grArrow = na
+if i_showGolden and not na(grProjBar) and grProjBar > bar_index
+    if not na(grArrow)
+        line.delete(grArrow)
+    grArrow := line.new(bar_index, close, grProjBar, close,
+                        color = color.new(color.yellow, 30),
+                        style = line.style_arrow_right,
+                        width = 1)
+
+if i_showGolden and nearGolden
+    label.new(bar_index, low,
+              text      = "φ GR",
+              color     = color.new(color.yellow, 20),
+              textcolor = color.black,
+              style     = label.style_label_up,
+              size      = size.tiny,
+              yloc      = yloc.belowbar)
+
+// ── Sun-Neptune aspect marker  (Strategy 7)
+if i_showSigs and sunNepAsp
+    label.new(bar_index, high,
+              text      = "☉♆",
+              color     = color.new(color.aqua, 45),
+              textcolor = color.black,
+              style     = label.style_label_down,
+              size      = size.tiny,
+              yloc      = yloc.abovebar)
+
+// ── Intermarket divergence markers  (Strategy 10)
+if i_showDiv and negDiv
+    label.new(bar_index - i_pivN, high,
+              text      = "NEG DIV ▼",
+              color     = color.new(color.orange, 25),
+              textcolor = color.black,
+              style     = label.style_label_down,
+              size      = size.small)
+
+if i_showDiv and posDiv
+    label.new(bar_index - i_pivN, low,
+              text      = "POS DIV ▲",
+              color     = color.new(color.teal, 25),
+              textcolor = color.black,
+              style     = label.style_label_up,
+              size      = size.small)
+
+// ── Mutable Factor dual-target lines  (Strategy 8 — 5-day window)
+if i_showSigs and s8Short and not na(s8Target1) and not na(s8Target2)
+    line.new(bar_index, s8Target1, bar_index + 5, s8Target1,
+             color = color.new(color.orange, 30),
+             style = line.style_dotted, width = 1)
+    line.new(bar_index, s8Target2, bar_index + 5, s8Target2,
+             color = color.new(color.red, 30),
+             style = line.style_dotted, width = 2)
+
+if i_showSigs and s8Long and not na(s8Target1) and not na(s8Target2)
+    line.new(bar_index, s8Target1, bar_index + 5, s8Target1,
+             color = color.new(color.lime, 30),
+             style = line.style_dotted, width = 1)
+    line.new(bar_index, s8Target2, bar_index + 5, s8Target2,
+             color = color.new(color.green, 30),
+             style = line.style_dotted, width = 2)
+
+// ── Final aggregated LONG signal label + trade box
+if i_showSigs and finalLong
+    string lTxt = "▲  LONG\nConf: " + str.tostring(longConf) + "/10\n" +
+                  "R:R  " + str.tostring(math.round(lRR, 1)) + ":1"
+    label.new(bar_index, low,
+              text      = lTxt,
+              color     = color.new(color.lime, 10),
+              textcolor = color.black,
+              style     = label.style_label_up,
+              size      = size.normal,
+              yloc      = yloc.belowbar)
+    if not na(aggLE) and not na(aggLT) and not na(aggLS)
+        box.new(bar_index, aggLT, bar_index + 5, aggLS,
+                bgcolor      = color.new(color.lime, 80),
+                border_color = color.lime,
+                border_width = 1)
+
+// ── Final aggregated SHORT signal label + trade box
+if i_showSigs and finalShort
+    string sTxt = "▼  SHORT\nConf: " + str.tostring(shortConf) + "/10\n" +
+                  "R:R  " + str.tostring(math.round(sRR, 1)) + ":1"
+    label.new(bar_index, high,
+              text      = sTxt,
+              color     = color.new(color.red, 10),
+              textcolor = color.white,
+              style     = label.style_label_down,
+              size      = size.normal,
+              yloc      = yloc.abovebar)
+    if not na(aggSE) and not na(aggST) and not na(aggSS)
+        box.new(bar_index, aggSS, bar_index + 5, aggST,
+                bgcolor      = color.new(color.red, 80),
+                border_color = color.red,
+                border_width = 1)
+
+// ── Confidence plots  (data window values)
+plot(longConf,  title = "Long Confidence  (0-10)",  color = color.lime, linewidth = 2,
+     display = display.data_window)
+plot(shortConf, title = "Short Confidence (0-10)",  color = color.red,  linewidth = 2,
+     display = display.data_window)
+
+
+// ============================================================================
+// ■ SECTION 16 — STRATEGY SUMMARY TABLE  (top-right, last bar only)
+// ============================================================================
+
+var table tbl = table.new(position.top_right, 3, 14,
+                           bgcolor      = color.new(color.black, 65),
+                           border_width = 1,
+                           border_color = color.new(color.gray, 50))
+
+if barstate.islast and i_showTable
+    // ── Header
+    table.cell(tbl, 0,  0, "Strategy",
+               text_color = color.white,
+               bgcolor    = color.new(color.navy, 40),
+               text_size  = size.small)
+    table.cell(tbl, 1,  0, "Long ▲",
+               text_color = color.lime,
+               bgcolor    = color.new(color.navy, 40),
+               text_size  = size.small)
+    table.cell(tbl, 2,  0, "Short ▼",
+               text_color = color.red,
+               bgcolor    = color.new(color.navy, 40),
+               text_size  = size.small)
+
+    // ── Strategy rows
+    table.cell(tbl, 0,  1, "1  Lunation Duad",   text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  1, s1Long  ? "●" : "○",  text_color = s1Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  1, s1Short ? "●" : "○",  text_color = s1Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  2, "2  8th Way",          text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  2, s2Long  ? "●" : "○",  text_color = s2Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  2, s2Short ? "●" : "○",  text_color = s2Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  3, "3  Solar Trend",      text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  3, s3Long  ? "●" : "○",  text_color = s3Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  3, s3Short ? "●" : "○",  text_color = s3Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  4, "4  Lunar Trend",      text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  4, s4Long  ? "●" : "○",  text_color = s4Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  4, s4Short ? "●" : "○",  text_color = s4Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  5, "5  Elem/Qual",        text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  5, s5Long  ? "●" : "○",  text_color = s5Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  5, s5Short ? "●" : "○",  text_color = s5Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  6, "6  Golden Ratio",     text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  6, s6Long  ? "●" : "○",  text_color = s6Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  6, s6Short ? "●" : "○",  text_color = s6Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  7, "7  Sun-Neptune",      text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  7, s7Long  ? "●" : "○",  text_color = s7Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  7, s7Short ? "●" : "○",  text_color = s7Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  8, "8  Mutable Factor",   text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  8, s8Long  ? "●" : "○",  text_color = s8Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  8, s8Short ? "●" : "○",  text_color = s8Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0,  9, "9  Phase Duad",       text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1,  9, s9Long  ? "●" : "○",  text_color = s9Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2,  9, s9Short ? "●" : "○",  text_color = s9Short ? color.red  : color.gray, text_size = size.small)
+
+    table.cell(tbl, 0, 10, "10 Intermarket Div",  text_color = color.white,  text_size = size.tiny)
+    table.cell(tbl, 1, 10, s10Long  ? "●" : "○", text_color = s10Long  ? color.lime : color.gray, text_size = size.small)
+    table.cell(tbl, 2, 10, s10Short ? "●" : "○", text_color = s10Short ? color.red  : color.gray, text_size = size.small)
+
+    // ── Aggregated result row
+    string lAggStr = "▲ LONG  Conf:" + str.tostring(longConf)  + (finalLong  ? " ✓" : "")
+    string sAggStr = "▼ SHORT Conf:" + str.tostring(shortConf) + (finalShort ? " ✓" : "")
+    table.cell(tbl, 0, 11, "── AGGREGATED ──",
+               text_color = color.yellow,
+               bgcolor    = color.new(color.navy, 60),
+               text_size  = size.tiny)
+    table.cell(tbl, 1, 11, lAggStr,
+               text_color = finalLong  ? color.lime : color.gray,
+               bgcolor    = color.new(color.navy, 60),
+               text_size  = size.tiny)
+    table.cell(tbl, 2, 11, sAggStr,
+               text_color = finalShort ? color.red  : color.gray,
+               bgcolor    = color.new(color.navy, 60),
+               text_size  = size.tiny)
+
+    // ── Status row: Solar Trend
+    string stTxt = "Solar: " + sTrend
+    color  stCol = sBull ? color.lime : sBear ? color.red : color.gray
+    table.cell(tbl, 0, 12, stTxt,
+               text_color = stCol, text_size = size.tiny)
+    table.cell(tbl, 1, 12,
+               "Moon sign: " + str.tostring(mSignIdx) +
+               (isMutableMoon ? "  (Mutable)" : ""),
+               text_color = isMutableMoon ? color.purple : color.white,
+               text_size  = size.tiny)
+    table.cell(tbl, 2, 12,
+               "Phase: " + str.tostring(math.round(mPhase, 0)) + "°" +
+               (isPhaseDay ? "  ★" : ""),
+               text_color = isPhaseDay ? color.yellow : color.white,
+               text_size  = size.tiny)
+
+    // ── Status row: min thresholds reminder
+    table.cell(tbl, 0, 13,
+               "MinConf=" + str.tostring(i_minConf) +
+               "  MinRR=" + str.tostring(i_minRR),
+               text_color = color.gray, text_size = size.tiny)
+    table.cell(tbl, 1, 13,
+               "SolarFilt=" + (i_solarFilt ? "ON" : "OFF"),
+               text_color = i_solarFilt ? color.yellow : color.gray,
+               text_size  = size.tiny)
+    table.cell(tbl, 2, 13,
+               "PivN=" + str.tostring(i_pivN),
+               text_color = color.gray, text_size = size.tiny)
