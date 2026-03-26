@@ -884,15 +884,9 @@ float s10Target = s10Short and not na(s10Risk) ? s10Entry - s10Risk :
 // ■ SIGNAL AGGREGATION & CONFIDENCE SCORING
 // =============================================================================
 
-int longConf  = (s1Long  ? 1 : 0) + (s2Long  ? 1 : 0) + (s3Long  ? 1 : 0) +
-                (s4Long  ? 1 : 0) + (s5Long  ? 1 : 0) + (s6Long  ? 1 : 0) +
-                (s7Long  ? 1 : 0) + (s8Long  ? 1 : 0) + (s9Long  ? 1 : 0) +
-                (s10Long ? 1 : 0)
+int longConf  = (s1Long  ? 1 : 0) + (s2Long  ? 1 : 0) + (s3Long  ? 1 : 0) + (s4Long  ? 1 : 0) + (s5Long  ? 1 : 0) + (s6Long  ? 1 : 0) + (s7Long  ? 1 : 0) + (s8Long  ? 1 : 0) + (s9Long  ? 1 : 0) + (s10Long ? 1 : 0)
 
-int shortConf = (s1Short  ? 1 : 0) + (s2Short  ? 1 : 0) + (s3Short  ? 1 : 0) +
-                (s4Short  ? 1 : 0) + (s5Short  ? 1 : 0) + (s6Short  ? 1 : 0) +
-                (s7Short  ? 1 : 0) + (s8Short  ? 1 : 0) + (s9Short  ? 1 : 0) +
-                (s10Short ? 1 : 0)
+int shortConf = (s1Short  ? 1 : 0) + (s2Short  ? 1 : 0) + (s3Short  ? 1 : 0) + (s4Short  ? 1 : 0) + (s5Short  ? 1 : 0) + (s6Short  ? 1 : 0) + (s7Short  ? 1 : 0) + (s8Short  ? 1 : 0) + (s9Short  ? 1 : 0) + (s10Short ? 1 : 0)
 
 bool rawLong  = longConf  >= i_minConf
 bool rawShort = shortConf >= i_minConf
