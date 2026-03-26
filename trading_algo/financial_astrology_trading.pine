@@ -480,8 +480,7 @@ bool  s3Short = sBear and not sBear[1]
 float s3Entry  = s3Long  ? sRes  : s3Short ? sSup  : na
 float s3Stop   = s3Long  ? sSup  : s3Short ? sRes  : na
 float s3Risk   = not na(s3Entry) and not na(s3Stop) ? math.abs(s3Entry - s3Stop) : na
-float s3Target = s3Long  and not na(s3Risk) ? s3Entry + 2.0 * s3Risk :
-                 s3Short and not na(s3Risk) ? s3Entry - 2.0 * s3Risk : na
+float s3Target = s3Long  and not na(s3Risk) ? s3Entry + 2.0 * s3Risk : s3Short and not na(s3Risk) ? s3Entry - 2.0 * s3Risk : na
 
 
 // =============================================================================
@@ -519,8 +518,7 @@ bool  s1Short = lq_active and lq_bias == "short" and nBarHigh and bearEngulf
 float s1Entry  = s1Long  ? pbH + syminfo.mintick : s1Short ? pbL - syminfo.mintick : na
 float s1Stop   = s1Long  ? low  - syminfo.mintick : s1Short ? high + syminfo.mintick : na
 float s1Risk   = not na(s1Entry) and not na(s1Stop) ? math.abs(s1Entry - s1Stop) : na
-float s1Target = s1Long  and not na(s1Risk) ? s1Entry + 2.0 * s1Risk :
-                 s1Short and not na(s1Risk) ? s1Entry - 2.0 * s1Risk : na
+float s1Target = s1Long  and not na(s1Risk) ? s1Entry + 2.0 * s1Risk : s1Short and not na(s1Risk) ? s1Entry - 2.0 * s1Risk : na
 
 
 // =============================================================================
@@ -655,8 +653,7 @@ bool  s5Long  = nBarLow  and bullEngulf and ((not na(priorLE) and low  > priorLE
 float s5Entry  = s5Short ? pbL - syminfo.mintick : s5Long ? pbH + syminfo.mintick : na
 float s5Stop   = s5Short ? high + syminfo.mintick : s5Long ? low  - syminfo.mintick : na
 float s5Risk   = not na(s5Entry) and not na(s5Stop) ? math.abs(s5Entry - s5Stop) : na
-float s5Target = s5Short and not na(s5Risk) ? s5Entry - 2.0 * s5Risk :
-                 s5Long  and not na(s5Risk) ? s5Entry + 2.0 * s5Risk : na
+float s5Target = s5Short and not na(s5Risk) ? s5Entry - 2.0 * s5Risk : s5Long  and not na(s5Risk) ? s5Entry + 2.0 * s5Risk : na
 
 
 // =============================================================================
@@ -873,11 +870,9 @@ bool  s10Short = confNeg
 bool  s10Long  = confPos
 
 float s10Entry  = s10Short ? low  : s10Long  ? high : na
-float s10Stop   = s10Short ? (not na(lpH) ? lpH + syminfo.mintick : high * (1.0 + DIVERGENCE_STOP_BUF)) :
-                  s10Long  ? (not na(lpL) ? lpL  - syminfo.mintick : low  * (1.0 - DIVERGENCE_STOP_BUF)) : na
+float s10Stop   = s10Short ? (not na(lpH) ? lpH + syminfo.mintick : high * (1.0 + DIVERGENCE_STOP_BUF)) : s10Long  ? (not na(lpL) ? lpL  - syminfo.mintick : low  * (1.0 - DIVERGENCE_STOP_BUF)) : na
 float s10Risk   = not na(s10Entry) and not na(s10Stop) ? math.abs(s10Entry - s10Stop) : na
-float s10Target = s10Short and not na(s10Risk) ? s10Entry - s10Risk :
-                  s10Long  and not na(s10Risk) ? s10Entry + s10Risk : na
+float s10Target = s10Short and not na(s10Risk) ? s10Entry - s10Risk : s10Long  and not na(s10Risk) ? s10Entry + s10Risk : na
 
 
 // =============================================================================
@@ -922,9 +917,7 @@ bool finalShort = filtShort and sRR >= i_minRR
 // ■ VISUAL OUTPUT
 // =============================================================================
 
-bgcolor(i_showSolar   and sBull         ? color.new(color.green,  90) :
-        i_showSolar   and sBear         ? color.new(color.red,    90) : na,
-        title = "Solar Trend Background")
+bgcolor(i_showSolar and sBull ? color.new(color.green, 90) : i_showSolar and sBear ? color.new(color.red, 90) : na, title = "Solar Trend Background")
 
 bgcolor(i_showMutable and isMutableMoon ? color.new(color.purple, 88) : na,
         title = "Mutable Moon Period")
@@ -940,10 +933,7 @@ plotshape(i_showPiv and hasPL,
           title = "Confirmed Pivot Low", style = shape.triangleup,
           location = location.belowbar, color = color.new(color.teal, 10), size = size.small)
 
-string lunarTxt = isNewMoon  ? "🌑 NM" :
-                  isFirstQ   ? "🌓 1Q" :
-                  isFullMoon ? "🌕 FM" :
-                  isLastQ    ? "🌗 3Q" : ""
+string lunarTxt = isNewMoon ? "🌑 NM" : isFirstQ ? "🌓 1Q" : isFullMoon ? "🌕 FM" : isLastQ ? "🌗 3Q" : ""
 
 if i_showLunar and isPhaseDay
     label.new(bar_index, high, text = lunarTxt,
@@ -1033,8 +1023,7 @@ if i_showSigs and s8Long and not na(s8Target1) and not na(s8Target2)
              color = color.new(color.green, 30), style = line.style_dotted, width = 2)
 
 if i_showSigs and finalLong
-    string lTxt = "▲  LONG\nConf: " + str.tostring(longConf) + "/10\n" +
-                  "R:R  " + str.tostring(math.round(lRR, 1)) + ":1"
+    string lTxt = "▲  LONG\nConf: " + str.tostring(longConf) + "/10\n" + "R:R  " + str.tostring(math.round(lRR, 1)) + ":1"
     label.new(bar_index, low, text = lTxt,
               color = color.new(color.lime, 10), textcolor = color.black,
               style = label.style_label_up, size = size.normal, yloc = yloc.belowbar)
@@ -1043,8 +1032,7 @@ if i_showSigs and finalLong
                 bgcolor = color.new(color.lime, 80), border_color = color.lime, border_width = 1)
 
 if i_showSigs and finalShort
-    string sTxt = "▼  SHORT\nConf: " + str.tostring(shortConf) + "/10\n" +
-                  "R:R  " + str.tostring(math.round(sRR, 1)) + ":1"
+    string sTxt = "▼  SHORT\nConf: " + str.tostring(shortConf) + "/10\n" + "R:R  " + str.tostring(math.round(sRR, 1)) + ":1"
     label.new(bar_index, high, text = sTxt,
               color = color.new(color.red, 10), textcolor = color.white,
               style = label.style_label_down, size = size.normal, yloc = yloc.abovebar)
