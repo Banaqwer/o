@@ -894,41 +894,17 @@ bool rawShort = shortConf >= i_minConf
 bool filtLong  = rawLong  and (not i_solarFilt or sBull)
 bool filtShort = rawShort and (not i_solarFilt or sBear)
 
-float aggLE = filtLong  ?
-    (s1Long  ? s1Entry  : s2Long  ? s2Entry  : s3Long  ? s3Entry  :
-     s4Long  ? s4Entry  : s5Long  ? s5Entry  : s6Long  ? s6Entry  :
-     s7Long  ? s7Entry  : s8Long  ? s8Entry  : s9Long  ? s9Entry  :
-     s10Long ? s10Entry : close) : na
+float aggLE = filtLong  ? (s1Long  ? s1Entry  : s2Long  ? s2Entry  : s3Long  ? s3Entry  : s4Long  ? s4Entry  : s5Long  ? s5Entry  : s6Long  ? s6Entry  : s7Long  ? s7Entry  : s8Long  ? s8Entry  : s9Long  ? s9Entry  : s10Long ? s10Entry : close) : na
 
-float aggLS = filtLong  ?
-    (s1Long  ? s1Stop   : s2Long  ? s2Stop   : s3Long  ? s3Stop   :
-     s4Long  ? s4Stop   : s5Long  ? s5Stop   : s6Long  ? s6Stop   :
-     s7Long  ? s7Stop   : s8Long  ? s8Stop   : s9Long  ? s9Stop   :
-     s10Long ? s10Stop  : close * AGG_STOP_BUF_LONG) : na
+float aggLS = filtLong  ? (s1Long  ? s1Stop   : s2Long  ? s2Stop   : s3Long  ? s3Stop   : s4Long  ? s4Stop   : s5Long  ? s5Stop   : s6Long  ? s6Stop   : s7Long  ? s7Stop   : s8Long  ? s8Stop   : s9Long  ? s9Stop   : s10Long ? s10Stop  : close * AGG_STOP_BUF_LONG) : na
 
-float aggLT = filtLong  ?
-    (s1Long  ? s1Target : s2Long  ? s2Target : s3Long  ? s3Target :
-     s4Long  ? s4Target : s5Long  ? s5Target : s6Long  ? s6Target :
-     s7Long  ? s7Target : s8Long  ? s8Target : s9Long  ? s9Target :
-     s10Long ? s10Target : close * AGG_TARGET_BUF_LONG) : na
+float aggLT = filtLong  ? (s1Long  ? s1Target : s2Long  ? s2Target : s3Long  ? s3Target : s4Long  ? s4Target : s5Long  ? s5Target : s6Long  ? s6Target : s7Long  ? s7Target : s8Long  ? s8Target : s9Long  ? s9Target : s10Long ? s10Target : close * AGG_TARGET_BUF_LONG) : na
 
-float aggSE = filtShort ?
-    (s1Short  ? s1Entry  : s2Short  ? s2Entry  : s3Short  ? s3Entry  :
-     s4Short  ? s4Entry  : s5Short  ? s5Entry  : s6Short  ? s6Entry  :
-     s7Short  ? s7Entry  : s8Short  ? s8Entry  : s9Short  ? s9Entry  :
-     s10Short ? s10Entry : close) : na
+float aggSE = filtShort ? (s1Short  ? s1Entry  : s2Short  ? s2Entry  : s3Short  ? s3Entry  : s4Short  ? s4Entry  : s5Short  ? s5Entry  : s6Short  ? s6Entry  : s7Short  ? s7Entry  : s8Short  ? s8Entry  : s9Short  ? s9Entry  : s10Short ? s10Entry : close) : na
 
-float aggSS = filtShort ?
-    (s1Short  ? s1Stop   : s2Short  ? s2Stop   : s3Short  ? s3Stop   :
-     s4Short  ? s4Stop   : s5Short  ? s5Stop   : s6Short  ? s6Stop   :
-     s7Short  ? s7Stop   : s8Short  ? s8Stop   : s9Short  ? s9Stop   :
-     s10Short ? s10Stop  : close * AGG_STOP_BUF_SHORT) : na
+float aggSS = filtShort ? (s1Short  ? s1Stop   : s2Short  ? s2Stop   : s3Short  ? s3Stop   : s4Short  ? s4Stop   : s5Short  ? s5Stop   : s6Short  ? s6Stop   : s7Short  ? s7Stop   : s8Short  ? s8Stop   : s9Short  ? s9Stop   : s10Short ? s10Stop  : close * AGG_STOP_BUF_SHORT) : na
 
-float aggST = filtShort ?
-    (s1Short  ? s1Target : s2Short  ? s2Target : s3Short  ? s3Target :
-     s4Short  ? s4Target : s5Short  ? s5Target : s6Short  ? s6Target :
-     s7Short  ? s7Target : s8Short  ? s8Target : s9Short  ? s9Target :
-     s10Short ? s10Target : close * AGG_TARGET_BUF_SHORT) : na
+float aggST = filtShort ? (s1Short  ? s1Target : s2Short  ? s2Target : s3Short  ? s3Target : s4Short  ? s4Target : s5Short  ? s5Target : s6Short  ? s6Target : s7Short  ? s7Target : s8Short  ? s8Target : s9Short  ? s9Target : s10Short ? s10Target : close * AGG_TARGET_BUF_SHORT) : na
 
 float lRisk   = not na(aggLE) and not na(aggLS) ? math.abs(aggLE - aggLS)  : na
 float lReward = not na(aggLE) and not na(aggLT) ? math.abs(aggLT - aggLE)  : na
