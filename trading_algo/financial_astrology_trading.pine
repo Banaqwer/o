@@ -25,12 +25,18 @@
 // =============================================================================
 
 //@version=5
-indicator(title      = "Financial Astrology – Kenneth Min (27 Lessons, Exact Tables)",
-          shorttitle = "FinAstro-Exact",
-          overlay    = true,
-          max_lines_count  = 500,
-          max_labels_count = 500,
-          max_boxes_count  = 200)
+strategy(title       = "Financial Astrology – Kenneth Min (27 Lessons, Exact Tables)",
+         shorttitle  = "FinAstro-Exact",
+         overlay     = true,
+         pyramiding  = 0,
+         default_qty_type  = strategy.percent_of_equity,
+         default_qty_value = 10,
+         initial_capital   = 10000,
+         commission_type   = strategy.commission.percent,
+         commission_value  = 0.1,
+         max_lines_count   = 500,
+         max_labels_count  = 500,
+         max_boxes_count   = 200)
 
 
 // =============================================================================
@@ -39,6 +45,7 @@ indicator(title      = "Financial Astrology – Kenneth Min (27 Lessons, Exact T
 
 var string GRP_CORE    = "◆ Core Settings"
 var string GRP_FILTER  = "◆ Signal Filters"
+var string GRP_RISK    = "◆ Risk / Position Sizing"
 var string GRP_DISPLAY = "◆ Display Options"
 
 i_sym2    = input.symbol("SPY", "Symbol 2  (Intermarket Divergence)",  group = GRP_CORE)
@@ -52,6 +59,10 @@ i_minRR     = input.float(1.5, "Min Risk : Reward",
 i_solarFilt = input.bool (true,
                            "Solar Trend Filter (long in bull / short in bear only)",
                            group = GRP_FILTER)
+
+i_riskPct   = input.float(1.0, "Risk % of Equity per Trade", minval = 0.1, maxval = 10.0, step = 0.1, group = GRP_RISK)
+i_useFixed  = input.bool (false, "Use Fixed Qty Instead of % Risk",               group = GRP_RISK)
+i_fixedQty  = input.int  (1,     "Fixed Qty (shares/contracts)",  minval = 1,      group = GRP_RISK)
 
 i_showLunar   = input.bool(true,  "Lunar Phase Labels",             group = GRP_DISPLAY)
 i_showPiv     = input.bool(true,  "Confirmed Pivot Markers",        group = GRP_DISPLAY)
@@ -715,8 +726,7 @@ if nearGolden
 // Uses exact Sun-Neptune aspect dates (pre-computed at 30-degree intervals).
 // Both primary symbol AND sector ETF must confirm a 3-bar pivot.
 
-[secHigh, secLow] = request.security(i_sector, timeframe.period,
-                     [high, low], lookahead = barmerge.lookahead_off)
+[secHigh, secLow] = request.security(i_sector, timeframe.period, [high, low], lookahead = barmerge.lookahead_off)
 
 float secPivH  = ta.pivothigh(secHigh, i_pivN, i_pivN)
 float secPivL  = ta.pivotlow (secLow,  i_pivN, i_pivN)
@@ -825,8 +835,7 @@ if not na(lp9PH) and not na(lp9PL)
 // =============================================================================
 // Purely price-based.  Compares primary symbol with Symbol 2.
 
-[s2H, s2L] = request.security(i_sym2, timeframe.period,
-              [high, low], lookahead = barmerge.lookahead_off)
+[s2H, s2L] = request.security(i_sym2, timeframe.period, [high, low], lookahead = barmerge.lookahead_off)
 
 float sym2PivH = ta.pivothigh(s2H, i_pivN, i_pivN)
 float sym2PivL = ta.pivotlow (s2L, i_pivN, i_pivN)
@@ -911,6 +920,34 @@ float sRR     = not na(sRisk) and sRisk > 0.0 and not na(sReward) ? sReward / sR
 
 bool finalLong  = filtLong  and lRR >= i_minRR
 bool finalShort = filtShort and sRR >= i_minRR
+
+
+// =============================================================================
+// ■ STRATEGY EXECUTION
+// =============================================================================
+
+// Position-size helper: risk-based qty, always >= 1
+f_qty(entry, stop) =>
+    riskPerShare = math.abs(entry - stop)
+    qty = if i_useFixed
+        i_fixedQty
+    else if riskPerShare > 0.0
+        math.max(1, math.floor(strategy.equity * (i_riskPct / 100.0) / riskPerShare))
+    else
+        1
+    qty
+
+if finalLong and strategy.position_size == 0
+    qtyL = f_qty(not na(aggLE) ? aggLE : close, not na(aggLS) ? aggLS : close * 0.99)
+    strategy.entry("Long", strategy.long, qty = qtyL)
+    if not na(aggLS) and not na(aggLT)
+        strategy.exit("Long TP/SL", from_entry = "Long", stop = aggLS, limit = aggLT)
+
+if finalShort and strategy.position_size == 0
+    qtyS = f_qty(not na(aggSE) ? aggSE : close, not na(aggSS) ? aggSS : close * 1.01)
+    strategy.entry("Short", strategy.short, qty = qtyS)
+    if not na(aggSS) and not na(aggST)
+        strategy.exit("Short TP/SL", from_entry = "Short", stop = aggSS, limit = aggST)
 
 
 // =============================================================================
