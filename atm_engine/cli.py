@@ -197,6 +197,15 @@ def cmd_stats(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_protocol(args: argparse.Namespace) -> int:
+    from .research import protocol
+
+    argv = [args.phase, "--hist", args.hist, "--out", args.out, "--instruments", args.instruments]
+    if args.context:
+        argv += ["--context", args.context]
+    return protocol.main(argv)
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="atm-engine", description="Adaptive mean-reversion ladder and reversal engine.")
     sub = p.add_subparsers(dest="cmd", required=True)
@@ -241,6 +250,13 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--instrument", default="NQ")
     s.add_argument("--session", default=None)
     s.set_defaults(fn=cmd_stats)
+    pr = sub.add_parser("protocol", help="run a phase of the pre-registered research protocol (docs/protocol.md)")
+    pr.add_argument("phase", choices=["dev", "val", "holdout"])
+    pr.add_argument("--hist", required=True, help="directory of <INST>_<YEAR>.csv one-minute files")
+    pr.add_argument("--out", required=True, help="directory for tables, fitted weights and chosen cell")
+    pr.add_argument("--context", default=None)
+    pr.add_argument("--instruments", default="NQ,ES,GC")
+    pr.set_defaults(fn=cmd_protocol)
     return p
 
 
