@@ -20,6 +20,7 @@ import json
 import sys
 import time
 from dataclasses import asdict, replace
+from datetime import time as dtime
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
@@ -31,14 +32,31 @@ from ..data.schema import validate_frame
 from .backtest import replay
 from .context import DailyContext
 from .execution import ExecutionSpec, simulate
-from .fit import FEATURES, FitResult, fit_weights
+from .fit import FEATURES, FitResult, fit_weights, logloss
 from .validation import first_passage_labels, matched_baseline_events, performance
+
+
+def entry_labels(ev: pd.DataFrame, bars: pd.DataFrame) -> pd.Series:
+    """Reversion label measured from the executable entry: the next bar's open (amendment 1)."""
+    pos = pd.Series(np.arange(len(bars)), index=bars.index)
+    i = pos.reindex(pd.to_datetime(ev["ts"], utc=True)).to_numpy()
+    ok = np.isfinite(i)
+    nxt = np.full(len(ev), np.nan)
+    ii = np.clip(i[ok].astype(int) + 1, 0, len(bars) - 1)
+    nxt[ok] = bars["open"].to_numpy()[ii]
+    e2 = ev.copy()
+    e2["level_price"] = nxt
+    e2 = e2[np.isfinite(nxt)]
+    lab = first_passage_labels(e2, bars, **LABEL)
+    return lab.reindex(ev.index)
 
 WARMUP_MONTHS = 3
 GRID_Q = (0.50, 0.60, 0.70)
-GRID_STOP = (1.5, 2.0, 3.0)
-GRID_H = (30, 60)
+GRID_STOP = (2.0, 3.0, 5.0)  # amended after development: levels behave as zones
+GRID_H = (15, 60)
 LABEL = dict(k_fav=1.0, k_adv=1.0, horizon=60)
+FIT_MIN_GAIN = 0.005  # fitted weights must beat the intercept model's CV log-loss by this much
+MORNING = (dtime(9, 30), dtime(12, 0))  # the single secondary hypothesis
 PERIODS = {
     "dev": ("2018-01-01", "2022-01-01"),
     "val": ("2022-01-01", "2024-01-01"),
@@ -116,22 +134,28 @@ def phase_dev(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
     cfg = config_for("NQ")
     bars, ev, lad, sessions, secs = run_replay(hist, "NQ", start, end, cfg, ctx)
     ev.to_csv(out / "dev_events.csv", index=False)
-    labels = first_passage_labels(ev, bars, **LABEL)
+    labels_level = first_passage_labels(ev, bars, **LABEL)
+    labels = entry_labels(ev, bars)
     fit = fit_weights(ev, labels)
-    (out / "fitted_reversal.json").write_text(json.dumps({"weights": fit.weights, "bias": fit.bias, "lam": fit.lam, "cv_logloss": {str(k): v for k, v in fit.cv_logloss.items()}, "n": fit.n, "base_rate": fit.base_rate}, indent=2))
+    # intercept-only reference under the same grouped folds is approximated by the entropy of the base rate
+    p0 = fit.base_rate
+    null_ll = float(-(p0 * np.log(p0) + (1 - p0) * np.log(1 - p0)))
+    gain = null_ll - fit.cv_logloss[fit.lam]
+    use_fitted = gain >= FIT_MIN_GAIN
+    (out / "fitted_reversal.json").write_text(json.dumps({"use_fitted": bool(use_fitted), "cv_gain_over_null": gain, "weights": fit.weights, "bias": fit.bias, "lam": fit.lam, "cv_logloss": {str(k): v for k, v in fit.cv_logloss.items()}, "null_logloss": null_ll, "n": fit.n, "base_rate": fit.base_rate}, indent=2))
 
     lines = [f"# Development phase: NQ {start} to {end}", "", f"{len(bars)} bars incl. warm-up, {len(sessions)} sessions, {len(ev)} level tests, replay {secs:.0f}s.", ""]
-    lines += ["## Reversion label", "", f"1 rho favourable before 1 rho adverse within 60 bars. Labelled events: {fit.n} ({labels.notna().mean():.1%} of tests). Base rate P(favourable first) = {fit.base_rate:.3f}.", ""]
+    lines += ["## Reversion label", "", f"Amended label: 1 rho favourable before 1 rho adverse within 60 bars, measured from the next bar's open. Labelled events: {fit.n} ({labels.notna().mean():.1%} of tests). Base rate = {fit.base_rate:.3f}. (Original from-level label base rate {labels_level.mean():.3f}, shown alongside for the record.)", ""]
     comp_rows = []
     for f in FEATURES:
         q = pd.qcut(ev[f], 3, labels=["low", "mid", "high"], duplicates="drop")
         for lab, g in ev.groupby(q, observed=True):
-            lg = labels[g.index]
-            comp_rows.append({"component": f, "tercile": lab, "n": len(g), "p_fav_first": float(lg.mean()) if lg.notna().any() else np.nan, "edge15_sigma": float((g["mfe_sigma_15"] - g["mae_sigma_15"]).mean()), "reverted60": float(g["reverted_60"].mean())})
+            lg, ll = labels[g.index], labels_level[g.index]
+            comp_rows.append({"component": f, "tercile": lab, "n": len(g), "p_fav_from_entry": float(lg.mean()) if lg.notna().any() else np.nan, "p_fav_from_level": float(ll.mean()) if ll.notna().any() else np.nan, "reverted60": float(g["reverted_60"].mean())})
     lines += ["## Components by tercile (development data)", "", md_table(pd.DataFrame(comp_rows)), ""]
-    lines += ["## Fitted weights (L2 logistic, grouped 5-fold CV)", "", f"lambda = {fit.lam}; CV log-loss by lambda: " + ", ".join(f"{k}: {v:.4f}" for k, v in fit.cv_logloss.items()), "", md_table(pd.DataFrame([{"feature": k, "weight": v} for k, v in fit.weights.items()] + [{"feature": "bias", "weight": fit.bias}]), "{:.4f}"), ""]
+    lines += ["## Fitted weights on the amended label (L2 logistic, grouped 5-fold CV)", "", f"lambda = {fit.lam}; CV log-loss by lambda: " + ", ".join(f"{k}: {v:.4f}" for k, v in fit.cv_logloss.items()) + f"; intercept-only log-loss {null_ll:.4f}; gain {gain:.4f}; rule needs {FIT_MIN_GAIN}.", "", md_table(pd.DataFrame([{"feature": k, "weight": v} for k, v in fit.weights.items()] + [{"feature": "bias", "weight": fit.bias}]), "{:.4f}"), ""]
     hand = ReversalConfig()
-    lines += ["Hand-set weights for comparison: " + ", ".join(f"{k}={getattr(hand, 's_' + k.split('_', 1)[1]):.2f}" for k in FEATURES) + f", bias={hand.bias:.2f}.", ""]
+    lines += [f"**Decision: {'fitted weights' if use_fitted else 'hand-set weights kept'}.** Hand-set weights: " + ", ".join(f"{k}={getattr(hand, 's_' + k.split('_', 1)[1]):.2f}" for k in FEATURES) + f", bias={hand.bias:.2f}.", ""]
 
     # in-sample calibration of the fitted score (flagged as in-sample)
     X = ev[list(FEATURES)].to_numpy(dtype=float)
@@ -141,39 +165,41 @@ def phase_dev(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
     cal = ev.groupby(dec).apply(lambda d: pd.Series({"n": len(d), "p_fav_first": float(labels[d.index].mean()), "edge15_sigma": float((d["mfe_sigma_15"] - d["mae_sigma_15"]).mean()), "reverted60": float(d["reverted_60"].mean())}), include_groups=False).reset_index().rename(columns={"fitted_score": "decile"})
     lines += ["## Calibration of the fitted score by decile (IN-SAMPLE on development data)", "", md_table(cal), ""]
 
-    # overlay on development data: hand-set entries vs fitted entries vs baseline, default overlay
-    spec = ExecutionSpec(stop_sigma=2.0, horizon_bars=60)
+    # overlay on development data across the amended grid, hand-set entries, stated costs
     rows = []
-    rows.append(perf_row("hand-set entries", performance(simulate(ev, bars, "NQ", spec), sessions)))
-    thr = ev["fitted_score"].expanding(min_periods=50).quantile(0.6).shift(1)
-    ev_fit = ev.assign(is_entry=(ev["fitted_score"] >= thr.fillna(ev["fitted_score"].quantile(0.6))))
-    rows.append(perf_row("fitted-score entries (in-sample)", performance(simulate(ev_fit, bars, "NQ", spec), sessions)))
-    rows.append(perf_row("all tests", performance(simulate(ev, bars, "NQ", replace(spec, entries_only=False)), sessions)))
-    base = matched_baseline_events(ev, lad, bars)
-    rows.append(perf_row("matched baseline (all tests)", performance(simulate(base, bars, "NQ", spec), sessions)))
-    lines += ["## Overlay on development data (stop 2 rho, target anchor, H 60, stated costs, USD per contract)", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
+    for stop in GRID_STOP:
+        for H in GRID_H:
+            spec = ExecutionSpec(stop_sigma=stop, horizon_bars=H)
+            rows.append(perf_row(f"entries stop {stop} H {H}", performance(simulate(ev, bars, "NQ", spec), sessions)))
+            rows.append(perf_row(f"entries stop {stop} H {H} 09:30-12:00", performance(simulate(ev, bars, "NQ", replace(spec, entry_window=MORNING)), sessions)))
+    spec = ExecutionSpec(stop_sigma=3.0, horizon_bars=60)
+    rows.append(perf_row("all tests stop 3 H 60", performance(simulate(ev, bars, "NQ", replace(spec, entries_only=False)), sessions)))
+    base = matched_baseline_events(ev[ev["is_entry"]], lad, bars)
+    rows.append(perf_row("matched baseline (entries) stop 3 H 60", performance(simulate(base, bars, "NQ", spec), sessions)))
+    lines += ["## Overlay on development data (hand-set entries, target anchor, stated costs, USD per contract)", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
     (out / "dev.md").write_text("\n".join(lines))
     print("\n".join(lines))
 
 
-def load_fit(out: Path) -> FitResult:
+def load_fit(out: Path) -> Tuple[FitResult, bool]:
     d = json.loads((out / "fitted_reversal.json").read_text())
-    return FitResult(d["weights"], d["bias"], d["lam"], {float(k): v for k, v in d["cv_logloss"].items()}, d["n"], d["base_rate"])
+    fit = FitResult(d["weights"], d["bias"], d["lam"], {float(k): v for k, v in d["cv_logloss"].items()}, d["n"], d["base_rate"])
+    return fit, bool(d.get("use_fitted", False))
 
 
-def fitted_config(inst: str, fit: FitResult, q: float) -> EngineConfig:
-    rev = replace(fit.to_config(ReversalConfig()), entry_quantile=q)
-    return config_for(inst, reversal=rev)
+def fitted_config(inst: str, fit: FitResult, q: float, use_fitted: bool) -> EngineConfig:
+    base = fit.to_config(ReversalConfig()) if use_fitted else ReversalConfig()
+    return config_for(inst, reversal=replace(base, entry_quantile=q))
 
 
 def phase_val(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
     start, end = PERIODS["val"]
-    fit = load_fit(out)
-    lines = [f"# Validation phase: NQ {start} to {end}", "", "Fitted weights from development; 18-cell grid, all cells reported.", ""]
+    fit, use_fitted = load_fit(out)
+    lines = [f"# Validation phase: NQ {start} to {end}", "", f"Weights: {'fitted on development' if use_fitted else 'hand-set (development decision rule)'}; amended 18-cell grid, all cells reported.", ""]
     cells: List[Dict[str, object]] = []
     cache = {}
     for q in GRID_Q:
-        bars, ev, lad, sessions, secs = run_replay(hist, "NQ", start, end, fitted_config("NQ", fit, q), ctx)
+        bars, ev, lad, sessions, secs = run_replay(hist, "NQ", start, end, fitted_config("NQ", fit, q, use_fitted), ctx)
         cache[q] = (bars, ev, lad, sessions)
         ev.to_csv(out / f"val_events_q{int(q * 100)}.csv", index=False)
         for stop in GRID_STOP:
@@ -198,7 +224,8 @@ def phase_val(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
     rows = [perf_row(name, performance(simulate(ev, bars, "NQ", s), sessions)) for name, s in cost_variants(spec).items()]
     base = matched_baseline_events(ev[ev["is_entry"]], lad, bars)
     rows.append(perf_row("matched baseline, stated costs", performance(simulate(base, bars, "NQ", spec), sessions)))
-    lines += ["## Chosen cell: cost sensitivity and baseline", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
+    rows.append(perf_row("secondary: 09:30-12:00 ET signals only, stated costs", performance(simulate(ev, bars, "NQ", replace(spec, entry_window=MORNING)), sessions)))
+    lines += ["## Chosen cell: cost sensitivity, baseline and the secondary hypothesis", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
     # how many of 18 cells positive
     lines += [f"Cells with positive session mean: {(grid['session_mean'] > 0).sum()} of {len(grid)}; with CI above zero: {(grid['session_ci_lo'] > 0).sum()} of {len(grid)}.", ""]
     (out / "val.md").write_text("\n".join(lines))
@@ -206,16 +233,16 @@ def phase_val(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
 
 
 def phase_holdout(hist: Path, out: Path, ctx: Optional[DailyContext], instruments: Tuple[str, ...] = ("NQ", "ES", "GC")) -> None:
-    fit = load_fit(out)
+    fit, use_fitted = load_fit(out)
     choice = json.loads((out / "chosen_cell.json").read_text())
     spec = ExecutionSpec(stop_sigma=choice["stop"], horizon_bars=choice["H"])
-    lines = ["# Hold-out phase", "", f"Configuration frozen from development and validation: fitted weights, q={choice['q']}, stop={choice['stop']} rho, target anchor, H={choice['H']}. Run once per instrument.", ""]
+    lines = ["# Hold-out phase", "", f"Configuration frozen from development and validation: {'fitted' if use_fitted else 'hand-set'} weights, q={choice['q']}, stop={choice['stop']} rho, target anchor, H={choice['H']}. Run once per instrument.", ""]
     summary = []
     for inst in instruments:
         for period in ("holdout", "seen"):
             start, end = PERIODS[period]
             try:
-                bars, ev, lad, sessions, secs = run_replay(hist, inst, start, end, fitted_config(inst, fit, choice["q"]), ctx)
+                bars, ev, lad, sessions, secs = run_replay(hist, inst, start, end, fitted_config(inst, fit, choice["q"], use_fitted), ctx)
             except FileNotFoundError as e:
                 lines.append(f"{inst} {period}: {e}")
                 continue
@@ -225,6 +252,7 @@ def phase_holdout(hist: Path, out: Path, ctx: Optional[DailyContext], instrument
             base = matched_baseline_events(ev[ev["is_entry"]], lad, bars)
             rows.append(perf_row("matched baseline, stated costs", performance(simulate(base, bars, inst, spec), sessions)))
             rows.append(perf_row("all tests, stated costs", performance(simulate(ev, bars, inst, replace(spec, entries_only=False)), sessions)))
+            rows.append(perf_row("secondary: 09:30-12:00 ET signals only, stated costs", performance(simulate(ev, bars, inst, replace(spec, entry_window=MORNING)), sessions)))
             lines += [f"## {tag}", "", f"{len(ev)} tests, {int(ev['is_entry'].sum())} entries, {len(sessions)} sessions.", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
             tr = simulate(ev, bars, inst, spec)
             if not tr.empty:

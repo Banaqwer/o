@@ -10,7 +10,8 @@ both print in one bar; one contract per event.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, List, Optional
+from datetime import time as dtime
+from typing import Dict, List, Optional, Tuple
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -48,6 +49,8 @@ class ExecutionSpec:
     flat_at_close: bool = True
     session_tz: str = "America/New_York"
     close_hour: int = 16
+    # Optional window (exchange local time) the signal bar must fall in.
+    entry_window: Optional[Tuple[dtime, dtime]] = None
 
 
 def _rth_last_bar_flags(index: pd.DatetimeIndex, tz: str, close_hour: int) -> np.ndarray:
@@ -81,9 +84,14 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
 
     rows: List[dict] = []
     ts_values = pd.to_datetime(ev["ts"], utc=True)
+    tz = ZoneInfo(spec.session_tz)
     for ts, r in zip(ts_values, ev.itertuples(index=False)):
         if ts not in pos.index:
             continue
+        if spec.entry_window is not None:
+            lt = ts.tz_convert(tz).time()
+            if not (spec.entry_window[0] <= lt < spec.entry_window[1]):
+                continue
         i = int(pos[ts])
         if i + 1 >= n:
             continue

@@ -83,3 +83,38 @@ Re-fitting on validation or hold-out data; adding features after seeing
 development results on other sets; choosing costs after seeing results;
 dropping instruments or periods that look bad; reporting the best cell
 without the grid.
+
+## Amendments logged during the development phase
+
+Recorded 9 November 2026 after the development phase and before any
+validation or hold-out bar was examined.
+
+1. **Label contamination (fix).** The pre-registered label measured the
+   1 rho race from the *level price*. The divergence component includes the
+   test bar's own intrabar rejection, so a large rejection means the close
+   already sits well inside the favourable side of the level: the label was
+   predictable (divergence terciles 0.29 / 0.42 / 0.70) without being
+   tradable. Re-labelled from the executable entry (next bar's open) the
+   same terciles read 0.44 / 0.43 / 0.44 and every other component is flat
+   too. The label is therefore redefined from the next-open entry.
+2. **Weight fitting (decision rule).** With the corrected label the
+   cross-validated fit selects the strongest regularisation and its log-loss
+   is indistinguishable from an intercept-only model. Rule: the fitted
+   weights are used only if their grouped-CV log-loss beats the intercept
+   model by at least 0.005; otherwise the hand-set weights stay. On
+   development data this rule keeps the hand-set weights. The hand-set entry
+   filter does add executable value on development (gross +14 USD per trade
+   versus -1 USD for all tests at the default overlay), so it stays.
+3. **Validation grid (changed before use).** Development overlays show stop
+   rates of 42-60% at 1.5-2 rho, i.e. the levels behave as zones. The grid
+   is re-specified as stop_sigma in {2, 3, 5} and H in {15, 60}, with q
+   unchanged in {0.50, 0.60, 0.70}: still 18 cells, all reported, same
+   selection rule.
+4. **One secondary hypothesis.** On development the gross edge of entries
+   is concentrated in 09:30-12:00 ET (hours 9-11 positive, 12-16 negative).
+   A single pre-stated filter, entries whose signal bar falls in
+   09:30-12:00 ET, is evaluated on the chosen cell only as a secondary row
+   in validation and hold-out. It does not take part in cell selection.
+
+Nothing else changes. The 2025-11 to 2026-11 period remains flagged as
+seen.
