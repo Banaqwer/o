@@ -46,7 +46,21 @@ atm-engine context --start 2015-01-01 --out context.csv  # FRED + French, no key
 atm-engine replay sp500_1m.csv --instrument ES --context context.csv --out session_log
 ```
 
-The LSE client follows the published contract: key in the `X-API-Key`
+Two kinds of LSE key exist. A key made for LSE Data 3.0 answers on
+`download.londonstrategicedge.com/v3`. A key issued for the LSE Terminal or
+the older Databank (prefix `lse_live_`) is rejected there as `key-unknown`
+but answers on the Terminal's data calls at
+`api.londonstrategicedge.com/vault` (`/vault/catalog`, `/vault/candles`,
+`/vault/usage`, `/vault/meta`), which serve 1-minute futures candles with
+volume for `NASDAQ100.F`, `GOLD.F`, `SP500.F` and 30 other contract
+families back to 2017, 5,000 rows a call at 60 calls a minute.
+`fetch-lse --api auto` probes the key and picks the service; `--symbol NQ`
+or `GC` maps to the vault symbol.
+
+Results on one year of real NQ and GC 1-minute bars are in
+`docs/results_nq_gc_2025-11_2026-11.md`.
+
+The LSE Data 3.0 client follows the published contract: key in the `X-API-Key`
 header, export streamed or prepared as a job that is polled and
 checksum-verified, `Retry-After` honoured, ranges bisected by the server's
 own row estimate so each export stays under the plan cap. It is exercised
@@ -67,7 +81,7 @@ atm_engine/
   config.py            frozen, scale-free configuration; per-instrument tick sizes
   types.py             Bar, Rung, Level, Ladder, Event, Reaction
   data/                session clock, schema validation, labelled synthetic bars
-  data/sources/        LSE Data 3.0 client, FRED and French library fetchers, cached HTTP
+  data/sources/        LSE Data 3.0 and /vault clients, FRED and French fetchers, cached HTTP
   features/            deviation, orderflow, liquidity, structure, regime, estimators
   engine/              ladder builder, reversal engine, reaction tracker, session log
   research/            replay harness, reaction statistics, daily macro context
