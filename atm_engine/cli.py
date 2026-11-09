@@ -14,7 +14,7 @@ from .data.schema import load_csv
 from .data.synthetic import SyntheticSpec, generate
 from .engine.session_log import SessionLog
 from .research.backtest import replay
-from .research.stats import session_summary, summarize
+from .research.stats import session_summary, summarize, summarize_by
 from .types import RUNG_ORDER
 
 
@@ -62,14 +62,71 @@ def _print_stats(events: pd.DataFrame) -> None:
 
 
 def cmd_replay(args: argparse.Namespace) -> int:
+    from .research.context import DailyContext
+
     cfg = config_for(args.instrument)
     df = load_csv(args.csv)
     log = SessionLog(args.out) if args.out else None
-    res = replay(df, cfg, log=log)
+    ctx = DailyContext.from_csv(args.context) if args.context else None
+    res = replay(df, cfg, log=log, context=ctx)
     _print_dashboard(res, cfg.instrument, cfg.session.tz)
     _print_stats(res.events)
+    if ctx is not None and not res.events.empty:
+        by = summarize_by(res.events, "ctx_vix_z")
+        if not by.empty:
+            cols = [c for c in ["group", "horizon", "n", "edge_sigma", "edge_ci_lo", "edge_ci_hi", "t_stat", "p_reverted"] if c in by.columns]
+            print("\nReaction by previous-close VIX regime")
+            print(by[cols].to_string(index=False, float_format=lambda x: f"{x:.3f}"))
     if args.out:
         print(f"\nsession log written under {Path(args.out).resolve()}")
+    return 0
+
+
+def cmd_fetch_lse(args: argparse.Namespace) -> int:
+    from .data.sources.lse import LSEClient, LSEError
+
+    try:
+        client = LSEClient(api_key=args.key)
+        if args.usage:
+            import json
+
+            print(json.dumps(client.usage(), indent=2))
+            return 0
+        if args.search:
+            page = client.pairs(args.market, q=args.search, limit=25)
+            for p in page.get("pairs", []):
+                print(f"{p.get('symbol'):<16} {p.get('name', '')}  pair_id={p.get('pair_id')}")
+            return 0
+        if args.preview:
+            print(client.preview(args.market, args.symbol, args.timeframe).to_string())
+            return 0
+        est = client.estimate(args.market, args.symbol, args.timeframe, args.start, args.end)
+        print(f"estimate: {est.get('rows')} rows, ~{est.get('estimated_bytes', 0) / 1e6:.1f} MB, mode {est.get('mode')}")
+        if est.get("download"):
+            d = est["download"]
+            print(f"download would be refused: {d.get('code')} {d.get('message')} {d.get('required_plan') or ''}")
+            return 2
+        df = client.candles(args.market, args.symbol, args.timeframe, args.start, args.end)
+        df.to_csv(args.out, index_label="ts")
+        print(f"{len(df)} bars -> {args.out}")
+        return 0
+    except LSEError as e:
+        print(f"LSE refused: {e}")
+        if e.required_plan:
+            print(f"required plan: {e.required_plan}")
+        return 1
+
+
+def cmd_context(args: argparse.Namespace) -> int:
+    from .data.sources.http import HttpClient
+    from .research.context import DailyContext
+
+    http = HttpClient(cache_dir=args.cache) if args.cache else HttpClient()
+    ctx = DailyContext.fetch(start=args.start, index_id=args.index, http=http, with_factors=not args.no_factors)
+    ctx.to_csv(args.out)
+    f = ctx.frame.dropna(subset=["vix"])
+    print(f"{len(f)} days {f.index[0].date()} .. {f.index[-1].date()} -> {args.out}")
+    print(f.tail(5).to_string(float_format=lambda x: f"{x:.3f}"))
     return 0
 
 
@@ -97,7 +154,29 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("csv")
     r.add_argument("--instrument", default="NQ")
     r.add_argument("--out", default=None, help="directory for the per-session log")
+    r.add_argument("--context", default=None, help="daily context CSV from `atm-engine context`")
     r.set_defaults(fn=cmd_replay)
+
+    f = sub.add_parser("fetch-lse", help="download candles from London Strategic Edge (LSE Data 3.0; key in LSE_API_KEY)")
+    f.add_argument("--market", default="futures", help="futures | indices | commodities | us_stocks | cme (paid) ...")
+    f.add_argument("--symbol", default="SP500")
+    f.add_argument("--timeframe", default="1m")
+    f.add_argument("--start", default=None, help="YYYY-MM-DD")
+    f.add_argument("--end", default=None, help="YYYY-MM-DD")
+    f.add_argument("--out", default="bars.csv")
+    f.add_argument("--key", default=None, help="API key (else LSE_API_KEY)")
+    f.add_argument("--usage", action="store_true", help="print the key's plan and allowances")
+    f.add_argument("--search", default=None, help="search instruments in the market")
+    f.add_argument("--preview", action="store_true", help="print the newest ten candles")
+    f.set_defaults(fn=cmd_fetch_lse)
+
+    c = sub.add_parser("context", help="build the daily FRED + French context CSV")
+    c.add_argument("--start", default="2010-01-01")
+    c.add_argument("--index", default="NASDAQ100", help="FRED index series: NASDAQ100 | SP500 | DJIA")
+    c.add_argument("--out", default="context.csv")
+    c.add_argument("--cache", default=None, help="directory to cache downloads")
+    c.add_argument("--no-factors", action="store_true", help="skip the French library")
+    c.set_defaults(fn=cmd_context)
 
     s = sub.add_parser("stats", help="summarise a session log")
     s.add_argument("log")

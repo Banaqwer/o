@@ -82,6 +82,13 @@ class ReversalEngine:
         self._bar_index = 0
         self._last_rho = cfg.tick_size * 8
         self.events: List[Event] = []
+        self._context = None
+        self._ctx_snapshot = None
+        self._ctx_dict: Dict[str, float] = {}
+
+    def set_context(self, context) -> None:
+        """Attach a :class:`~atm_engine.research.context.DailyContext` (or None)."""
+        self._context = context
 
     # ---------------------------------------------------------------- plumbing
     def _on_reaction(self, event: Event) -> None:
@@ -94,6 +101,8 @@ class ReversalEngine:
         self._session = _SessionState(stamp.session_date.isoformat())
         self.liquidity.start_session(self._last_rho)
         self.ladder = None
+        self._ctx_snapshot = self._context.for_session(stamp.session_date) if self._context is not None else None
+        self._ctx_dict = {k: v for k, v in self._ctx_snapshot.as_dict().items() if k != "asof"} if self._ctx_snapshot else {}
 
     def finish(self) -> None:
         """Flush pending reactions at the end of a replay or a live day."""
@@ -110,7 +119,8 @@ class ReversalEngine:
         of = self.orderflow.update(bar, stamp.is_open_bar)
         minute = int(max(minutes_since_open(bar.ts, self.cfg.session), 0))
         liq = self.liquidity.update(bar, of.delta, minute, stamp.in_rth)
-        reg = self.regime.update(bar, liq.illiquidity_z, liq.relative_volume)
+        exog = self._ctx_snapshot.vix_z if self._ctx_snapshot is not None else 0.0
+        reg = self.regime.update(bar, liq.illiquidity_z, liq.relative_volume, exog)
         tol = self.cfg.reversal.touch_tolerance_sigma * dev.rho
         self.structure.update(bar, stamp.in_rth, stamp.is_open_bar, tol)
 
@@ -253,4 +263,5 @@ class ReversalEngine:
             regime=reg,
             ladder={r.name.lower(): self.ladder.levels[r].price for r in RUNG_ORDER},
             session_date=self._session.date,
+            context=dict(self._ctx_dict),
         )

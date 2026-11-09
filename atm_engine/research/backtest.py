@@ -26,11 +26,13 @@ class ReplayResult:
     engine: ReversalEngine
 
 
-def replay(df: pd.DataFrame, cfg: Optional[EngineConfig] = None, log=None) -> ReplayResult:
+def replay(df: pd.DataFrame, cfg: Optional[EngineConfig] = None, log=None, context=None) -> ReplayResult:
     cfg = cfg or EngineConfig()
     frame = validate_frame(df)
     mem = MemoryLog()
     engine = ReversalEngine(cfg, log=_Tee(mem, log))
+    if context is not None:
+        engine.set_context(context)
     n = 0
     for bar in iter_bars(frame):
         engine.on_bar(bar)

@@ -21,6 +21,25 @@ import numpy as np
 import pandas as pd
 
 
+def _quantile_bins(x: pd.Series, bins: int, names: Optional[tuple] = None) -> Optional[pd.Series]:
+    """qcut that survives tied edges: labels are assigned after duplicates are dropped."""
+
+    if x.nunique() <= bins:
+        # a discrete column (few distinct values): one group per value
+        if x.nunique() < 2:
+            return None
+        return pd.Series(pd.Categorical(x.map(lambda v: f"{v:.3g}")), index=x.index)
+    try:
+        cat = pd.qcut(x, bins, duplicates="drop")
+    except (ValueError, IndexError):
+        return None
+    k = len(cat.cat.categories)
+    if k < 2:
+        return None
+    labels = list(names[:k]) if names and len(names) >= k else [f"q{i + 1}" for i in range(k)]
+    return cat.cat.rename_categories(labels)
+
+
 def _block(df: pd.DataFrame, h: int, rng: np.random.Generator, n_boot: int) -> dict:
     mfe = df[f"mfe_sigma_{h}"].to_numpy(dtype=float)
     mae = df[f"mae_sigma_{h}"].to_numpy(dtype=float)
@@ -49,6 +68,7 @@ def _block(df: pd.DataFrame, h: int, rng: np.random.Generator, n_boot: int) -> d
 def summarize(events: pd.DataFrame, horizons: Optional[Iterable[int]] = None, n_boot: int = 2000, seed: int = 7) -> pd.DataFrame:
     if events is None or events.empty:
         return pd.DataFrame()
+    events = events.reset_index(drop=True)
     rng = np.random.default_rng(seed)
     if horizons is None:
         horizons = sorted(int(c.split("_")[-1]) for c in events.columns if c.startswith("mfe_sigma_"))
@@ -56,14 +76,39 @@ def summarize(events: pd.DataFrame, horizons: Optional[Iterable[int]] = None, n_
     groups = [("all", events)]
     groups += [(f"rung={r}", g) for r, g in events.groupby("rung", sort=False)]
     groups += [(f"entry={bool(e)}", g) for e, g in events.groupby("is_entry", sort=False)]
-    if "r_confidence" in events.columns and events["r_confidence"].nunique() >= 3:
-        terc = pd.qcut(events["r_confidence"], 3, labels=["low", "mid", "high"], duplicates="drop")
-        groups += [(f"regime_conf={t}", g) for t, g in events.groupby(terc, observed=True, sort=False)]
+    if "r_confidence" in events.columns:
+        terc = _quantile_bins(events["r_confidence"].astype(float), 3, names=("low", "mid", "high"))
+        if terc is not None:
+            groups += [(f"regime_conf={t}", g) for t, g in events.groupby(terc, observed=True, sort=False)]
     for name, g in groups:
         for h in horizons:
             if f"mfe_sigma_{h}" not in g.columns:
                 continue
             row = {"group": name}
+            row.update(_block(g, h, rng, n_boot))
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def summarize_by(events: pd.DataFrame, column: str, bins: int = 3, horizons: Optional[Iterable[int]] = None, n_boot: int = 1000, seed: int = 7) -> pd.DataFrame:
+    """Reaction statistics cut by quantile bins of ``column`` (e.g. ``ctx_vix_z``)."""
+
+    if events is None or events.empty or column not in events.columns:
+        return pd.DataFrame()
+    sub = events[np.isfinite(events[column].astype(float))].reset_index(drop=True)
+    if sub[column].nunique() < 2:
+        return pd.DataFrame()
+    cat = _quantile_bins(sub[column].astype(float), bins)
+    if cat is None:
+        return pd.DataFrame()
+    rng = np.random.default_rng(seed)
+    if horizons is None:
+        horizons = sorted(int(c.split("_")[-1]) for c in sub.columns if c.startswith("mfe_sigma_"))
+    rows: List[dict] = []
+    for lab, g in sub.groupby(cat, observed=True, sort=True):
+        lo, hi = float(g[column].min()), float(g[column].max())
+        for h in horizons:
+            row = {"group": f"{column}={lab} [{lo:.2f}, {hi:.2f}]"}
             row.update(_block(g, h, rng, n_boot))
             rows.append(row)
     return pd.DataFrame(rows)

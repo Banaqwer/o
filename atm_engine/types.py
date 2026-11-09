@@ -132,6 +132,7 @@ class RegimeSnapshot:
     relative_volume: float
     width_multiplier: float
     confidence: float  # in [0, 1]; 1 = conditions most favourable to reversion
+    exogenous_z: float = 0.0
 
 
 @dataclass
@@ -155,6 +156,7 @@ class Event:
     ladder: Dict[str, float]
     session_date: str
     reaction: Optional["Reaction"] = None
+    context: Dict[str, float] = field(default_factory=dict)
 
     def to_record(self) -> Dict[str, object]:
         rec = {
@@ -175,6 +177,7 @@ class Event:
         rec.update({f"c_{k}": v for k, v in self.components.items()})
         rec.update({f"r_{k}": v for k, v in asdict(self.regime).items()})
         rec.update({f"l_{k}": v for k, v in self.ladder.items()})
+        rec.update({f"ctx_{k}": v for k, v in self.context.items()})
         if self.reaction is not None:
             rec.update(self.reaction.to_record())
         return rec

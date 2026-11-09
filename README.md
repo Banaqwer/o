@@ -25,6 +25,41 @@ same code path in research replay and live streaming.
 | "Every level and entry ... logged ... with how price reacted afterwards" | `SessionLog` writes the ladder at every bar and every event with its forward reaction (MFE, MAE, reversion to anchor at several horizons) |
 | "No position sizing, no risk parameters and no execution logic" | None included |
 
+## Data
+
+The engine needs intraday bars with volume. Three free sources are wired in
+under `atm_engine/data/sources/`:
+
+| Source | What it gives the engine | Access |
+| --- | --- | --- |
+| [London Strategic Edge, LSE Data 3.0](https://londonstrategicedge.com/api-documentation) | Intraday candles (`time, open, high, low, close, volume, trades`) for the free `futures`, `indices` and `commodities` markets, e.g. `SP500`; CME Globex contracts such as `NQZ6` need a CME plan | Free key from the Databank in `LSE_API_KEY`; 60 calls/min, one download at a time, 2.5M rows per export, 12.5M rows/day |
+| [FRED](https://fred.stlouisfed.org/) | Daily VIX, Treasury spreads, index closes for the regime context | Keyless CSV endpoint |
+| [Kenneth R. French library](https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/data_library.html) | Daily market, size, value, profitability, investment and momentum factors for the context | Public zip files |
+
+```bash
+export LSE_API_KEY=...                                   # free key from the Databank
+atm-engine fetch-lse --usage                             # plan and allowances
+atm-engine fetch-lse --market futures --search nasdaq    # find the symbol
+atm-engine fetch-lse --market futures --symbol SP500 --timeframe 1m \
+    --start 2026-01-02 --end 2026-03-31 --out sp500_1m.csv
+atm-engine context --start 2015-01-01 --out context.csv  # FRED + French, no key
+atm-engine replay sp500_1m.csv --instrument ES --context context.csv --out session_log
+```
+
+The LSE client follows the published contract: key in the `X-API-Key`
+header, export streamed or prepared as a job that is polled and
+checksum-verified, `Retry-After` honoured, ranges bisected by the server's
+own row estimate so each export stays under the plan cap. It is exercised
+against a scripted server in the tests; a live run needs a key.
+
+The daily context (standardised log-VIX, VIX percentile, 10y-2y spread,
+20-day index return and volatility, 63-day drawdown, 20-day market factor
+return and volatility) is read for each session from the **previous**
+close only. It enters the regime width multiplier through
+`RegimeConfig.beta_exogenous` and is attached to every event as `ctx_*`
+columns, so reaction statistics can be cut by VIX regime with
+`summarize_by(events, "ctx_vix_z")`.
+
 ## Layout
 
 ```
@@ -32,10 +67,11 @@ atm_engine/
   config.py            frozen, scale-free configuration; per-instrument tick sizes
   types.py             Bar, Rung, Level, Ladder, Event, Reaction
   data/                session clock, schema validation, labelled synthetic bars
+  data/sources/        LSE Data 3.0 client, FRED and French library fetchers, cached HTTP
   features/            deviation, orderflow, liquidity, structure, regime, estimators
   engine/              ladder builder, reversal engine, reaction tracker, session log
-  research/            replay harness and reaction statistics
-  cli.py               demo / replay / stats
+  research/            replay harness, reaction statistics, daily macro context
+  cli.py               demo / replay / stats / fetch-lse / context
 tests/                 unit and invariant tests (no-lookahead, ordering, determinism)
 ```
 

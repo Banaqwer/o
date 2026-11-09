@@ -112,6 +112,9 @@ class RegimeConfig:
     beta_trend: float = 0.20
     beta_vol: float = 0.25
     beta_illiq: float = 0.10
+    # Sensitivity to an exogenous daily context (standardised log-VIX from
+    # the previous close), when a DailyContext is attached to the engine.
+    beta_exogenous: float = 0.15
     width_bounds: Tuple[float, float] = (0.6, 2.5)
 
 

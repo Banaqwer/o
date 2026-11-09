@@ -4,7 +4,9 @@ Three standardised statistics describe the environment:
 
 * ``vol_ratio`` -- fast over slow EWMA volatility (expanding / contracting);
 * ``efficiency`` -- Kaufman's efficiency ratio (trending vs. two-sided);
-* ``illiquidity_z`` -- standardised log-Amihud from the liquidity component.
+* ``illiquidity_z`` -- standardised log-Amihud from the liquidity component;
+* optionally ``exogenous_z`` -- a daily context such as the standardised
+  log-VIX at the previous close (see :mod:`atm_engine.research.context`).
 
 They are combined into a log-linear **width multiplier** on the ladder and a
 **confidence** in [0, 1] that reversion behaviour is intact. Both are
@@ -36,7 +38,7 @@ class RegimeState:
         self._prev_close: float | None = None
         self.snapshot: RegimeSnapshot | None = None
 
-    def update(self, bar: Bar, illiquidity_z: float, relative_volume: float) -> RegimeSnapshot:
+    def update(self, bar: Bar, illiquidity_z: float, relative_volume: float, exogenous_z: float = 0.0) -> RegimeSnapshot:
         if self._prev_close is not None and self._prev_close > 0:
             r = math.log(bar.close / self._prev_close)
             self._fast.update(r)
@@ -59,11 +61,15 @@ class RegimeState:
         self._z_er.update(er)
 
         c = self.cfg
-        raw = clip(c.beta_trend * z_er + c.beta_vol * z_vol + c.beta_illiq * illiquidity_z, -3.0, 3.0)
+        raw = clip(
+            c.beta_trend * z_er + c.beta_vol * z_vol + c.beta_illiq * illiquidity_z + c.beta_exogenous * exogenous_z,
+            -3.0,
+            3.0,
+        )
         lo, hi = c.width_bounds
         width = clip(math.exp(raw), lo, hi)
         confidence = 1.0 - logistic(raw)
-        self.snapshot = RegimeSnapshot(vol_ratio, er, illiquidity_z, relative_volume, width, confidence)
+        self.snapshot = RegimeSnapshot(vol_ratio, er, illiquidity_z, relative_volume, width, confidence, exogenous_z)
         return self.snapshot
 
     def component_scale(self) -> Dict[str, float]:
