@@ -57,8 +57,21 @@ families back to 2017, 5,000 rows a call at 60 calls a minute.
 `fetch-lse --api auto` probes the key and picks the service; `--symbol NQ`
 or `GC` maps to the vault symbol.
 
-Results on one year of real NQ and GC 1-minute bars are in
-`docs/results_nq_gc_2025-11_2026-11.md`.
+## Results
+
+The research record is in `docs/`:
+
+* `docs/protocol.md`: the pre-registered protocol (development 2018-2021,
+  validation 2022-2023, one hold-out 2024-2025) and every amendment, each
+  logged before the data it concerns was read.
+* `docs/results.md`: development, validation and hold-out results for the
+  ladder, the two independent audits and what they changed, and the
+  outcome for the OTE family.
+* `docs/results_nq_gc_2025-11_2026-11.md`: reaction statistics on the
+  year of data seen before the protocol was written (not evidence).
+* `docs/ote_lesson_extraction.md`, `docs/results_ote_dev.md`: the rules
+  extracted from the Optimal Trade Entry lesson and their development-phase
+  outcome.
 
 The LSE Data 3.0 client follows the published contract: key in the `X-API-Key`
 header, export streamed or prepared as a job that is polled and
@@ -82,10 +95,13 @@ atm_engine/
   types.py             Bar, Rung, Level, Ladder, Event, Reaction
   data/                session clock, schema validation, labelled synthetic bars
   data/sources/        LSE Data 3.0 and /vault clients, FRED and French fetchers, cached HTTP
-  features/            deviation, orderflow, liquidity, structure, regime, estimators
+  features/            deviation, orderflow, liquidity, structure, regime, estimators,
+                       ote (Optimal Trade Entry legs, taps, boxes, bias)
   engine/              ladder builder, reversal engine, reaction tracker, session log
-  research/            replay harness, reaction statistics, daily macro context
-  cli.py               demo / replay / stats / fetch-lse / context
+  research/            replay harness, reaction statistics, daily macro context,
+                       costed overlay, session-level inference, the protocol phases,
+                       the OTE strategy wrapper
+  cli.py               demo / replay / stats / fetch-lse / context / protocol
 tests/                 unit and invariant tests (no-lookahead, ordering, determinism)
 ```
 
@@ -146,7 +162,8 @@ for bar in live_bars():            # Bar objects, timezone-aware
    entry when its score clears the rolling 60th percentile of past scores.
 7. **Reaction.** For each event: max favourable and adverse excursion and
    whether the anchor was revisited at 5, 15, 30 and 60 bars, in points and
-   in sigma units.
+   in sigma units, measured from the open of the bar after the event (the
+   first obtainable price), not from the level.
 
 ## Scope and limitations
 
