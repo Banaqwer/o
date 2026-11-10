@@ -40,6 +40,7 @@ class OTEConfig:
     swing_width: int = 3  # fractal half-width on the leg timeframe
     bias_swing_width: int = 3
     min_displacement_sigma: float = 3.0  # leg range in units of rho
+    max_displacement_sigma: float = 30.0  # "such a huge range": prefer a lower-timeframe leg instead
     max_chop: float = 0.5  # deepest counter-move inside the leg, as a share of the leg
     zone_lo: float = 0.62
     zone_hi: float = 0.79
@@ -49,13 +50,17 @@ class OTEConfig:
     stop_buffer_sigma: float = 0.25  # stop beyond the 1.0 level (or beyond the consolidation range)
     target: str = "extreme"  # "extreme" (0.0 level) | "expansion" (-0.5) | "symmetrical" (-1.0)
     touch_level: float = 0.5  # the zone is "tapped" once price retraces at least this far (0.5 or 0.705 in the lesson)
-    confirmation: str = "range_break"  # "none" | "close_inside" | "close_back" | "range_break"
+    confirmation: str = "range_break"  # "none" | "close_inside" | "close_back" | "range_break" | "range_or_bos"
     # range_break: after the tap, a consolidation of at least ``consolidation_bars`` bars whose total
     # range is at most ``consolidation_max_sigma`` rho, then a bar closing beyond the range in the leg's
     # direction with a body of at least ``breakout_min_sigma`` rho (momentum and displacement).
     consolidation_bars: int = 5
     consolidation_max_sigma: float = 1.5
     breakout_min_sigma: float = 0.5
+    # break of structure: after the tap, a bar with a large body closing beyond the highest high
+    # (lowest low) of the last ``bos_lookback`` bars substitutes for the consolidation ("such a huge candle")
+    bos_lookback: int = 15
+    bos_min_sigma: float = 1.0
     stop_at: str = "range"  # "range": beyond the consolidation range | "origin": beyond the 1.0 level
     require_bias: bool = True
     max_zone_age_bars: int = 390  # one session
@@ -87,6 +92,8 @@ class Leg:
     range_hi: float = float("-inf")
     range_lo: float = float("inf")
     range_n: int = 0
+    recent_highs: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
+    recent_lows: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
 
     def level(self, f: float) -> float:
         return self.extreme + (self.origin - self.extreme) * f
@@ -236,7 +243,7 @@ class OTEState:
     def _make_leg(self, direction: Direction, origin: Swing, extreme: Swing, rho: float, ts: datetime) -> None:
         c = self.cfg
         span = abs(extreme.price - origin.price)
-        if rho <= 0 or span / rho < c.min_displacement_sigma:
+        if rho <= 0 or span / rho < c.min_displacement_sigma or span / rho > c.max_displacement_sigma:
             return
         # chop: deepest counter-move inside the leg on the aggregated bars
         seg = [b for idx, b in self._indexed_leg_bars() if origin.index <= idx <= extreme.index]
@@ -311,14 +318,24 @@ class OTEState:
                 ok = leg.inside_count >= 1
             elif c.confirmation == "close_back":  # price closed back on the extreme side of the zone after touching it
                 ok = close_frac < c.zone_lo
-            else:  # range_break
+            else:  # range_break / range_or_bos
                 ok = False
+                body = abs(bar.close - bar.open)
                 if leg.range_n >= c.consolidation_bars and (leg.range_hi - leg.range_lo) <= c.consolidation_max_sigma * rho:
-                    body = abs(bar.close - bar.open)
                     broke = (bar.close > leg.range_hi) if bull else (bar.close < leg.range_lo)
                     if broke and body >= c.breakout_min_sigma * rho:
                         ok = True
                         stop_ref = leg.range_lo if bull else leg.range_hi
+                if not ok and c.confirmation == "range_or_bos" and len(leg.recent_highs) >= c.bos_lookback:
+                    look_h = list(leg.recent_highs)[-c.bos_lookback:]
+                    look_l = list(leg.recent_lows)[-c.bos_lookback:]
+                    bos = (bar.close > max(look_h)) if bull else (bar.close < min(look_l))
+                    if bos and body >= c.bos_min_sigma * rho:
+                        ok = True
+                        trigger = "bos"
+                        stop_ref = min(look_l + [bar.low]) if bull else max(look_h + [bar.high])
+                leg.recent_highs.append(bar.high)
+                leg.recent_lows.append(bar.low)
                 if not ok:
                     # extend or restart the consolidation window: a bar that would make the range too wide starts a new one
                     nh, nl = max(leg.range_hi, bar.high), min(leg.range_lo, bar.low)
@@ -346,8 +363,8 @@ class OTEState:
                     stop_price=stop,
                     target_price=target,
                     trigger=trigger,
-                    range_hi=leg.range_hi if trigger == "range_break" else float("nan"),
-                    range_lo=leg.range_lo if trigger == "range_break" else float("nan"),
+                    range_hi=(leg.range_hi if trigger == "range_break" else (stop_ref if (trigger == "bos" and not bull) else float("nan"))),
+                    range_lo=(leg.range_lo if trigger == "range_break" else (stop_ref if (trigger == "bos" and bull) else float("nan"))),
                     origin=leg.origin,
                     extreme=leg.extreme,
                     displacement_sigma=leg.displacement_sigma,

@@ -51,6 +51,10 @@ class ExecutionSpec:
     close_hour: int = 16
     # Optional window (exchange local time) the signal bar must fall in.
     entry_window: Optional[Tuple[dtime, dtime]] = None
+    # Trailing stop: after entry, the stop is ratcheted to the lowest low (highest high) of the last
+    # ``trail_bars`` bars less a buffer of ``trail_buffer_sigma`` rho; 0 disables trailing.
+    trail_bars: int = 0
+    trail_buffer_sigma: float = 0.25
 
 
 def _rth_last_bar_flags(index: pd.DatetimeIndex, tz: str, close_hour: int) -> np.ndarray:
@@ -124,6 +128,12 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
                 j = n - 1
                 exit_px, reason = cl[j], "end"
                 break
+            if spec.trail_bars > 0 and k >= spec.trail_bars:
+                lo_w, hi_w = j - spec.trail_bars, j  # the trailing window excludes the current bar
+                if side < 0:
+                    stop = max(stop, float(np.min(l[lo_w:hi_w])) - spec.trail_buffer_sigma * rho)
+                else:
+                    stop = min(stop, float(np.max(h[lo_w:hi_w])) + spec.trail_buffer_sigma * rho)
             hit_stop = h[j] >= stop if side > 0 else l[j] <= stop
             hit_tgt = target is not None and ((l[j] <= target) if side > 0 else (h[j] >= target))
             if hit_stop:

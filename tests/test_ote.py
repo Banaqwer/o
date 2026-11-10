@@ -151,3 +151,52 @@ def test_simulate_explicit_stop_skips_when_already_through():
     df = frame_from_path(synthetic_impulse_and_retest())
     ev = pd.DataFrame([{"ts": df.index[100], "direction": "Buying", "level_price": 120.0, "stop_price": 200.0, "target_price": 150.0, "anchor": 120.0, "rho": 5.0, "is_entry": True, "score": 0.9, "session_date": "2024-01-03", "rung": "x"}])
     assert simulate(ev, df, "NQ").empty
+
+
+def test_bos_trigger_fires_on_large_candle_without_consolidation():
+    cfg = OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=1.0, require_bias=False, confirmation="range_or_bos", bos_lookback=5, bos_min_sigma=0.5, consolidation_bars=50)
+    st = OTEState(cfg)
+    path = synthetic_impulse_and_retest()[:115]  # ends inside the pullback, no consolidation yet
+    path.append((112.5, 120.0, 112.0, 119.5))  # one huge candle closing above the last 15 highs
+    df = frame_from_path(path)
+    from atm_engine.data.schema import iter_bars
+
+    sigs = []
+    for k, bar in enumerate(iter_bars(df)):
+        sigs.extend(st.update(bar, rho=5.0, minutes_since_open=k))
+    assert len(sigs) == 1 and sigs[0].trigger == "bos" and sigs[0].direction is Direction.BUYING
+    assert sigs[0].stop_price < 112.0
+
+
+def test_max_displacement_filters_outsized_legs():
+    cfg = OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=1.0, max_displacement_sigma=5.0, require_bias=False, confirmation="close_inside", touch_level=0.62)
+    st = OTEState(cfg)
+    df = frame_from_path(synthetic_impulse_and_retest())
+    from atm_engine.data.schema import iter_bars
+
+    sigs = []
+    for k, bar in enumerate(iter_bars(df)):
+        sigs.extend(st.update(bar, rho=5.0, minutes_since_open=k))  # leg is 45 pts = 9 rho > 5 rho
+    assert sigs == []
+
+
+def test_trailing_stop_ratchets_and_exits():
+    # long from 100 with a far stop; price rises to 120 then falls back: the trail should exit well above 100
+    path = [(100, 100.5, 99.5, 100)]
+    for i in range(20):
+        p = 100 + (i + 1)
+        path.append((p - 1, p + 0.2, p - 1.2, p))
+    for i in range(20):
+        p = 120 - (i + 1)
+        path.append((p + 1, p + 1.2, p - 0.2, p))
+    bars = make_bars_simple(path)
+    ev = pd.DataFrame([{"ts": bars.index[0], "direction": "Buying", "level_price": 100.0, "stop_price": 80.0, "target_price": np.nan, "anchor": 100.0, "rho": 1.0, "is_entry": True, "score": 0.9, "session_date": "2024-01-03", "rung": "x"}])
+    tr = simulate(ev, bars, "NQ", ExecutionSpec(horizon_bars=200, target="none", trail_bars=5, trail_buffer_sigma=0.0))
+    t = tr.iloc[0]
+    assert t.reason == "stop" and t.exit > 110.0 and t.points > 8.0
+
+
+def make_bars_simple(path):
+    idx = pd.date_range("2024-01-03 14:30", periods=len(path), freq="1min", tz="UTC")
+    o, h, l, c = (np.array([p[k] for p in path], float) for k in range(4))
+    return pd.DataFrame({"open": o, "high": h, "low": l, "close": c, "volume": 100.0}, index=idx)
