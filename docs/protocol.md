@@ -118,3 +118,40 @@ validation or hold-out bar was examined.
 
 Nothing else changes. The 2025-11 to 2026-11 period remains flagged as
 seen.
+
+## Amendment 5: the OTE family (recorded 10 November 2026, before its development grid was read)
+
+A second strategy family was extracted from a lesson video supplied by the
+user (see docs/ote_lesson_extraction.md): Optimal Trade Entry retracements
+of an impulsive leg with a consolidation-break or break-of-structure
+trigger, higher-timeframe bias gate, stop beyond the consolidation or leg
+origin, target at the leg extreme or its expansion, or a trailing stop.
+
+Rules for this family:
+
+1. Development only on NQ 2018-2021, the same development years as the
+   ladder. Signals are generated once per (leg timeframe in {5, 15} min,
+   tap level in {0.5, 0.705}, trigger in {range break, range or BOS}) with
+   the bias gate off and the bias recorded, so bias handling is a post-hoc
+   split (aligned, neutral, counter) rather than a re-run.
+2. Management variants on development: target at the 0 level, target at
+   the -0.5 expansion, or no target with a 15-bar trailing stop.
+3. **Stopping rule, fixed before the grid is read:** the family proceeds
+   to validation only if at least one cell with at least 0.3 trades per
+   session has a session-mean 95% block-bootstrap interval above zero at
+   stated costs and an annualised session Sharpe of at least 0.7.
+   Otherwise the OTE family is recorded as null on development and is not
+   taken to validation or hold-out, whatever individual cells show.
+4. If it does proceed, validation gets exactly the passing cells (all of
+   them reported), and the hold-out gets the single cell with the highest
+   validation Sharpe, once, on NQ then ES and GC.
+5. Implementation fidelity and look-ahead are checked by an independent
+   review before any validation run; confirmed fixes are applied and the
+   development grid is re-run before the stopping rule is applied.
+
+The first development grid (range-break trigger only, 5-minute legs,
+before the break-of-structure trigger and trailing were added) is kept in
+the record: all-signal cells negative after costs; the best cell
+(0.705 tap, bias-aligned, range stop, expansion target, 60-bar horizon)
+had 70 trades in four years, +91 USD per trade, Sharpe 0.58, interval
+including zero. That look is counted as consumed.
