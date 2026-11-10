@@ -98,9 +98,20 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
         side = 1 if r.direction == "Selling" else -1  # +1 short, -1 long
         entry = o[i + 1] - side * slip  # short fills a tick lower, long a tick higher
         rho = float(r.rho)
-        stop = float(r.level_price) + side * spec.stop_sigma * rho
+        # explicit per-event geometry (e.g. OTE: stop beyond the leg origin, target at its extreme) wins
+        sp = getattr(r, "stop_price", None)
+        if sp is not None and sp == sp:
+            stop = float(sp)
+        else:
+            stop = float(r.level_price) + side * spec.stop_sigma * rho
+        if (side > 0 and stop <= entry) or (side < 0 and stop >= entry):
+            continue  # already through the stop at the fill: no trade
         target: Optional[float] = None
-        if spec.target == "anchor":
+        tp = getattr(r, "target_price", None)
+        if tp is not None and tp == tp:
+            if (side > 0 and float(tp) < entry) or (side < 0 and float(tp) > entry):
+                target = float(tp)
+        elif spec.target == "anchor":
             a = float(r.anchor)
             if (side > 0 and a < entry) or (side < 0 and a > entry):
                 target = a
@@ -146,7 +157,7 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
                 "costs": cost,
                 "net": gross - cost,
                 "rho": rho,
-                "r_multiple": points / (spec.stop_sigma * rho) if rho > 0 else np.nan,
+                "r_multiple": points / abs(entry - stop) if abs(entry - stop) > 0 else np.nan,
                 "score": getattr(r, "score", np.nan),
             }
         )
