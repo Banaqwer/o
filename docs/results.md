@@ -7,7 +7,7 @@ the data it concerns was read. Raw phase outputs are in `docs/record/`.
 Data: London Strategic Edge `/vault/candles`, 1-minute continuous
 front-month futures with volume, NQ, ES and GC, 2018 to November 2026.
 Costs everywhere: 2.50 USD commission per side and one tick of slippage per
-side, paid in the fills (15 USD per NQ round trip, 15 USD ES, 25 USD GC).
+side, paid in the fills (15 USD per NQ round trip, 30 USD ES, 25 USD GC).
 Inference everywhere: session-level, moving-block bootstrap of five
 sessions, annualised session Sharpe. One contract per signal.
 
@@ -52,9 +52,10 @@ on the stop, the target, a time limit or the 15:59 ET close.
 
 ### Development, NQ 2018-2021 (1,030 sessions)
 
-7,853 level tests, 3,162 entries (3.07 per session). The reversion label
+7,879 level tests, 3,165 entries (3.07 per session). The reversion label
 (one rho in the rung's direction before one rho against it, within 60
-bars, measured from the next open) has a base rate of 0.44 on entries. An
+bars, measured from the next open) has a base rate of 0.44 over all
+labelled level tests (7,320 labelled, 92.9% of tests). An
 L2 logistic fit of the six score components on that label beat the
 intercept-only model by 0.0018 in grouped-CV log-loss against the
 pre-stated 0.005 rule, so the hand-set weights were kept for every later
@@ -72,9 +73,11 @@ contract per session; the full 12-cell table is in
 | all tests, stop 3, H 60 | 7853 | 0.55 | -13.8 | -105 | [-213, -2] | -0.92 | -0.06 |
 | |z|-matched random baseline, stop 3, H 60 | 3138 | 0.50 | -22.6 | -69 | [-217, +78] | -0.46 | -0.04 |
 
-Every 15-bar cell is negative. Entries beat both nulls (all tests, and
-random bars at the same |z|) by 20 to 35 USD a trade; no development cell
-has an interval above zero.
+Five of the six 15-bar cells are negative; the sixth (stop 5, H 15,
+09:30-12:00) is marginally positive at +1.4 USD a trade (Sharpe 0.08). At
+the cell where the nulls were run (stop 3, H 60) entries beat both nulls,
+by 19 USD a trade against all tests and 28 USD against random bars at the
+same |z|; no development cell has an interval above zero.
 
 ### Validation, NQ 2022-2023 (514 sessions), one look
 
@@ -115,7 +118,7 @@ minute since the open):
 
 Read plainly: on validation the engine's entries make about 36 USD a
 trade net at one contract, a session Sharpe of one, and the interval
-includes zero. Break-even is about 3.5 ticks of slippage per side. The
+includes zero. Break-even is about 4 ticks of slippage per side. The
 edge sits in the first half hour; after that the levels lose.
 
 ## 2. The audits
@@ -134,7 +137,10 @@ integrity; 38 agents, 14 claims refuted, 2 confirmed):
   the engine's "reaction evidence" about threefold. Fixed: measured from
   the next open. The costed overlay never used them.
 * Refuted, with the reasons in the record: that the hold-out criterion is
-  too weak to be informative (it is conservative, not biased), that the
+  too weak to be informative (the NQ leg is conservative, not biased; the
+  referee did find the secondary ES/GC point-estimate leg uninformative,
+  passing with probability 0.75 under the null, so amendment 6 dropped it
+  before the hold-out), that the
   fit rejection rule and grid amendment were disguised selection (both
   were logged before validation and re-running the original path does
   not flip the sign of the chosen cell), that the |z|-matched baseline is
@@ -177,8 +183,10 @@ NQ hold-out by minute since the open:
 | 30+ | 431 | 0.54 | -43 | 25% |
 
 The |z|-matched random baseline lost more than the entries on NQ and ES
-(-128 and -66 USD a trade) and about the same on GC, so the entries still
-carry some information relative to random bars at the same deviation;
+(-128 and -66 USD a trade against -52 and -34), so on those two
+instruments the entries still carry some information relative to random
+bars at the same deviation. On GC they carry none: the baseline was close
+to break-even (-2 USD a trade) while the entries lost 28. Where it exists,
 that information is not worth the stop-and-target geometry it is traded
 with, and it is not an edge.
 
@@ -196,9 +204,10 @@ extreme or its expansion, or trail after expansion, higher-timeframe bias
 gate) were extracted from the transcript and frames
 (`docs/ote_lesson_extraction.md`), implemented without look-ahead, and
 tested on the same development years under their own pre-stated stopping
-rule. Three grids, 234 cells, zero passes. The faithful detector, after
+rule. Three grids, 228 cells, zero passes. The faithful detector, after
 the review's fixes, prints at most 0.10 signals per regular session and
-every all-signal cell loses after costs (-94 to -258 USD a trade), no
+every all-signal cell loses after costs (-94 to -258 USD a trade with the
+target at the leg's extreme, -28 to -387 across all four managements), no
 better than a random minute in the same session with the same stop and
 target distances. Details and all three grids: `docs/results_ote_dev.md`.
 

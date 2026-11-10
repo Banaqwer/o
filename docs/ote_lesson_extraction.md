@@ -108,7 +108,7 @@ parameters of `OTEConfig` and `ExecutionSpec`.
 | Proper range, no chop | Displacement between 3 and 30 rho, deepest counter-move inside the leg at most 50% of it |
 | Drag the end of the range while the move continues | Extreme updated until the first tap |
 | Tap of 0.5 or 0.705 | `touch_level` |
-| Lower-timeframe consolidation, then break with displacement | 1-minute consolidation of at least 5 bars within 1.5 rho, then a close beyond it with body at least 0.5 rho |
+| Lower-timeframe consolidation, then break with displacement | The last 15 one-minute bars before the trigger bar form the box; it must be at most 1.5 rho and 0.20 of the leg tall, reach within 0.10 of the leg of the tapped level, and be sideways (net drift at most half its range); then a close beyond the box with body at least 0.5 rho (amendment 7; the first detector used a greedy window of at least 5 bars within 1.5 rho anywhere after the tap) |
 | Break of structure on a huge candle | Close beyond the last 15 bars' extreme with body at least 1 rho |
 | Stop just beyond the consolidation / leg origin | `stop_at` = range or origin, buffer 0.25 rho |
 | Expansions or scalp | `target` = extreme (0 level), expansion (-0.5) or symmetrical (-1.0) |

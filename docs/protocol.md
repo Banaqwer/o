@@ -151,7 +151,7 @@ Rules for this family:
 
 The first development grid (range-break trigger only, 5-minute legs,
 before the break-of-structure trigger and trailing were added) is kept in
-the record: all-signal cells negative after costs; the best cell
+the record: 13 of 16 all-signal cells negative after costs; the best cell
 (0.705 tap, bias-aligned, range stop, expansion target, 60-bar horizon)
 had 70 trades in four years, +91 USD per trade, Sharpe 0.58, interval
 including zero. That look is counted as consumed.
@@ -185,9 +185,9 @@ confirmed ones and the changes made, all before the hold-out is run:
    "positive point estimate on ES or GC" leg is dropped: it passes with
    probability 0.75 under the null. ES and GC are reported descriptively.
 5. **Record.** The choice of NQ as primary rested on a seen-period
-   comparison made with the from-level measure (NQ +1.57 sigma vs GC +0.35
+   comparison made with the from-level measure (NQ +1.59 sigma vs GC +0.35
    at 15 bars). From the next open the same entries show NQ +0.49 sigma
-   (t 2.1) and GC -0.08; the ordering survives and NQ stays primary. Two
+   (t 2.1) and GC -0.07; the ordering survives and NQ stays primary. Two
    consumed looks were not logged earlier: a passive fill-at-level overlay
    tested on development events after validation (not adopted), and the
    development replay ran without the promised three-month warm-up because
@@ -201,7 +201,8 @@ confirmed ones and the changes made, all before the hold-out is run:
    under test is the engine as coded. Its levels in the first minutes of a
    session are built from one or two bars of session data, and on
    validation 62% of trades and 88% of the chosen cell's net come from the
-   first fifteen minutes. A pass is evidence for an opening-minutes fade to
+   first fifteen minutes (audit figures on the pre-amendment overlay; 63%
+   and 81% on the re-run). A pass is evidence for an opening-minutes fade to
    the session VWAP on NQ at one contract, not for the website's
    undisclosed engine. (b) Costs are fixed in USD while rho in USD roughly
    tripled from 2018 to 2024, so the USD criterion is easier in later
@@ -263,3 +264,14 @@ same box break with no retracement requirement, no level requirement and
 no extension rule (its first form produced one signal in four years). The
 family is expected to print well under 0.3 signals per session under any
 faithful reading; the grid is still run and reported in full.
+
+Verification note (recorded after the hold-out, from an independent check
+of the write-ups against the record): the grid-3 script computed a cell
+only when its signal set had at least 10 signals, a floor amendment 7 did
+not state. One set (15-minute legs, tap 0.705, range break, aligned) had 9
+signals, so 92 of the 96 pre-registered cells and 15 of 16 nulls are in
+the record; at under 0.01 signals per session that set could not have
+passed the frequency bar. Transcription errors found by the same check
+(a level-test count, an entry count, a cell count, rounding of three
+intervals, the ES round-trip cost) were corrected in the results
+documents without changing any verdict.

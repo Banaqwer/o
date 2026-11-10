@@ -43,18 +43,18 @@ flat at the close (USD per contract):
 | 5 | 0.5 | range break | 52 | 0.25 | -228 | -11.5 | [-22.2, -2.1] | -1.06 | 1.00 | +5.6 |
 | 5 | 0.705 | range break | 35 | 0.34 | -183 | -6.2 | [-17.6, +4.1] | -0.54 | 0.70 | +11.5 |
 | 5 | 0.5 | range or BOS | 103 | 0.42 | -175 | -17.5 | [-32.0, -3.6] | -1.22 | 1.00 | +9.9 |
-| 5 | 0.705 | range or BOS | 73 | 0.51 | -94 | -6.6 | [-20.5, +6.6] | -0.48 | 0.80 | +11.6 |
-| 15 | 0.5 | range break | 30 | 0.30 | -258 | -7.5 | [-15.8, +0.2] | -0.93 | 0.98 | -1.1 |
+| 5 | 0.705 | range or BOS | 73 | 0.51 | -94 | -6.6 | [-20.5, +6.5] | -0.48 | 0.80 | +11.6 |
+| 15 | 0.5 | range break | 30 | 0.30 | -258 | -7.5 | [-15.8, +0.2] | -0.93 | 0.98 | -1.0 |
 | 15 | 0.705 | range break | 19 | 0.37 | -141 | -2.6 | [-11.9, +8.9] | -0.24 | 0.39 | +3.9 |
 | 15 | 0.5 | range or BOS | 66 | 0.44 | -233 | -14.9 | [-27.7, -2.9] | -1.19 | 1.00 | +2.6 |
-| 15 | 0.705 | range or BOS | 44 | 0.48 | -147 | -6.3 | [-18.0, +7.1] | -0.48 | 0.57 | +6.5 |
+| 15 | 0.705 | range or BOS | 44 | 0.48 | -147 | -6.3 | [-18.0, +7.0] | -0.48 | 0.57 | +6.5 |
 
 * Every all-signal cell loses, several significantly, and most do worse
   than a random minute in the same session with the same stop and target
   distances (the random null, 100 draws, is itself slightly negative
   because of costs).
 * The flipped direction, same bars and mirrored geometry, is positive in
-  six of eight cells. That is an observation on consumed development data,
+  seven of eight cells. That is an observation on consumed development data,
   not a tested hypothesis.
 * The same box break with no retracement requirement (tap level 0, box
   anywhere) loses the same way (net per trade -127 to -180 USD), so the
@@ -68,7 +68,12 @@ flat at the close (USD per contract):
   then trail, held overnight; 100% of those exits were on the trailed
   stop).
 * 11 of 92 cells have a positive session mean; none has an interval above
-  zero; the highest Sharpe of any cell is 0.36 on 21 trades.
+  zero; the highest Sharpe of any cell is 0.36 on 21 trades. Amendment 7
+  pre-registers 96 cells; the four for 15-minute legs, tap 0.705, range
+  break, aligned were not computed because the grid script skips any set
+  with fewer than 10 signals and that set has 9 (its nulls are absent for
+  the same reason). That floor was not pre-registered; at 9 signals in
+  1,030 sessions the set fails the frequency bar in any case.
 
 ## Grids 1 and 2: the first detector (before the review)
 
@@ -81,13 +86,18 @@ move had already resumed, with the target behind the entry. It printed
 
 | Grid | Cells | Best cell | Trades | Net/trade | Session mean | Sharpe | Cells passing |
 |---|---|---|---|---|---|---|---|
-| 1 (range break, 5-min legs, 60-minute HH/HL bias) | 46 | tap 0.705, aligned, range stop, expansion target, H 60 | 70 | +91 | +6.2 [-3.1, +16.0] | 0.58 | 0 |
+| 1 (range break, 5-min legs, 60-minute HH/HL bias) | 40 | tap 0.705, aligned, range stop, expansion target, H 60 | 70 | +91 | +6.2 [-3.1, +16.0] | 0.58 | 0 |
 | 2 (adds BOS trigger, 15-min legs, trailing) | 96 | 5-min, tap 0.5, range break, counter-trend, expansion | 152 | +132 | +19.4 [-3.5, +40.9] | 0.85 | 0 |
 
-In grid 2 the only positive point estimates were counter-trend under the
-60-minute HH/HL bias, the setup the lesson warns against; the review
-established that bias was undefined for 41% of signals and is not the
-narrator's reading, which is why it was replaced.
+In grid 2, 25 of 96 cells had a positive session mean, none with an
+interval above zero: 15 counter-trend under the 60-minute HH/HL bias, 9
+aligned and 1 all-signal. The five largest (+10 to +19 USD per session,
+Sharpe 0.53 to 0.85) were all counter-trend at tap 0.5 on 5-minute legs,
+the setup the lesson warns against; the best aligned cell (5-min, tap
+0.705, range break, expansion target) made +58 USD per trade, +3.9 per
+session [-8.3, +16.3], Sharpe 0.28 on 70 trades. The review established
+that bias was undefined for 41% of signals and is not the narrator's
+reading, which is why it was replaced.
 
 ## Reading
 
