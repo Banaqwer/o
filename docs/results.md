@@ -13,7 +13,32 @@ sessions, annualised session Sharpe. One contract per signal.
 
 ## Summary
 
-TO FILL AFTER THE HOLD-OUT.
+* **The ladder has no edge out of sample.** On the pre-registered hold-out
+  (NQ, January 2024 to October 2025, 474 sessions, run once) the frozen
+  configuration lost 51.5 USD per trade at stated costs, 157 USD per
+  session with a 95% interval of [-338, +23], Sharpe -1.30. It loses at
+  zero costs too (-36 USD per trade), so this is not a cost story. ES and
+  GC, run unchanged, lost 34 and 28 USD per trade. The protocol's verdict
+  is a failure to show an edge.
+* **The validation signal was an opening-minutes fade that reversed.** On
+  2022-2023 the chosen cell made +36.5 USD a trade (Sharpe 1.01, interval
+  including zero) and 70% of that came from signals in the first five
+  minutes of the session. On 2024-2025 the same first five minutes lost
+  100 USD a trade and account for 87% of the hold-out loss.
+* **The OTE family is null on development**, three times, including once
+  after an independent fidelity review and a corrected set of nulls. The
+  faithful setup fires about once or twice a month in regular hours and
+  loses after costs under every management rule the lesson describes.
+* **Two adversarial audits changed the numbers but not the verdicts.**
+  Slippage had been counted twice (every costed figure was 10 USD a trade
+  too pessimistic on NQ) and the engine's reaction statistics were
+  measured from the level rather than from an obtainable price (inflating
+  them about threefold). Both were fixed before the hold-out was run.
+* **What survives is the engine, the data plumbing and the protocol**, not
+  a trading edge: a faithful, look-ahead-free implementation of the
+  website's description, free data from the LSE vault, FRED and the
+  French library, a costed overlay with session-level inference, and a
+  logged research record in which every look is accounted for.
 
 ## 1. The ladder (ATM reversal engine)
 
@@ -124,14 +149,81 @@ integrity; 38 agents, 14 claims refuted, 2 confirmed):
 **OTE fidelity and look-ahead review** (five lenses, 33 agents, no
 look-ahead found, five fidelity gaps confirmed): see section 4.
 
-## 3. Hold-out
+## 3. Hold-out (one run, 10 November 2026)
 
-TO FILL.
+Frozen configuration: hand-set weights, entry quantile 0.6, stop 5 rho,
+target at the anchor, 60-bar limit, flat at 15:59 ET. Period: 2024-01-01
+to 2025-11-01 (the year after it was seen before the protocol and is
+reported separately, not as evidence). Full tables in
+`docs/record/ladder_holdout.md`.
+
+| Instrument | Sessions | Trades | Hit | Net/trade | Session mean | 95% interval | Sharpe | Net per rho | Zero-cost net/trade |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| NQ | 474 | 1447 | 0.63 | -51.5 | -157 | [-338, +23] | -1.30 | -0.16 | -35.8 |
+| ES | 474 | 1518 | 0.63 | -33.9 | -109 | [-201, -17] | -1.76 | -0.20 | -5.4 |
+| GC | 475 | 1549 | 0.65 | -28.4 | -93 | [-201, +23] | -1.12 | -0.11 | -4.2 |
+
+The pre-registered criterion (NQ interval entirely above zero at stated
+costs) is not met. The secondary morning hypothesis fails as well (NQ
+09:30-12:00: -49 USD a trade, Sharpe -1.15). Both hold-out years are
+negative on all three instruments; no VIX tercile is positive on NQ.
+
+NQ hold-out by minute since the open:
+
+| Minute | Trades | Hit | Net/trade | Share of total net |
+| --- | --- | --- | --- | --- |
+| 0-4 | 653 | 0.61 | -100 | 87% |
+| 5-29 | 363 | 0.75 | +25 | -12% |
+| 30+ | 431 | 0.54 | -43 | 25% |
+
+The |z|-matched random baseline lost more than the entries on NQ and ES
+(-128 and -66 USD a trade) and about the same on GC, so the entries still
+carry some information relative to random bars at the same deviation;
+that information is not worth the stop-and-target geometry it is traded
+with, and it is not an edge.
+
+The seen year (November 2025 to November 2026, looked at before the
+protocol) shows NQ +29 USD a trade with an interval of [-298, +493]; ES
+and GC negative. It is reported for completeness and carries no evidential
+weight.
 
 ## 4. The OTE family
 
-TO FILL.
+The lesson video's Optimal Trade Entry rules (fib retracement of an
+impulsive leg, tap of 0.5 or 0.705, consolidation at the level, entry on
+its break with displacement, stop beyond the box, target at the leg's
+extreme or its expansion, or trail after expansion, higher-timeframe bias
+gate) were extracted from the transcript and frames
+(`docs/ote_lesson_extraction.md`), implemented without look-ahead, and
+tested on the same development years under their own pre-stated stopping
+rule. Three grids, 234 cells, zero passes. The faithful detector, after
+the review's fixes, prints at most 0.10 signals per regular session and
+every all-signal cell loses after costs (-94 to -258 USD a trade), no
+better than a random minute in the same session with the same stop and
+target distances. Details and all three grids: `docs/results_ote_dev.md`.
 
 ## 5. What this does and does not show
 
-TO FILL.
+* The website's engine is described, not disclosed. What was tested is a
+  faithful implementation of every stated ingredient with standard
+  quantitative choices where the site is silent, and the result is
+  specific to those choices. A differently specified engine could behave
+  differently; nothing here says the site's own levels do or do not work.
+* The one effect the development and validation years agreed on, a fade
+  of the first minutes of the session toward the session VWAP on NQ,
+  reversed in 2024-2025. That is the usual fate of an effect found by
+  selection on a few years of one instrument, and the protocol was built
+  to expose exactly that.
+* The costed numbers are for one contract with fixed USD friction; the
+  scale-free rows (net per rho) tell the same story in every period, so
+  the conclusion does not depend on the price level.
+* The hold-out is consumed. Any revised engine (for instance one whose
+  ladder is warm-started at the open from the prior session's dispersion,
+  the main design flaw the audit identified) needs new out-of-sample data,
+  which from here means a forward period, not another pass over
+  2024-2025.
+* What the repository delivers: the engine and its tests (89 passing), the
+  free-data clients, the research harness (costed overlay, session-level
+  bootstrap, matched nulls, protocol phases), the OTE detector, and a
+  research record that can be re-run end to end with the commands in the
+  README and `docs/protocol.md`.
