@@ -64,7 +64,7 @@ class OTEConfig:
     # beyond the box in the leg's direction with a body of at least ``breakout_min_sigma`` rho.
     consolidation_bars: int = 15
     consolidation_max_sigma: float = 1.5
-    consolidation_max_leg_fraction: float = 0.15
+    consolidation_max_leg_fraction: float = 0.20  # the lesson's five-minute example boxes about 0.18 of its leg
     consolidation_band: float = 0.10
     consolidation_max_drift: float = 0.5
     breakout_min_sigma: float = 0.5

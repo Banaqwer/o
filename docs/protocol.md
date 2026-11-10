@@ -248,3 +248,18 @@ not tuned on it:
    of amendment 5 rule 3 applies unchanged to this grid. Nulls run on the
    "all" and "aligned" sets under the extreme target. The two earlier grids
    are consumed looks and stay in the record.
+
+Addendum to amendment 7 (recorded before any P&L of the re-run was read).
+The first re-run crashed on a zero-draw bootstrap after printing its first
+signal count: 15 signals in four development years for 5-minute legs, tap
+0.5, range break (464 under the old box). A count-only probe on 2019 (no
+P&L computed) showed the box-to-leg cap was the binding condition: 5
+signals at 0.15, 17 at 0.20, 23 at 0.25, 30 with no leg cap; the level
+band, the drift test, the extension rule and the rho cap each changed the
+count by at most one. The lesson's own five-minute example (part 2) boxes
+about 0.18 of its leg, so the cap is set to 0.20, the value the lesson
+supports, and nothing else is changed. The tap-0 null is redefined as the
+same box break with no retracement requirement, no level requirement and
+no extension rule (its first form produced one signal in four years). The
+family is expected to print well under 0.3 signals per session under any
+faithful reading; the grid is still run and reported in full.

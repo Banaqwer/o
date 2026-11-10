@@ -30,7 +30,7 @@ def block_bootstrap_mean(x: np.ndarray, block: int = 5, n_boot: int = 2000, seed
 
     x = np.asarray(x, dtype=float)
     n = len(x)
-    if n < 2:
+    if n < 2 or n_boot <= 0:
         return (float("nan"), float("nan"))
     block = max(1, min(block, n))
     rng = np.random.default_rng(seed)
