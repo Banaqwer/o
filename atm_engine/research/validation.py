@@ -78,6 +78,13 @@ def performance(trades: pd.DataFrame, sessions: pd.Index, block: int = 5, n_boot
             "exit_target": float((trades["reason"] == "target").mean()),
         }
     )
+    # scale-free edge: points per unit of rho, gross and net of all friction, so periods at different
+    # price levels can be compared (USD costs are fixed while rho in USD is not)
+    if "points" in trades and "rho" in trades and float(trades["rho"].sum()) > 0:
+        nz = trades[trades["points"] != 0]
+        mult = float((nz["gross"] / nz["points"]).iloc[0]) if len(nz) else np.nan
+        out["gross_per_rho"] = float(trades["points"].sum() / trades["rho"].sum())
+        out["net_per_rho"] = float((trades["net"] / mult).sum() / trades["rho"].sum()) if mult and np.isfinite(mult) else np.nan
     return out
 
 

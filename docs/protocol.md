@@ -155,3 +155,96 @@ the record: all-signal cells negative after costs; the best cell
 (0.705 tap, bias-aligned, range stop, expansion target, 60-bar horizon)
 had 70 trades in four years, +91 USD per trade, Sharpe 0.58, interval
 including zero. That look is counted as consumed.
+
+## Amendment 6: confirmed audit fixes and reporting before the hold-out (recorded 10 November 2026, before any re-run was read)
+
+An independent audit of the pipeline (five lenses, every finding
+refereed) confirmed two defects and refuted fourteen other claims. The
+confirmed ones and the changes made, all before the hold-out is run:
+
+1. **Slippage was counted twice.** Fills were moved one tick per side
+   against the trade and the cost line charged two more ticks, so friction
+   on NQ was 25 USD per round trip against the stated 15. Fixed: commission
+   in the cost line, slippage in the fills. Development and validation are
+   re-run mechanically with the same selection rule; the earlier tables
+   stay in the record (`proto/`), the re-run lives in `proto_a6/`. The
+   chosen cell is whatever the unchanged rule picks on the re-run.
+2. **Reaction statistics were measured from the level price.** The
+   engine's MFE/MAE/reverted columns credited the test bar's own rejection
+   (already inside the divergence component) as reaction. They are now
+   measured from the open of the bar after the event, the first obtainable
+   price, consistent with amendment 1. The costed overlay never used them.
+   Every table built on the old measure is regenerated and labelled; the
+   README no longer quotes from-level reaction as evidence.
+3. **Overlay hygiene.** A signal on the 15:59 ET bar is skipped when the
+   rule is flat at the close (it would fill at 16:00). An explicit target
+   already behind the fill skips the trade. The ladder has no explicit
+   targets, so only the first applies to it.
+4. **Hold-out criterion made one-sided and single-legged.** NQ passes only
+   if the stated-cost session-mean interval lies entirely above zero. The
+   "positive point estimate on ES or GC" leg is dropped: it passes with
+   probability 0.75 under the null. ES and GC are reported descriptively.
+5. **Record.** The choice of NQ as primary rested on a seen-period
+   comparison made with the from-level measure (NQ +1.57 sigma vs GC +0.35
+   at 15 bars). From the next open the same entries show NQ +0.49 sigma
+   (t 2.1) and GC -0.08; the ordering survives and NQ stays primary. Two
+   consumed looks were not logged earlier: a passive fill-at-level overlay
+   tested on development events after validation (not adopted), and the
+   development replay ran without the promised three-month warm-up because
+   no 2017 bars were fetched (the first weeks of 2018 used fallback band
+   multipliers). Development is consumed either way; left as is.
+6. **Reporting additions, no selection.** Cost rows at 2 and 3 ticks per
+   side; a scale-free edge (points per unit of rho, gross and net); a
+   descriptive split by the signal bar's minute since the open ([0,5),
+   [5,30), 30+); by-year tables count every session of the year.
+7. **Limitations stated before the hold-out is read.** (a) The object
+   under test is the engine as coded. Its levels in the first minutes of a
+   session are built from one or two bars of session data, and on
+   validation 62% of trades and 88% of the chosen cell's net come from the
+   first fifteen minutes. A pass is evidence for an opening-minutes fade to
+   the session VWAP on NQ at one contract, not for the website's
+   undisclosed engine. (b) Costs are fixed in USD while rho in USD roughly
+   tripled from 2018 to 2024, so the USD criterion is easier in later
+   years; the scale-free rows are for comparison and the pre-registered USD
+   criterion stands. (c) Capacity is one contract; nothing here says what
+   size the result survives.
+
+The hold-out runs once after items 1-3 are in the code and the validation
+re-run has been read, on NQ then ES and GC.
+
+## Amendment 7: OTE fidelity re-run (recorded 10 November 2026, before the re-run grid was read)
+
+The independent review required by amendment 5 rule 5 found no look-ahead
+and five confirmed fidelity gaps. Fixes, all fixed before the re-run and
+not tuned on it:
+
+1. **The box sits at the level.** A tapped leg dies when price trades
+   beyond its 0.0 level before a trigger ("already broken out of"). The
+   consolidation is the last 15 one-minute bars before the trigger bar; it
+   must reach within 0.10 of the leg of the tapped level, be at most 0.15
+   of the leg and 1.5 rho tall, and be sideways (net drift across it at
+   most half its range). The trigger is unchanged: a close beyond the box
+   with a body of at least 0.5 rho. Reward-to-risk at the signal is
+   recorded.
+2. **Bias is the four-hour break-of-structure state**: +1 after a close
+   above the last confirmed swing high, -1 after a close below the last
+   confirmed swing low, held until the opposite break, never neutral once
+   warmed up. The 60-minute state and the sign of the 24-hour change are
+   recorded as diagnostics and do not enter the grid.
+3. **Management.** The three variants of amendment 5 stay. A fourth,
+   "expand then trail", is the narrator's own: no time stop, held through
+   the overnight for up to three sessions, initial stop at the box, a
+   15-bar trailing stop (less 0.25 rho) armed only once price reaches the
+   0.0 level.
+4. **Nulls corrected.** The random-minute null now takes the real trade's
+   stop and target distances from the fill, is drawn 100 times, and is
+   reported as P(null session mean >= actual). Two more nulls: the flipped
+   direction at the same bars with mirrored geometry, and the same box
+   break with no retracement requirement (tap level 0), which tests whether
+   the retracement adds anything to a plain box breakout.
+5. **Grid and rule.** Legs {5, 15} min x tap {0.5, 0.705} x trigger {range
+   break, range or BOS} x set {all, aligned, counter} x management
+   {extreme, expansion, trail, expand-trail} = 96 cells. The stopping rule
+   of amendment 5 rule 3 applies unchanged to this grid. Nulls run on the
+   "all" and "aligned" sets under the extreme target. The two earlier grids
+   are consumed looks and stay in the record.

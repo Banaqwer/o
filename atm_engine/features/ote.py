@@ -7,13 +7,14 @@ ICT material it follows:
   confirmed swing high (bullish) or the reverse;
 * a Fibonacci retracement is drawn from the leg's origin (1.0) to its
   extreme (0.0) with levels 0.79, 0.705, 0.62, 0.5, 0.25;
-* the *zone* is the 0.62-0.79 band, with 0.705 as the sweet spot and 0.5 as
-  equilibrium; the slide tells traders to wait for price to move "deep into
-  the 0.5-0.705 zone", buying at discount and selling at premium;
-* checklist: confirm the higher-timeframe bias, mark a proper zone (no
-  chop), wait for the retest, wait for consolidation, target expansions or
-  scalps (the 0.0 level, or symmetrical extensions beyond it), stop beyond
-  the 1.0 level.
+* the lesson trades two levels, 0.705 and 0.5 (fair value and equilibrium);
+  the 0.62-0.79 band of the public ICT material is kept as ``zone_lo`` /
+  ``zone_hi`` for the ``close_inside`` confirmation only;
+* checklist: confirm the higher-timeframe bias (a break-of-structure state
+  on four-hour bars), mark a proper zone (no chop), wait for the tap, wait
+  for consolidation *at the level* that is small next to the leg, enter on
+  the break of that box with displacement, stop beyond the box or the 1.0
+  level, target the 0.0 level or its expansion, or trail after expansion.
 
 Everything here is scale-free (displacement in units of ``rho``) and
 incremental: swings are confirmed with a lag, zones become active only
@@ -36,9 +37,13 @@ FIB_LEVELS: Tuple[float, ...] = (0.0, 0.25, 0.5, 0.62, 0.705, 0.79, 1.0)
 @dataclass(frozen=True)
 class OTEConfig:
     leg_minutes: int = 5  # bar size on which legs are identified
-    bias_minutes: int = 60  # bar size for the higher-timeframe bias
+    bias_minutes: int = 240  # bar size for the higher-timeframe bias ("the four hour timeframe")
     swing_width: int = 3  # fractal half-width on the leg timeframe
     bias_swing_width: int = 3
+    # "bos": break-of-structure state, +1 after a close above the last confirmed swing high, -1 after a close
+    # below the last confirmed swing low, held until the opposite break ("took out all these highs");
+    # "hh_hl": the earlier higher-highs-and-higher-lows reading, which can be undefined (0)
+    bias_mode: str = "bos"
     min_displacement_sigma: float = 3.0  # leg range in units of rho
     max_displacement_sigma: float = 30.0  # "such a huge range": prefer a lower-timeframe leg instead
     max_chop: float = 0.5  # deepest counter-move inside the leg, as a share of the leg
@@ -47,15 +52,21 @@ class OTEConfig:
     sweet: float = 0.705
     equilibrium: float = 0.5
     invalidation: float = 1.0  # a close through this retracement kills the zone
+    invalidate_on_extension: bool = True  # after the tap, a bar trading beyond the 0.0 level kills the zone (the move resumed without us)
     stop_buffer_sigma: float = 0.25  # stop beyond the 1.0 level (or beyond the consolidation range)
     target: str = "extreme"  # "extreme" (0.0 level) | "expansion" (-0.5) | "symmetrical" (-1.0)
     touch_level: float = 0.5  # the zone is "tapped" once price retraces at least this far (0.5 or 0.705 in the lesson)
     confirmation: str = "range_break"  # "none" | "close_inside" | "close_back" | "range_break" | "range_or_bos"
-    # range_break: after the tap, a consolidation of at least ``consolidation_bars`` bars whose total
-    # range is at most ``consolidation_max_sigma`` rho, then a bar closing beyond the range in the leg's
-    # direction with a body of at least ``breakout_min_sigma`` rho (momentum and displacement).
-    consolidation_bars: int = 5
+    # range_break: the box is the last ``consolidation_bars`` one-minute bars before the trigger bar. It must
+    # be small (range at most ``consolidation_max_sigma`` rho and ``consolidation_max_leg_fraction`` of the
+    # leg), sit at the tapped level (reach within ``consolidation_band`` of the leg of it) and be sideways
+    # (net drift across it at most ``consolidation_max_drift`` of its range). The trigger is a bar closing
+    # beyond the box in the leg's direction with a body of at least ``breakout_min_sigma`` rho.
+    consolidation_bars: int = 15
     consolidation_max_sigma: float = 1.5
+    consolidation_max_leg_fraction: float = 0.15
+    consolidation_band: float = 0.10
+    consolidation_max_drift: float = 0.5
     breakout_min_sigma: float = 0.5
     # break of structure: after the tap, a bar with a large body closing beyond the highest high
     # (lowest low) of the last ``bos_lookback`` bars substitutes for the consolidation ("such a huge candle")
@@ -89,11 +100,18 @@ class Leg:
     deepest: float = 0.0  # deepest retracement fraction reached since confirmation
     signalled: bool = False
     inside_count: int = 0
-    range_hi: float = float("-inf")
-    range_lo: float = float("inf")
-    range_n: int = 0
+    range_hi: float = float("nan")  # the box at the trigger (range_break only)
+    range_lo: float = float("nan")
+    recent_opens: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
     recent_highs: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
     recent_lows: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
+    recent_closes: Deque[float] = field(default_factory=lambda: deque(maxlen=64))
+
+    def push(self, bar: Bar) -> None:
+        self.recent_opens.append(bar.open)
+        self.recent_highs.append(bar.high)
+        self.recent_lows.append(bar.low)
+        self.recent_closes.append(bar.close)
 
     def level(self, f: float) -> float:
         return self.extreme + (self.origin - self.extreme) * f
@@ -122,6 +140,9 @@ class OTESignal:
     trigger: str = ""
     range_hi: float = float("nan")  # consolidation range at the trigger (range_break only)
     range_lo: float = float("nan")
+    bias_60: int = 0  # diagnostic: the same break-of-structure state on 60-minute bars
+    mom24: int = 0  # diagnostic: sign of the close-to-close change over the last 1440 one-minute bars
+    reward_risk: float = float("nan")  # |target - close| / |close - stop| at the signal bar
 
 
 class _Aggregator:
@@ -189,17 +210,44 @@ class OTEState:
         self.tz = ZoneInfo(cfg.session_tz)
         self._agg = _Aggregator(cfg.leg_minutes, cfg.session_tz)
         self._bias_agg = _Aggregator(cfg.bias_minutes, cfg.session_tz)
+        self._bias60_agg = _Aggregator(60, cfg.session_tz)
         self._swings = _SwingDetector(cfg.swing_width)
         self._bias_swings = _SwingDetector(cfg.bias_swing_width)
+        self._bias60_swings = _SwingDetector(cfg.bias_swing_width)
+        self._closes: Deque[float] = deque(maxlen=1440)
         self._leg_bars: List[Bar] = []  # aggregated bars, to measure chop inside a leg
         self._i = 0
         self.legs: Dict[Direction, Optional[Leg]] = {Direction.BUYING: None, Direction.SELLING: None}
         self.bias = 0
+        self.bias_60 = 0
+        self.mom24 = 0
 
     # ------------------------------------------------------------------ bias
+    def _structure_state(self, det: _SwingDetector, done: Bar, prev: int) -> int:
+        """Break-of-structure state: +1 after a close above the last confirmed swing high, -1 after a close
+        below the last confirmed swing low, otherwise unchanged. The confirming swing is never the bar itself."""
+        hs, ls = det.highs, det.lows
+        if hs and done.close > hs[-1].price:
+            return 1
+        if ls and done.close < ls[-1].price:
+            return -1
+        return prev
+
     def _update_bias(self, bar: Bar) -> None:
+        self._closes.append(bar.close)
+        if len(self._closes) == self._closes.maxlen:
+            d = bar.close - self._closes[0]
+            self.mom24 = 1 if d > 0 else -1 if d < 0 else self.mom24
+        d60 = self._bias60_agg.update(bar)
+        if d60 is not None:
+            self.bias_60 = self._structure_state(self._bias60_swings, d60, self.bias_60)
+            self._bias60_swings.update(d60)
         done = self._bias_agg.update(bar)
         if done is None:
+            return
+        if self.cfg.bias_mode == "bos":
+            self.bias = self._structure_state(self._bias_swings, done, self.bias)
+            self._bias_swings.update(done)
             return
         self._bias_swings.update(done)
         hs, ls = self._bias_swings.highs, self._bias_swings.lows
@@ -306,6 +354,11 @@ class OTEState:
                 leg.touched = True
             leg.deepest = max(leg.deepest, frac)
             if not leg.touched or leg.signalled:
+                leg.push(bar)
+                continue
+            # the move resumed past the 0.0 level without a trigger: the range is "already broken out of"
+            if c.invalidate_on_extension and ((bull and bar.high > leg.extreme) or (not bull and bar.low < leg.extreme)):
+                self.legs[direction] = None
                 continue
             close_frac = leg.retrace_fraction(bar.close)
             inside = c.zone_lo <= close_frac <= c.zone_hi
@@ -321,11 +374,24 @@ class OTEState:
             else:  # range_break / range_or_bos
                 ok = False
                 body = abs(bar.close - bar.open)
-                if leg.range_n >= c.consolidation_bars and (leg.range_hi - leg.range_lo) <= c.consolidation_max_sigma * rho:
-                    broke = (bar.close > leg.range_hi) if bull else (bar.close < leg.range_lo)
-                    if broke and body >= c.breakout_min_sigma * rho:
-                        ok = True
-                        stop_ref = leg.range_lo if bull else leg.range_hi
+                span = abs(leg.origin - leg.extreme)
+                level_t = leg.level(c.touch_level)
+                tol = c.consolidation_band * span
+                m = c.consolidation_bars
+                if len(leg.recent_highs) >= m:
+                    hs, ls = list(leg.recent_highs)[-m:], list(leg.recent_lows)[-m:]
+                    box_hi, box_lo = max(hs), min(ls)
+                    rng = box_hi - box_lo
+                    cap = min(c.consolidation_max_sigma * rho, c.consolidation_max_leg_fraction * span)
+                    at_level = (box_lo - tol) <= level_t <= (box_hi + tol)
+                    drift = abs(leg.recent_closes[-1] - list(leg.recent_opens)[-m])
+                    sideways = drift <= c.consolidation_max_drift * rng
+                    if rng <= cap and at_level and sideways:
+                        broke = (bar.close > box_hi) if bull else (bar.close < box_lo)
+                        if broke and body >= c.breakout_min_sigma * rho:
+                            ok = True
+                            stop_ref = box_lo if bull else box_hi
+                            leg.range_hi, leg.range_lo = box_hi, box_lo
                 if not ok and c.confirmation == "range_or_bos" and len(leg.recent_highs) >= c.bos_lookback:
                     look_h = list(leg.recent_highs)[-c.bos_lookback:]
                     look_l = list(leg.recent_lows)[-c.bos_lookback:]
@@ -334,15 +400,7 @@ class OTEState:
                         ok = True
                         trigger = "bos"
                         stop_ref = min(look_l + [bar.low]) if bull else max(look_h + [bar.high])
-                leg.recent_highs.append(bar.high)
-                leg.recent_lows.append(bar.low)
-                if not ok:
-                    # extend or restart the consolidation window: a bar that would make the range too wide starts a new one
-                    nh, nl = max(leg.range_hi, bar.high), min(leg.range_lo, bar.low)
-                    if nh - nl <= c.consolidation_max_sigma * rho:
-                        leg.range_hi, leg.range_lo, leg.range_n = nh, nl, leg.range_n + 1
-                    else:
-                        leg.range_hi, leg.range_lo, leg.range_n = bar.high, bar.low, 1
+                leg.push(bar)
             if not ok:
                 continue
             if c.require_bias and self.bias != (1 if bull else -1):
@@ -355,6 +413,8 @@ class OTEState:
                 stop = leg.level(c.invalidation) - (c.stop_buffer_sigma * rho if bull else -c.stop_buffer_sigma * rho)
             tgt_f = {"extreme": 0.0, "expansion": -0.5, "symmetrical": -1.0}[c.target]
             target = leg.level(tgt_f)
+            risk = abs(bar.close - stop)
+            rr = abs(target - bar.close) / risk if risk > 0 else float("nan")
             signals.append(
                 OTESignal(
                     ts=bar.ts,
@@ -371,6 +431,9 @@ class OTEState:
                     chop=leg.chop,
                     deepest=leg.deepest,
                     bias=self.bias,
+                    bias_60=self.bias_60,
+                    mom24=self.mom24,
+                    reward_risk=rr,
                     rho=rho,
                     minutes_since_open=minutes_since_open,
                     bars_since_leg=self._i - leg.confirmed_at,

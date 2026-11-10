@@ -115,10 +115,11 @@ def test_reaction_tracker_measures_excursions_per_horizon():
         tr.on_bar(mk(i, o, h, l, c), i)
     assert tr.pending == 0 and ev.reaction is not None
     r = ev.reaction
-    assert r.favourable[2] == 102.0 - 99.5 and r.adverse[2] == 103.0 - 102.0 and r.reverted_to_anchor[2] is True
-    assert r.favourable[4] == 102.0 - 98.0 and r.adverse[4] == 104.0 - 102.0
+    # excursions are measured from the next bar's open (101), not from the level (102)
+    assert r.favourable[2] == 101.0 - 99.5 and r.adverse[2] == 103.0 - 101.0 and r.reverted_to_anchor[2] is True
+    assert r.favourable[4] == 101.0 - 98.0 and r.adverse[4] == 104.0 - 101.0
     rec = r.to_record()
-    assert math.isclose(rec["mfe_sigma_2"], 2.5 / 2.0)
+    assert math.isclose(rec["mfe_sigma_2"], 1.5 / 2.0)
 
 
 def test_reaction_tracker_close_session_leaves_unreached_horizons_nan():

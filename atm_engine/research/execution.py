@@ -55,6 +55,10 @@ class ExecutionSpec:
     # ``trail_bars`` bars less a buffer of ``trail_buffer_sigma`` rho; 0 disables trailing.
     trail_bars: int = 0
     trail_buffer_sigma: float = 0.25
+    # "bars": the trail runs from bar ``trail_bars`` onward; "target": the initial stop holds until price
+    # first reaches ``target_price`` (the lesson's "after expansion"), then the target is dropped and the
+    # trail takes over (requires a per-event target_price and trail_bars > 0)
+    trail_arm: str = "bars"
 
 
 def _rth_last_bar_flags(index: pd.DatetimeIndex, tz: str, close_hour: int) -> np.ndarray:
@@ -83,7 +87,9 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
     cl = bars["close"].to_numpy(dtype=float)
     last_rth = _rth_last_bar_flags(idx, spec.session_tz, spec.close_hour)
     slip = spec.slippage_ticks * c.tick
-    cost = 2.0 * spec.commission_per_side + 2.0 * slip * c.multiplier
+    # slippage is paid in the fill prices (entry and exit each move one ``slip`` against the trade);
+    # the cost line carries commission only, so friction is counted once
+    cost = 2.0 * spec.commission_per_side
     n = len(idx)
 
     rows: List[dict] = []
@@ -99,6 +105,8 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
         i = int(pos[ts])
         if i + 1 >= n:
             continue
+        if spec.flat_at_close and last_rth[i]:
+            continue  # a signal on the last regular bar would fill after the close: flat means flat
         side = 1 if r.direction == "Selling" else -1  # +1 short, -1 long
         entry = o[i + 1] - side * slip  # short fills a tick lower, long a tick higher
         rho = float(r.rho)
@@ -115,10 +123,15 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
         if tp is not None and tp == tp:
             if (side > 0 and float(tp) < entry) or (side < 0 and float(tp) > entry):
                 target = float(tp)
+            else:
+                continue  # the explicit target is already behind the fill: nothing left to trade for
         elif spec.target == "anchor":
             a = float(r.anchor)
             if (side > 0 and a < entry) or (side < 0 and a > entry):
                 target = a
+        initial_stop = stop
+        arm_on_target = spec.trail_arm == "target" and spec.trail_bars > 0 and target is not None
+        armed = not arm_on_target
         exit_px = None
         reason = "time"
         j = i + 1
@@ -128,7 +141,7 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
                 j = n - 1
                 exit_px, reason = cl[j], "end"
                 break
-            if spec.trail_bars > 0 and k >= spec.trail_bars:
+            if spec.trail_bars > 0 and armed and k >= spec.trail_bars:
                 lo_w, hi_w = j - spec.trail_bars, j  # the trailing window excludes the current bar
                 if side < 0:
                     stop = max(stop, float(np.min(l[lo_w:hi_w])) - spec.trail_buffer_sigma * rho)
@@ -140,8 +153,11 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
                 exit_px, reason = stop + side * slip, "stop"
                 break
             if hit_tgt:
-                exit_px, reason = target + side * slip, "target"
-                break
+                if not arm_on_target:
+                    exit_px, reason = target + side * slip, "target"
+                    break
+                # expansion reached: drop the target and let the trail manage the rest from the next bar
+                armed, target = True, None
             if spec.flat_at_close and last_rth[j]:
                 exit_px, reason = cl[j] + side * slip, "close"
                 break
@@ -167,7 +183,7 @@ def simulate(events: pd.DataFrame, bars: pd.DataFrame, instrument: str, spec: Ex
                 "costs": cost,
                 "net": gross - cost,
                 "rho": rho,
-                "r_multiple": points / abs(entry - stop) if abs(entry - stop) > 0 else np.nan,
+                "r_multiple": points / abs(entry - initial_stop) if abs(entry - initial_stop) > 0 else np.nan,
                 "score": getattr(r, "score", np.nan),
             }
         )

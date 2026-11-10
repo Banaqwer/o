@@ -62,16 +62,20 @@ def synthetic_impulse_and_retest():
     # top: 15 minutes of a small cap
     for i in range(15):
         path.append((139.5, 140.0 - (i % 2) * 0.2, 138.5, 139.2))
-    # pullback: 30 minutes down to 112 (0.70 of a 40-pt leg from 140)
+    # pullback: 30 minutes down to 112 (0.63 of the 45-pt leg 95.5 -> 140.5)
     for i in range(30):
         p = 139 - (i + 1) * 0.9
         path.append((p + 0.9, p + 1.0, p - 0.3, p))
-    # consolidation inside the zone (111-115) for 15 minutes
-    for i in range(15):
-        path.append((112.5, 113.5, 111.5, 112.5 + (i % 2) * 0.5))
-    # resume up to 150
-    for i in range(40):
+    # bounce back to the 0.5 level (118) over 5 minutes
+    for i in range(5):
         p = 112 + (i + 1) * 1.0
+        path.append((p - 1, p + 0.3, p - 1.2, p))
+    # consolidation around the 0.5 level (116.5-118.5) for 15 minutes: small next to the leg, at the level
+    for i in range(15):
+        path.append((117.5, 118.5, 116.5, 117.5 + (i % 2) * 0.5))
+    # resume up to 157
+    for i in range(40):
+        p = 117 + (i + 1) * 1.0
         path.append((p - 1, p + 0.5, p - 1.2, p))
     return path
 
@@ -92,12 +96,13 @@ def test_ote_detects_leg_retest_and_signals_once():
 
     for k, bar in enumerate(iter_bars(df)):
         sigs.extend(st.update(bar, rho=5.0, minutes_since_open=k))
-    assert len(sigs) == 1
-    s = sigs[0]
-    assert s.direction is Direction.BUYING
+    longs = [s for s in sigs if s.direction is Direction.BUYING]
+    assert len(longs) == 1  # (the pullback itself is a bearish leg whose retrace also prints, once)
+    s = longs[0]
     assert 95 <= s.origin <= 96 and 140 <= s.extreme <= 141
     assert s.stop_price < s.origin and s.target_price == s.extreme
     assert 0.62 <= s.deepest <= 0.8
+    assert s.bias == 0 and s.bias_60 == 0 and s.mom24 == 0  # nothing long enough to establish either
     assert s.bars_since_leg > 0 and s.entry_reference == pytest.approx(s.extreme - 0.705 * (s.extreme - s.origin))
     # the signal prints after the retest, which is after the leg was confirmed, which is after the top
     assert s.ts > df.index[85]
@@ -112,7 +117,7 @@ def test_ote_bias_gate_blocks_signal():
     sigs = []
     for k, bar in enumerate(iter_bars(df)):
         sigs.extend(st.update(bar, rho=5.0, minutes_since_open=k))
-    assert sigs == []  # 170 minutes cannot establish a 60-minute structure bias
+    assert sigs == []  # 175 minutes cannot establish a four-hour structure bias
 
 
 def test_ote_zone_invalidated_by_close_through_origin():
@@ -137,7 +142,8 @@ def test_run_ote_and_simulate_with_explicit_geometry():
     df = frame_from_path(synthetic_impulse_and_retest())
     sig = run_ote(df, cfg, OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=0.5, require_bias=False, breakout_min_sigma=0.05))
     assert len(sig) == 1 and sig.iloc[0]["rung"] == "OTE long" and sig.iloc[0]["trigger"] == "range_break"
-    assert sig.iloc[0]["range_lo"] <= 112.0 and sig.iloc[0]["stop_price"] < sig.iloc[0]["range_lo"]
+    assert 116.0 <= sig.iloc[0]["range_lo"] <= 117.0 and sig.iloc[0]["stop_price"] < sig.iloc[0]["range_lo"]
+    assert sig.iloc[0]["reward_risk"] > 1.0
     tr = simulate(sig, df, "NQ", ExecutionSpec(horizon_bars=200))
     assert len(tr) == 1
     t = tr.iloc[0]
@@ -200,3 +206,84 @@ def make_bars_simple(path):
     idx = pd.date_range("2024-01-03 14:30", periods=len(path), freq="1min", tz="UTC")
     o, h, l, c = (np.array([p[k] for p in path], float) for k in range(4))
     return pd.DataFrame({"open": o, "high": h, "low": l, "close": c, "volume": 100.0}, index=idx)
+
+
+def _drive(cfg, df):
+    from atm_engine.data.schema import iter_bars
+
+    st = OTEState(cfg)
+    sigs = []
+    for k, bar in enumerate(iter_bars(df)):
+        sigs.extend(st.update(bar, rho=5.0, minutes_since_open=k))
+    return st, sigs
+
+
+def test_bos_bias_flips_on_close_above_confirmed_swing_high():
+    # 5-minute bias bars on the synthetic path: the top (140.5) is a confirmed swing high; the resume closes above it
+    cfg = OTEConfig(leg_minutes=5, swing_width=2, bias_minutes=5, bias_swing_width=2, min_displacement_sigma=1.0, require_bias=False)
+    path = synthetic_impulse_and_retest()
+    st_before, _ = _drive(cfg, frame_from_path(path[:140]))  # before the resume reaches the old top
+    assert st_before.bias == 0
+    st_after, _ = _drive(cfg, frame_from_path(path))
+    assert st_after.bias == 1
+
+
+def test_consolidation_away_from_the_level_does_not_trigger():
+    # same path but the pullback runs on to 107 and the box sits at the 0.75 retrace (105.5-107.5), not at the 0.5 level (118)
+    cfg = OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=1.0, require_bias=False, breakout_min_sigma=0.05)
+    path = synthetic_impulse_and_retest()[:115]
+    for i in range(5):
+        p = 112 - (i + 1) * 1.0
+        path.append((p + 1, p + 1.2, p - 0.3, p))
+    for i in range(20):
+        path.append((106.5, 107.5, 105.5, 106.5 + (i % 2) * 0.5))
+    for i in range(50):
+        p = 106 + (i + 1) * 1.0
+        path.append((p - 1, p + 0.5, p - 1.2, p))
+    _, sigs = _drive(cfg, frame_from_path(path))
+    assert [x for x in sigs if x.direction is Direction.BUYING] == []
+    wide = OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=1.0, require_bias=False, breakout_min_sigma=0.05, consolidation_band=0.3)
+    _, sigs2 = _drive(wide, frame_from_path(path))
+    assert len([x for x in sigs2 if x.direction is Direction.BUYING]) == 1  # a wider band admits it: the band is what rejected it
+
+
+def test_tapped_leg_dies_when_price_runs_past_the_extreme():
+    cfg = OTEConfig(leg_minutes=5, swing_width=2, min_displacement_sigma=1.0, require_bias=False, breakout_min_sigma=0.05, consolidation_bars=50)
+    path = synthetic_impulse_and_retest()[:120]  # tapped, bounce started, no box yet
+    for i in range(30):  # straight through the old top without consolidating
+        p = 117 + (i + 1) * 1.0
+        path.append((p - 1, p + 0.5, p - 1.2, p))
+    st, sigs = _drive(cfg, frame_from_path(path))
+    assert sigs == [] and st.legs[Direction.BUYING] is None
+
+
+def test_trail_armed_on_target_holds_initial_stop_until_expansion():
+    # long from 100: price goes to 110 (target), on to 120, then falls back; the trail must only start after 110
+    path = [(100, 100.5, 99.5, 100)]
+    for i in range(20):
+        p = 100 + (i + 1)
+        path.append((p - 1, p + 0.2, p - 1.2, p))
+    for i in range(30):
+        p = 120 - (i + 1)
+        path.append((p + 1, p + 1.2, p - 0.2, p))
+    bars = make_bars_simple(path)
+    ev = pd.DataFrame([{"ts": bars.index[0], "direction": "Buying", "level_price": 100.0, "stop_price": 95.0, "target_price": 110.0, "anchor": 100.0, "rho": 1.0, "is_entry": True, "score": 0.9, "session_date": "2024-01-03", "rung": "x"}])
+    t = simulate(ev, bars, "NQ", ExecutionSpec(horizon_bars=200, trail_bars=5, trail_buffer_sigma=0.0, trail_arm="target")).iloc[0]
+    assert t.reason == "stop" and t.exit > 110.0 and t.points > 8.0
+    assert t.r_multiple == pytest.approx(t.points / (ev.iloc[0]["stop_price"] - t.entry) * -1, rel=1e-6) or t.r_multiple > 1.5
+    # without arming, the same event exits at the target
+    t2 = simulate(ev, bars, "NQ", ExecutionSpec(horizon_bars=200)).iloc[0]
+    assert t2.reason == "target"
+
+
+def test_simulate_skips_target_already_behind_fill_and_last_rth_bar():
+    path = [(100 + i * 0.1, 100.5 + i * 0.1, 99.5 + i * 0.1, 100 + i * 0.1) for i in range(30)]
+    bars = make_bars_simple(path)
+    ev = pd.DataFrame([{"ts": bars.index[0], "direction": "Buying", "level_price": 100.0, "stop_price": 95.0, "target_price": 99.0, "anchor": 100.0, "rho": 1.0, "is_entry": True, "score": 0.9, "session_date": "2024-01-03", "rung": "x"}])
+    assert simulate(ev, bars, "NQ").empty
+    idx = pd.date_range("2024-01-03 15:50", periods=30, freq="1min", tz="America/New_York").tz_convert("UTC")
+    bars2 = bars.copy()
+    bars2.index = idx
+    ev2 = pd.DataFrame([{"ts": idx[9], "direction": "Buying", "level_price": 100.0, "stop_price": 95.0, "target_price": 150.0, "anchor": 100.0, "rho": 1.0, "is_entry": True, "score": 0.9, "session_date": "2024-01-03", "rung": "x"}])
+    assert simulate(ev2, bars2, "NQ").empty  # 15:59 signal would fill at 16:00
+    assert len(simulate(ev2, bars2, "NQ", ExecutionSpec(flat_at_close=False))) == 1

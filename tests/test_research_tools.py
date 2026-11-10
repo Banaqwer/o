@@ -32,8 +32,9 @@ def test_simulate_short_hits_target_at_anchor_with_costs():
     # short fills a tick lower on entry and a tick higher on exit
     assert t.entry == pytest.approx(104.0 - 0.25) and t.exit == pytest.approx(100.0 + 0.25)
     assert t.points == pytest.approx(3.5)
-    assert t.costs == pytest.approx(2 * 2.5 + 2 * 0.25 * 20)
-    assert t.net == pytest.approx(3.5 * 20 - 15.0)
+    # slippage is already in the fills (two ticks = 0.5 pt of the 4-pt move); the cost line is commission only
+    assert t.costs == pytest.approx(2 * 2.5)
+    assert t.net == pytest.approx(3.5 * 20 - 5.0)  # = 4 pts * 20 - 15 USD of total friction
 
 
 def test_simulate_stop_takes_precedence_in_same_bar_and_long_side():

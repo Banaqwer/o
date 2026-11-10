@@ -3,8 +3,11 @@
 For every event the tracker follows subsequent bars and records, at each
 configured horizon, the maximum favourable excursion, the maximum adverse
 excursion and whether price returned to the anchor that was in force when
-the level was tested. Excursions are in points; the record also carries
-them in sigma units via the event's ``rho``.
+the level was tested. Excursions are measured from the open of the bar
+after the event (the first price obtainable once the event is known), not
+from the level price: the test bar's own rejection is part of the event's
+evidence, not of its reaction. Excursions are in points; the record also
+carries them in sigma units via the event's ``rho``.
 """
 
 from __future__ import annotations
@@ -20,6 +23,7 @@ from ..types import Bar, Direction, Event, Reaction
 class _Pending:
     event: Event
     start_index: int
+    ref: float = float("nan")  # the next bar's open
     max_high: float = float("-inf")
     min_low: float = float("inf")
     fav: Dict[int, float] = field(default_factory=dict)
@@ -43,6 +47,8 @@ class ReactionTracker:
             n = bar_index - p.start_index
             if n <= 0:
                 continue
+            if n == 1:
+                p.ref = bar.open
             p.max_high = max(p.max_high, bar.high)
             p.min_low = min(p.min_low, bar.low)
             if n in self.horizons:
@@ -55,13 +61,14 @@ class ReactionTracker:
 
     def _record(self, p: _Pending, h: int) -> None:
         e = p.event
+        ref = p.ref
         if e.direction is Direction.SELLING:
-            p.fav[h] = e.level_price - p.min_low
-            p.adv[h] = p.max_high - e.level_price
+            p.fav[h] = ref - p.min_low
+            p.adv[h] = p.max_high - ref
             p.rev[h] = p.min_low <= e.anchor
         else:
-            p.fav[h] = p.max_high - e.level_price
-            p.adv[h] = e.level_price - p.min_low
+            p.fav[h] = p.max_high - ref
+            p.adv[h] = ref - p.min_low
             p.rev[h] = p.max_high >= e.anchor
 
     def _finish(self, p: _Pending) -> None:

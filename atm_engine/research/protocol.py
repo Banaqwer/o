@@ -114,7 +114,7 @@ def md_table(df: pd.DataFrame, floatfmt: str = "{:.3f}") -> str:
 
 
 def perf_row(name: str, perf: Dict[str, float]) -> Dict[str, object]:
-    keys = ["sessions", "trades", "trades_per_session", "hit_rate", "avg_net", "session_mean", "session_ci_lo", "session_ci_hi", "sharpe", "max_dd", "profit_factor", "pct_sessions_positive", "exit_stop", "exit_target"]
+    keys = ["sessions", "trades", "trades_per_session", "hit_rate", "avg_net", "session_mean", "session_ci_lo", "session_ci_hi", "sharpe", "max_dd", "profit_factor", "pct_sessions_positive", "exit_stop", "exit_target", "gross_per_rho", "net_per_rho"]
     row: Dict[str, object] = {"name": name}
     row.update({k: perf.get(k, np.nan) for k in keys})
     return row
@@ -125,7 +125,27 @@ def cost_variants(spec: ExecutionSpec) -> Dict[str, ExecutionSpec]:
         "stated costs": spec,
         "zero costs": replace(spec, commission_per_side=0.0, slippage_ticks=0.0),
         "double costs": replace(spec, commission_per_side=2 * spec.commission_per_side, slippage_ticks=2 * spec.slippage_ticks),
+        "2 ticks per side": replace(spec, slippage_ticks=2.0),
+        "3 ticks per side": replace(spec, slippage_ticks=3.0),
     }
+
+
+TOD_BINS = ((0, 5), (5, 30), (30, 10_000))
+
+
+def tod_split(tr: pd.DataFrame, tz: str = "America/New_York") -> pd.DataFrame:
+    """Descriptive split of trades by the signal bar's minute since the open (reporting only, no selection)."""
+
+    if tr.empty:
+        return pd.DataFrame(columns=["minutes_since_open", "trades", "hit_rate", "avg_net", "total_net", "share_of_total_net"])
+    sig = (pd.to_datetime(tr["ts_entry"], utc=True) - pd.Timedelta(minutes=1)).dt.tz_convert(tz)
+    minute = sig.dt.hour * 60 + sig.dt.minute - 570
+    total = float(tr["net"].sum())
+    rows = []
+    for lo, hi in TOD_BINS:
+        d = tr[(minute >= lo) & (minute < hi)]
+        rows.append({"minutes_since_open": f"[{lo}, {hi})" if hi < 10_000 else f"{lo}+", "trades": len(d), "hit_rate": float((d["net"] > 0).mean()) if len(d) else np.nan, "avg_net": float(d["net"].mean()) if len(d) else np.nan, "total_net": float(d["net"].sum()), "share_of_total_net": float(d["net"].sum() / total) if total != 0 else np.nan})
+    return pd.DataFrame(rows)
 
 
 # ---------------------------------------------------------------------- phases
@@ -226,6 +246,7 @@ def phase_val(hist: Path, out: Path, ctx: Optional[DailyContext]) -> None:
     rows.append(perf_row("matched baseline, stated costs", performance(simulate(base, bars, "NQ", spec), sessions)))
     rows.append(perf_row("secondary: 09:30-12:00 ET signals only, stated costs", performance(simulate(ev, bars, "NQ", replace(spec, entry_window=MORNING)), sessions)))
     lines += ["## Chosen cell: cost sensitivity, baseline and the secondary hypothesis", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
+    lines += ["Chosen cell by minute since the open (descriptive):", "", md_table(tod_split(simulate(ev, bars, "NQ", spec)), "{:.2f}"), ""]
     # how many of 18 cells positive
     lines += [f"Cells with positive session mean: {(grid['session_mean'] > 0).sum()} of {len(grid)}; with CI above zero: {(grid['session_ci_lo'] > 0).sum()} of {len(grid)}.", ""]
     (out / "val.md").write_text("\n".join(lines))
@@ -256,18 +277,20 @@ def phase_holdout(hist: Path, out: Path, ctx: Optional[DailyContext], instrument
             lines += [f"## {tag}", "", f"{len(ev)} tests, {int(ev['is_entry'].sum())} entries, {len(sessions)} sessions.", "", md_table(pd.DataFrame(rows), "{:.2f}"), ""]
             tr = simulate(ev, bars, inst, spec)
             if not tr.empty:
+                lines += ["By minute since the open (descriptive):", "", md_table(tod_split(tr), "{:.2f}"), ""]
                 tr["year"] = pd.to_datetime(tr["session_date"]).dt.year
-                by_year = tr.groupby("year").apply(lambda d: pd.Series(performance(d, pd.Index(sorted(set(d["session_date"]))))), include_groups=False)[["sessions", "trades", "hit_rate", "avg_net", "session_mean", "sharpe", "max_dd"]].reset_index()
-                lines += ["By year (sessions with trades only):", "", md_table(by_year, "{:.2f}"), ""]
+                sess_year = pd.Series(pd.to_datetime(sessions).year, index=sessions)
+                by_year = tr.groupby("year").apply(lambda d: pd.Series(performance(d, sess_year.index[sess_year == d.name])), include_groups=False)[["sessions", "trades", "hit_rate", "avg_net", "session_mean", "sharpe", "max_dd", "net_per_rho"]].reset_index()
+                lines += ["By year (all sessions of the year, zero when no trade):", "", md_table(by_year, "{:.2f}"), ""]
                 if "ctx_vix_z" in ev.columns:
-                    evt = ev[ev["is_entry"]]
+                    evt = ev[ev["is_entry"]].drop_duplicates("ts")
                     trv = tr.merge(evt[["ts", "ctx_vix_z"]].rename(columns={"ts": "ts_sig"}), left_on=tr["ts_entry"] - pd.Timedelta(minutes=1), right_on="ts_sig", how="left")
                     if trv["ctx_vix_z"].notna().sum() > 30:
                         terc = pd.qcut(trv["ctx_vix_z"], 3, labels=["low VIX", "mid VIX", "high VIX"], duplicates="drop")
                         by_vix = trv.groupby(terc, observed=True).apply(lambda d: pd.Series({"trades": len(d), "hit_rate": (d["net"] > 0).mean(), "avg_net": d["net"].mean(), "total_net": d["net"].sum()}), include_groups=False).reset_index()
                         lines += ["By previous-close VIX tercile:", "", md_table(by_vix, "{:.2f}"), ""]
             p = performance(tr, sessions)
-            summary.append({"instrument": inst, "period": period, "sessions": len(sessions), "trades": p["trades"], "session_mean_usd": p["session_mean"], "ci_lo": p["session_ci_lo"], "ci_hi": p["session_ci_hi"], "sharpe": p["sharpe"], "hit_rate": p["hit_rate"], "avg_net": p["avg_net"]})
+            summary.append({"instrument": inst, "period": period, "sessions": len(sessions), "trades": p["trades"], "session_mean_usd": p["session_mean"], "ci_lo": p["session_ci_lo"], "ci_hi": p["session_ci_hi"], "sharpe": p["sharpe"], "hit_rate": p["hit_rate"], "avg_net": p["avg_net"], "net_per_rho": p.get("net_per_rho", np.nan)})
     lines += ["## Summary", "", md_table(pd.DataFrame(summary), "{:.2f}"), ""]
     (out / "holdout.md").write_text("\n".join(lines))
     print("\n".join(lines))
